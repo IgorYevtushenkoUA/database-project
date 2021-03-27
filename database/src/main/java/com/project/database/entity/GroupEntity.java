@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Group {
+public class GroupEntity {
 
     private Integer groupCode;
     private String groupName;

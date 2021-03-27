@@ -7,10 +7,10 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Subject {
+public class SubjectEntity {
 
     private Integer subjectNo;
-    private String subjectNum;
+    private String subjectName;
     private String eduLevel;
     private String faculty;
 

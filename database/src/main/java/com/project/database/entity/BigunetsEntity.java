@@ -10,7 +10,7 @@ import java.util.Date;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bigunets {
+public class BigunetsEntity {
 
     private Integer bigunetsNo;
     private Date examDate;

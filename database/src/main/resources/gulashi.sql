@@ -48,7 +48,7 @@ create table subject
     subject_no  serial       not null
         constraint subject_pk
             primary key,
-    subject_num varchar(128) not null,
+    subject_name varchar(128) not null,
     edu_level   char(8)      not null,
     faculty     varchar(64)  not null
 );

@@ -7,16 +7,14 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class BigunetsMark {
+public class VidomistMarkEntity {
 
-    private Integer bigunetsNo;
-    private Integer studentCode;
     private Integer vidomistNo;
-    private Integer tutorNo;
+    private Integer studentCode;
     private Integer trimMark;
+    private String natMark;
     private Integer markCheck;
     private Integer completeMark;
-    private Integer natMark;
-    private Integer ectsMark;
+    private String ectsMark;
 
 }
