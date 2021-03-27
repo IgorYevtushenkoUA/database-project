@@ -1,16 +1,20 @@
 package com.project.database.dao.inter;
 
 import com.project.database.entity.StudentEntity;
+import com.project.database.entity.SubjectEntity;
+import com.project.database.entity.VidomistEntity;
 
 import java.util.List;
+import java.util.TreeMap;
 
 public interface StudentDao {
 
     /*
-    отримати всіх боржників за роком навчання / спеціальністю / предметом / групою / викладачем
--     отримати всіх студентів за роком навчання / спеціальністю  / предметом / групою / викладачем
--     отримати n% перших студентів за рейтингом (на спеціальності за семестр)
--     генерувати список студентів за рейтингом для спеціальності\курсу
+    - отримати всіх боржників за роком навчання / спеціальністю / предметом / групою / викладачем
+    - отримати всіх студентів за роком навчання / спеціальністю  / предметом / групою / викладачем
+    - отримати n% перших студентів за рейтингом (на спеціальності за семестр)
+    - генерувати список студентів за рейтингом для спеціальності\курсу
+    - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ
     * */
 
     /**
@@ -150,5 +154,35 @@ public interface StudentDao {
             int groupCode,
             int course
     );
+
+/**
+ - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ
+ * */
+
+    /** - отримати бігунці студента за ПІБ*/
+    public List<VidomistEntity> findAllVidomostyByStudentId(int studentId);
+
+    /** - отримати бігунці студента за ПІБ*/
+    public List<VidomistEntity> findAllVidomostyByStudentPIB(String name,
+                                                             String surname,
+                                                             String patronymic);
+
+    /** - отримати середній бал студента за ПІБ*/
+    public double findAverageMarkForStudentById(int studentCode);
+
+    /** - отримати середній бал студента за ПІБ*/
+    public double findAverageMarkForStudentByPIB(String name,
+                                                 String surname,
+                                                 String patronymic);
+
+    /** - отримати всі оцінки студента за ПІБ*/
+    public TreeMap<SubjectEntity, Integer> findAllMArksForStudentByPIB(String name,
+                                                                       String surname,
+                                                                       String patronymic);
+
+    /** - отримати всі оцінки студента за ПІБ*/
+    public TreeMap<SubjectEntity, Integer> findAllMArksForStudentById(int studentCode);
+
+    /** - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ*/
 
 }
