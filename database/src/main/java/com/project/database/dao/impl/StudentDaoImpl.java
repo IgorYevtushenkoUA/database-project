@@ -201,6 +201,7 @@ public class StudentDaoImpl implements StudentDao {
         return List.of(eduYear, subjectRes, groupRes, tutorRes);
     }
 
+    //+
     @Override
     public List<Student> findAllDebtorsByYearSubjectGroupTeacher(String eduYear, int subjectNo, int groupCode, int tutorNo, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
@@ -250,7 +251,6 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     // +
-
     @Override
     public List<Student> findAllStudentsByYearSubjectGroupTeacher(String eduYear, String subjectName, String groupName, String tutorName, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
@@ -293,7 +293,7 @@ public class StudentDaoImpl implements StudentDao {
         return students;
     }
 
-    // todo check or >= 60 or != F (because in some we can have 60 in some 61)
+    // +
     @Override
     public List<Student> findAllStudentsByYearSubjectGroupTeacher(String eduYear, int subjectNo, int groupCode, int tutorNo, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
@@ -329,9 +329,26 @@ public class StudentDaoImpl implements StudentDao {
         return students;
     }
 
+
+
+
     @Override
     public List<Student> findBestPercentOfStudentByGroupCourse(int percent, int groupCode, int course, int page, int numberPerPage) {
-        return null;
+        List<Student> students = new ArrayList<>();
+        int index = 1;
+        try {
+            String sql = "";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, numberPerPage);
+            preparedStatement.setInt(index++, (page - 1) * numberPerPage);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                students.add(createStudent(resultSet));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+        return students;
     }
 
     @Override

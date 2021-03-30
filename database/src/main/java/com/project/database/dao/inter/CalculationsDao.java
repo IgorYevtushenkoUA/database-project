@@ -21,16 +21,6 @@ public interface CalculationsDao {
     );
 
     /**
-     * - отримати кількість (не)допусків для групи/предмета/у викладача
-     */
-    public int getNonAdmissionForGroupSubjectInTutor(
-            int groupCode,
-            int subjectNo,
-            int tutorNo
-    );
-
-
-    /**
      * - отримати кількість допусків для групи/предмета/у викладача
      */
     public int getAdmissionForGroupSubjectInTutor(
@@ -39,14 +29,6 @@ public interface CalculationsDao {
             String tutorName
     );
 
-    /**
-     * - отримати кількість допусків для групи/предмета/у викладача
-     */
-    public int getAdmissionForGroupSubjectInTutor(
-            int groupCode,
-            int subjectNo,
-            int tutorNo
-    );
 
     /**
      * - вирахувати середній бал для group\курсу
@@ -56,15 +38,7 @@ public interface CalculationsDao {
             String subjectName
     );
 
-    /**
-     * - вирахувати середній бал для group\курсу
-     */
-    public double getAverageMarkForGroupByCourse(
-            int groupCode,
-            int subjectNo
-    );
-
     /** - вирахувати середній бал для студентів по предметах*/
-    public TreeMap<Subject, Double> getAverageMArsBySubjects();
+    public TreeMap<Subject, Double> getAverageMarsBySubjects();
 
 }
