@@ -1,6 +1,6 @@
 package com.project.database.dao.inter;
 
-import com.project.database.entity.SubjectEntity;
+import com.project.database.entity.Subject;
 
 import java.util.TreeMap;
 
@@ -65,6 +65,6 @@ public interface CalculationsDao {
     );
 
     /** - вирахувати середній бал для студентів по предметах*/
-    public TreeMap<SubjectEntity, Double> getAverageMArsBySubjects();
+    public TreeMap<Subject, Double> getAverageMArsBySubjects();
 
 }

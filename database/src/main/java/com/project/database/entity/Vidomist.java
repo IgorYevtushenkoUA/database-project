@@ -9,7 +9,7 @@ import java.util.Date;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class VidomistEntity {
+public class Vidomist {
 
     private Integer vidomistNo;
     private Integer tutorNo;

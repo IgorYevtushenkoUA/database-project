@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubjectEntity {
+public class Subject {
 
     private Integer subjectNo;
     private String subjectName;

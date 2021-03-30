@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class TutorEntity {
+public class Tutor {
 
     private Integer tutorNo;
     private String tutorName;
