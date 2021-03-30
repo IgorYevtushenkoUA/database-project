@@ -5,6 +5,7 @@ import com.project.database.dao.inter.StudentDao;
 import com.project.database.entity.Student;
 import com.project.database.entity.Subject;
 import com.project.database.entity.Vidomist;
+import com.sun.source.tree.Tree;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -28,7 +29,8 @@ public class StudentDaoImpl implements StudentDao {
 
     public static void main(String[] args) {
         StudentDaoImpl si = new StudentDaoImpl();
-        System.out.println(si.findAverageMarkForStudentByPIB("Вадим","Кучерявий","Юрійович"));
+        System.out.println(si.findAllMarksForStudentByPIB("Вадим", "Кучерявий", "Юрійович", 1, 3));
+        System.out.println(si.findAllMarksForStudentById(1, 1, 3));
     }
 
     /**
@@ -464,16 +466,76 @@ public class StudentDaoImpl implements StudentDao {
         }
         return averageMark;
     }
-
-
-    @Override
-    public TreeMap<Subject, Integer> findAllMArksForStudentByPIB(String name, String surname, String patronymic, int page, int numberPerPage) {
-        return null;
+    public Subject createSubject(ResultSet resultSet) throws SQLException {
+        Subject subject = new Subject();
+        subject.setSubjectNo(resultSet.getInt("subject_no"));
+        subject.setSubjectName(resultSet.getString("subject_name"));
+        subject.setEduLevel(resultSet.getString("edu_level"));
+        subject.setFaculty(resultSet.getString("faculty"));
+        return subject;
     }
 
-
+    // +
     @Override
-    public TreeMap<Subject, Integer> findAllMArksForStudentById(int studentCode, int page, int numberPerPage) {
-        return null;
+    public TreeMap<Integer, List> findAllMarksForStudentByPIB(String name, String surname, String patronymic, int page, int numberPerPage) {
+        TreeMap<Integer, List> statistics = new TreeMap<>();
+        int index = 1;
+        try {
+            String sql = "select sub.subject_no as subject_no, sub.subject_name as subject_name,sub.edu_level as edu_level, sub.faculty as faculty, vm.complete_mark as complete_mark   " +
+                    "from student s, \"group\" g, subject sub, vidomist v, vidomist_mark vm   " +
+                    "where s.student_code in (select student_code from student where student_name =? and student_surname=? and student_patronymic=? ) " +
+                    "and s.student_code = vm.student_code   " +
+                    "and vm.vidomist_no = v.vidomist_no   " +
+                    "and g.group_code=v.group_code   " +
+                    "and g.subject_no = sub.subject_no " +
+                    "limit ? offset ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(index++, name);
+            preparedStatement.setString(index++, surname);
+            preparedStatement.setString(index++, patronymic);
+            preparedStatement.setInt(index++, numberPerPage);
+            preparedStatement.setInt(index++, (page - 1) * numberPerPage);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int mark = resultSet.getInt("complete_mark");
+                Subject subject = createSubject(resultSet);
+                statistics.put(subject.getSubjectNo(), List.of(subject.getSubjectName(), mark));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return statistics;
+    }
+
+    // +
+    @Override
+    public TreeMap<Integer, List> findAllMarksForStudentById(int studentCode, int page, int numberPerPage) {
+        TreeMap<Integer, List> statistics = new TreeMap<>();
+        int index = 1;
+        try {
+            String sql = "select sub.subject_no as subject_no, sub.subject_name as subject_name,sub.edu_level as edu_level, sub.faculty as faculty, vm.complete_mark as complete_mark   " +
+                    "from student s, \"group\" g, subject sub, vidomist v, vidomist_mark vm   " +
+                    "where s.student_code = ? " +
+                    "and s.student_code = vm.student_code   " +
+                    "and vm.vidomist_no = v.vidomist_no   " +
+                    "and g.group_code=v.group_code   " +
+                    "and g.subject_no = sub.subject_no " +
+                    "limit ? offset ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, studentCode);
+            preparedStatement.setInt(index++, numberPerPage);
+            preparedStatement.setInt(index++, (page - 1) * numberPerPage);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int mark = resultSet.getInt("complete_mark");
+                Subject subject = createSubject(resultSet);
+                statistics.put(subject.getSubjectNo(), List.of(subject.getSubjectName(), mark));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return statistics;
     }
 }

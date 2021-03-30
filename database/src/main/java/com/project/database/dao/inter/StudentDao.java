@@ -206,7 +206,7 @@ public interface StudentDao {
     /**
      * - отримати всі оцінки студента за ПІБ
      */
-    public TreeMap<Subject, Integer> findAllMArksForStudentByPIB(String name,
+    public TreeMap<Integer, List> findAllMarksForStudentByPIB(String name,
                                                                  String surname,
                                                                  String patronymic,
                                                                  int page,
@@ -215,7 +215,7 @@ public interface StudentDao {
     /**
      * - отримати всі оцінки студента за ПІБ
      */
-    public TreeMap<Subject, Integer> findAllMArksForStudentById(int studentCode,
+    public TreeMap<Integer, List> findAllMarksForStudentById(int studentCode,
                                                                 int page,
                                                                 int numberPerPage);
 
