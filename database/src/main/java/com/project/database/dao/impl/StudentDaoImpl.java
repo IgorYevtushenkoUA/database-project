@@ -28,7 +28,7 @@ public class StudentDaoImpl implements StudentDao {
 
     public static void main(String[] args) {
         StudentDaoImpl si = new StudentDaoImpl();
-        System.out.println(si.findAllDebtorsByYearSubjectGroupTeacher(null,null,null,null, 1, 3));
+        System.out.println(si.findAverageMarkForStudentByPIB("Вадим","Кучерявий","Юрійович"));
     }
 
     /**
@@ -148,13 +148,13 @@ public class StudentDaoImpl implements StudentDao {
                     "                                                where v.control_type = 'залік' " +
                     "                                                  and v.tutor_no in (select t.tutor_no " +
                     "                                                                     from tutor t " +
-                    "                                                                     where tutor_name " +  params.get(3) + " ) " +
+                    "                                                                     where tutor_name " + params.get(3) + " ) " +
                     "                                                  and v.group_code in (select group_code " +
                     "                                                                       from \"group\" g " +
                     "                                                                       where g.group_code in (select gr.group_code " +
                     "                                                                                              from \"group\" gr " +
                     "                                                                                              where gr.group_name " + params.get(2) + ") " +
-                    "                                                                         and edu_year " + params.get(0) +" " +
+                    "                                                                         and edu_year " + params.get(0) + " " +
                     "                                                                         and subject_no in (select s.subject_no " +
                     "                                                                                            from subject s " +
                     "                                                                                            where s.subject_name " + params.get(1) + " ))) " +
@@ -166,7 +166,7 @@ public class StudentDaoImpl implements StudentDao {
                     "                                                where v.control_type = 'екзамен' " +
                     "                                                  and v.tutor_no in (select t.tutor_no " +
                     "                                                                     from tutor t " +
-                    "                                                                     where tutor_name " + params.get(3) +") " +
+                    "                                                                     where tutor_name " + params.get(3) + ") " +
                     "                                                  and v.group_code in (select group_code " +
                     "                                                                       from \"group\" g " +
                     "                                                                       where g.group_code in (select gr.group_code " +
@@ -207,7 +207,7 @@ public class StudentDaoImpl implements StudentDao {
         List<Student> students = new ArrayList<>();
         int index = 1;
         List<String> params = setParams(eduYear, subjectNo, groupCode, tutorNo);
-        try{
+        try {
             String sql = "select *   " +
                     "from student   " +
                     "where student_code in (select vm.student_code   " +
@@ -215,11 +215,11 @@ public class StudentDaoImpl implements StudentDao {
                     "                       where vm.vidomist_no in (select v.vidomist_no   " +
                     "                                                from vidomist v   " +
                     "                                                where v.control_type = 'залік'   " +
-                    "                                                  and v.tutor_no " + params.get(3)   + " " +
+                    "                                                  and v.tutor_no " + params.get(3) + " " +
                     "                                                  and v.group_code in (select group_code   " +
                     "                                                                       from \"group\" g   " +
-                    "                                                                       where g.group_code " + params.get(2)   + " " +
-                    "                                                                         and edu_year " + params.get(0)  +" " +
+                    "                                                                       where g.group_code " + params.get(2) + " " +
+                    "                                                                         and edu_year " + params.get(0) + " " +
                     "                                                                         and subject_no " + params.get(1) + " ))   " +
                     "                         and vm.complete_mark < 60)   " +
                     "   or student_code in (select vm.student_code   " +
@@ -227,12 +227,12 @@ public class StudentDaoImpl implements StudentDao {
                     "                       where vm.vidomist_no in (select v.vidomist_no   " +
                     "                                                from vidomist v   " +
                     "                                                where v.control_type = 'екзамен'   " +
-                    "                                                  and v.tutor_no " + params.get(3)  +" " +
+                    "                                                  and v.tutor_no " + params.get(3) + " " +
                     "                                                  and v.group_code in (select group_code   " +
                     "                                                                       from \"group\" g   " +
-                    "                                                                       where g.group_code " + params.get(2)  + " " +
-                    "                                                                         and edu_year " + params.get(0)  +" " +
-                    "                                                                         and subject_no " + params.get(1) +" ))   " +
+                    "                                                                       where g.group_code " + params.get(2) + " " +
+                    "                                                                         and edu_year " + params.get(0) + " " +
+                    "                                                                         and subject_no " + params.get(1) + " ))   " +
                     "                         and vm.complete_mark < 61)   " +
                     "order by student_surname   " +
                     "limit ? offset ?   ";
@@ -241,10 +241,10 @@ public class StudentDaoImpl implements StudentDao {
             preparedStatement.setInt(index++, numberPerPage);
             preparedStatement.setInt(index++, (page - 1) * numberPerPage);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 students.add(createStudent(resultSet));
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return students;
@@ -299,19 +299,19 @@ public class StudentDaoImpl implements StudentDao {
         List<Student> students = new ArrayList<>();
         int index = 1;
         List<String> params = setParams(eduYear, subjectNo, groupCode, tutorNo);
-        try{
+        try {
             String sql = "select * " +
                     "from student " +
                     "where student_code in (select vm.student_code " +
                     "                       from vidomist_mark vm " +
                     "                       where vm.vidomist_no in (select v.vidomist_no " +
                     "                                                from vidomist v " +
-                    "                                                where v.tutor_no " + params.get(3)  +
+                    "                                                where v.tutor_no " + params.get(3) +
                     "                                                  and v.group_code in (select group_code " +
                     "                                                                       from \"group\" g " +
                     "                                                                       where g.group_code " + params.get(2) +
                     "                                                                         and edu_year " + params.get(0) +
-                    "                                                                         and subject_no " + params.get(1) + ")) "+
+                    "                                                                         and subject_no " + params.get(1) + ")) " +
                     "                         and vm.complete_mark >= 60) " +
                     "order by student_surname " +
                     "limit ? offset ?";
@@ -320,16 +320,14 @@ public class StudentDaoImpl implements StudentDao {
             preparedStatement.setInt(index++, numberPerPage);
             preparedStatement.setInt(index++, (page - 1) * numberPerPage);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 students.add(createStudent(resultSet));
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return students;
     }
-
-
 
 
     @Override
@@ -426,20 +424,53 @@ public class StudentDaoImpl implements StudentDao {
         return vidomists;
     }
 
+    // +
     @Override
-    public double findAverageMarkForStudentById(int studentCode, int page, int numberPerPage) {
-        return 0;
+    public double findAverageMarkForStudentById(int studentCode) {
+        double averageMark = 0;
+        int index = 1;
+        try {
+            String sql = "select avg(bm.complete_mark) from bigunets_mark bm where bm.student_code = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, studentCode);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                averageMark = resultSet.getDouble("avg");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return averageMark;
     }
 
+    // +
     @Override
-    public double findAverageMarkForStudentByPIB(String name, String surname, String patronymic, int page, int numberPerPage) {
-        return 0;
+    public double findAverageMarkForStudentByPIB(String name, String surname, String patronymic) {
+        double averageMark = 0;
+        int index = 1;
+        try {
+            String sql = "select avg(bm.complete_mark) from bigunets_mark bm where bm.student_code in (select student_code from student where student_name = ? and student_surname = ? and student_patronymic= ?)";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(index++, name);
+            preparedStatement.setString(index++, surname);
+            preparedStatement.setString(index++, patronymic);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                averageMark = resultSet.getDouble("avg");
+                System.out.println(averageMark);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return averageMark;
     }
+
 
     @Override
     public TreeMap<Subject, Integer> findAllMArksForStudentByPIB(String name, String surname, String patronymic, int page, int numberPerPage) {
         return null;
     }
+
 
     @Override
     public TreeMap<Subject, Integer> findAllMArksForStudentById(int studentCode, int page, int numberPerPage) {

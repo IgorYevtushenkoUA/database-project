@@ -194,18 +194,14 @@ public interface StudentDao {
     /**
      * - отримати середній бал студента за ПІБ
      */
-    public double findAverageMarkForStudentById(int studentCode,
-                                                int page,
-                                                int numberPerPage);
+    public double findAverageMarkForStudentById(int studentCode);
 
     /**
      * - отримати середній бал студента за ПІБ
      */
     public double findAverageMarkForStudentByPIB(String name,
                                                  String surname,
-                                                 String patronymic,
-                                                 int page,
-                                                 int numberPerPage);
+                                                 String patronymic);
 
     /**
      * - отримати всі оцінки студента за ПІБ
