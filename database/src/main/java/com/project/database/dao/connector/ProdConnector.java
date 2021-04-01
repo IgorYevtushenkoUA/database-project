@@ -16,7 +16,7 @@ public class ProdConnector implements Connector {
     private final String connectionUrl;
 
 
-    public ProdConnector(@Value("${connection.url}") String connectionUrl) {
+    public ProdConnector(@Value("${spring.datasource.url}") String connectionUrl) {
         this.connectionUrl = connectionUrl;
     }
 

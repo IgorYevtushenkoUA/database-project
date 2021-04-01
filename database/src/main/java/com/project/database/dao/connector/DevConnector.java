@@ -16,7 +16,7 @@ public class DevConnector implements Connector {
     private final String connectionUrl;
 
 
-    public DevConnector(@Value("${connection.url}") String connectionUrl) {
+    public DevConnector(@Value("${spring.datasource.url}") String connectionUrl) {
         this.connectionUrl = connectionUrl;
     }
 

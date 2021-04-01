@@ -77,7 +77,7 @@ public class StudentDaoImpl implements StudentDao {
         List<Student> students = new ArrayList<>();
         int index = 1;
         try {
-            String sql = "select * from student order by student_surname limit ? offset ?";
+            String sql = "select * from \"student\" order by student_surname limit ? offset ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(index++, numberPerPage);
             preparedStatement.setInt(index++, (page - 1) * numberPerPage);
@@ -97,7 +97,7 @@ public class StudentDaoImpl implements StudentDao {
         List<Student> students = new ArrayList<>();
         int index = 1;
         try {
-            String sql = "select * from student where student_name=? and student_surname=? and student_patronymic=?  order by student_surname limit ? offset ?";
+            String sql = "select * from \"student\" where student_name=? and student_surname=? and student_patronymic=?  order by student_surname limit ? offset ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(index++, name);
             preparedStatement.setString(index++, surname);
@@ -120,7 +120,7 @@ public class StudentDaoImpl implements StudentDao {
         List<Student> students = new ArrayList<>();
         int index = 1;
         try {
-            String sql = "select * from student where student_name=? and student_surname=? order by student_surname limit ? offset ?";
+            String sql = "select * from \"student\" where student_name=? and student_surname=? order by student_surname limit ? offset ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(index++, name);
             preparedStatement.setString(index++, surname);
@@ -153,7 +153,7 @@ public class StudentDaoImpl implements StudentDao {
         System.out.println(params);
         try {
             String sql = "select * " +
-                    "from student " +
+                    "from \"student\" " +
                     "where student_code in (select vm.student_code " +
                     "                       from vidomist_mark vm " +
                     "                       where vm.vidomist_no in (select v.vidomist_no " +
@@ -222,7 +222,7 @@ public class StudentDaoImpl implements StudentDao {
         List<String> params = setParams(eduYear, subjectNo, groupCode, tutorNo);
         try {
             String sql = "select *   " +
-                    "from student   " +
+                    "from \"student\"   " +
                     "where student_code in (select vm.student_code   " +
                     "                       from vidomist_mark vm   " +
                     "                       where vm.vidomist_no in (select v.vidomist_no   " +
@@ -272,7 +272,7 @@ public class StudentDaoImpl implements StudentDao {
         System.out.println(params);
         try {
             String sql = "select *  " +
-                    "from student  " +
+                    "from \"student\"  " +
                     "where student_code in (select vm.student_code  " +
                     "                       from vidomist_mark vm  " +
                     "                       where vm.vidomist_no in (select v.vidomist_no  " +
@@ -314,7 +314,7 @@ public class StudentDaoImpl implements StudentDao {
         List<String> params = setParams(eduYear, subjectNo, groupCode, tutorNo);
         try {
             String sql = "select * " +
-                    "from student " +
+                    "from \"student\" " +
                     "where student_code in (select vm.student_code " +
                     "                       from vidomist_mark vm " +
                     "                       where vm.vidomist_no in (select v.vidomist_no " +
@@ -422,7 +422,7 @@ public class StudentDaoImpl implements StudentDao {
         try {
             String sql = "select * from vidomist where vidomist_no in " +
                     "(select vidomist_no from vidomist_mark where student_code in " +
-                    "(select student_code from student where student_name=? and student_surname=? and student_patronymic=?))";
+                    "(select student_code from \"student\" where student_name=? and student_surname=? and student_patronymic=?))";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, surname);
@@ -462,7 +462,7 @@ public class StudentDaoImpl implements StudentDao {
         double averageMark = 0;
         int index = 1;
         try {
-            String sql = "select avg(bm.complete_mark) from bigunets_mark bm where bm.student_code in (select student_code from student where student_name = ? and student_surname = ? and student_patronymic= ?)";
+            String sql = "select avg(bm.complete_mark) from bigunets_mark bm where bm.student_code in (select student_code from \"student\" where student_name = ? and student_surname = ? and student_patronymic= ?)";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(index++, name);
             preparedStatement.setString(index++, surname);
@@ -493,8 +493,8 @@ public class StudentDaoImpl implements StudentDao {
         int index = 1;
         try {
             String sql = "select sub.subject_no as subject_no, sub.subject_name as subject_name,sub.edu_level as edu_level, sub.faculty as faculty, vm.complete_mark as complete_mark   " +
-                    "from student s, \"group\" g, subject sub, vidomist v, vidomist_mark vm   " +
-                    "where s.student_code in (select student_code from student where student_name =? and student_surname=? and student_patronymic=? ) " +
+                    "from \"student\" s, \"group\" g, subject sub, vidomist v, vidomist_mark vm   " +
+                    "where s.student_code in (select student_code from \"student\" where student_name =? and student_surname=? and student_patronymic=? ) " +
                     "and s.student_code = vm.student_code   " +
                     "and vm.vidomist_no = v.vidomist_no   " +
                     "and g.group_code=v.group_code   " +
@@ -526,7 +526,7 @@ public class StudentDaoImpl implements StudentDao {
         int index = 1;
         try {
             String sql = "select sub.subject_no as subject_no, sub.subject_name as subject_name,sub.edu_level as edu_level, sub.faculty as faculty, vm.complete_mark as complete_mark   " +
-                    "from student s, \"group\" g, subject sub, vidomist v, vidomist_mark vm   " +
+                    "from \"student\" s, \"group\" g, subject sub, vidomist v, vidomist_mark vm   " +
                     "where s.student_code = ? " +
                     "and s.student_code = vm.student_code   " +
                     "and vm.vidomist_no = v.vidomist_no   " +
