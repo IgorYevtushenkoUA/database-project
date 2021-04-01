@@ -4,6 +4,7 @@ import com.project.database.dao.connector.Connector;
 import com.project.database.dao.inter.VidomistDao;
 import com.project.database.entity.Vidomist;
 
+import javax.annotation.PostConstruct;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,22 +14,32 @@ import java.util.List;
 
 public class VidomistDaoImpl implements VidomistDao {
 
-    private static Connection connection;
+    private Connection connection;
     private PreparedStatement preparedStatement;
 
-    static {
+    private final Connector connector;
+
+
+    public VidomistDaoImpl(Connector connector) {
+        this.connector = connector;
+    }
+
+
+    @PostConstruct
+    void initConnection() {
         try {
-            connection = new Connector().getConnection();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            connection = connector.getConnection();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
     }
 
-    public static void main(String[] args) {
-        VidomistDaoImpl vidomistDao = new VidomistDaoImpl();
-        vidomistDao.findAllVidomistsByTutorGroupSubject(null, null, null, 1, 20);
 
-    }
+//    public static void main(String[] args) {
+//        VidomistDaoImpl vidomistDao = new VidomistDaoImpl(connector);
+//        vidomistDao.findAllVidomistsByTutorGroupSubject(null, null, null, 1, 20);
+
+//    }
 
 
     List<String> setParams(String tutorName, String groupName, String subjectName) {

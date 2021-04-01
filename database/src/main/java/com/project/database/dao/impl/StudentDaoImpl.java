@@ -5,9 +5,10 @@ import com.project.database.dao.inter.StudentDao;
 import com.project.database.entity.Student;
 import com.project.database.entity.Subject;
 import com.project.database.entity.Vidomist;
-import com.sun.source.tree.Tree;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,22 +17,32 @@ import java.util.TreeMap;
 @Repository
 public class StudentDaoImpl implements StudentDao {
 
-    private static Connection connection;
+    private Connection connection;
     private PreparedStatement preparedStatement;
 
-    static {
+    private final Connector connector;
+
+
+    @Autowired
+    public StudentDaoImpl(Connector connector) {
+        this.connector = connector;
+    }
+
+    @PostConstruct
+    void initConnection() {
         try {
-            connection = new Connector().getConnection();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            connection = connector.getConnection();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
     }
 
-    public static void main(String[] args) {
-        StudentDaoImpl si = new StudentDaoImpl();
-        System.out.println(si.findAllMarksForStudentByPIB("Вадим", "Кучерявий", "Юрійович", 1, 3));
-        System.out.println(si.findAllMarksForStudentById(1, 1, 3));
-    }
+
+//    public static void main(String[] args) {
+//        StudentDaoImpl si = new StudentDaoImpl(connector);
+//        System.out.println(si.findAllMarksForStudentByPIB("Вадим", "Кучерявий", "Юрійович", 1, 3));
+//        System.out.println(si.findAllMarksForStudentById(1, 1, 3));
+//    }
 
     /**
      * method to create student by ResultSet
