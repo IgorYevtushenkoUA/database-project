@@ -50,7 +50,7 @@ public class StudentController {
     }
 
 
-    @PostMapping("/")
+    @PostMapping("/students")
     public List<Student> postAll(
             @RequestParam(name = "year", defaultValue = "2020") String year,
             @RequestParam(name = "subject") String subject,

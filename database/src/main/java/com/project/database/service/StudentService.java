@@ -26,22 +26,6 @@ public class StudentService {
         return studentDao.findByNameSurname(name, surname, page, numberPerPage);
     }
 
-    public List<Student> findAllDebtorsByYearSubjectGroupTeacher(String eduYear, String subjectName, String groupName, String tutorName, int page, int numberPerPage) {
-        return studentDao.findAllDebtorsByYearSubjectGroupTeacher(eduYear, subjectName, groupName, tutorName, page, numberPerPage);
-    }
-
-    public List<Student> findAllDebtorsByYearSubjectGroupTeacher(String eduYear, int subjectNo, int groupCode, int tutorNo, int page, int numberPerPage) {
-        return studentDao.findAllDebtorsByYearSubjectGroupTeacher(eduYear, subjectNo, groupCode, tutorNo, page, numberPerPage);
-    }
-
-    public List<Student> findAllByYearSubjectGroupTeacher(String eduYear, String subjectName, String groupName, String tutorName, int page, int numberPerPage) {
-        return studentDao.findAllByYearSubjectGroupTeacher(eduYear, subjectName, groupName, tutorName, page, numberPerPage);
-    }
-
-    public List<Student> findAllByYearSubjectGroupTeacher(String eduYear, int subjectNo, int groupCode, int tutorNo, int page, int numberPerPage) {
-        return studentDao.findAllByYearSubjectGroupTeacher(eduYear, subjectNo, groupCode, tutorNo, page, numberPerPage);
-    }
-
     public List<Vidomist> findAllVidomostyByStudentId(int studentId, int page, int numberPerPage) {
         return studentDao.findAllVidomostyByStudentId(studentId, page, numberPerPage);
     }
@@ -94,15 +78,15 @@ public class StudentService {
     }
 
     public List<Student> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(String eduYear,
-                                                                    String subjectName,
-                                                                    String groupName,
-                                                                    String tutorName,
-                                                                    String trim,
-                                                                    String course,
-                                                                    String sortType,
-                                                                    String sortGrow,
-                                                                    int page,
-                                                                    int numberPerPage) {
+                                                                           String subjectName,
+                                                                           String groupName,
+                                                                           String tutorName,
+                                                                           String trim,
+                                                                           String course,
+                                                                           String sortType,
+                                                                           String sortGrow,
+                                                                           int page,
+                                                                           int numberPerPage) {
         return studentDao.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
                 eduYear,
                 subjectName,
