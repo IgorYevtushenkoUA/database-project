@@ -65,9 +65,32 @@ public class StudentService {
     public TreeMap<Integer, List> findAllMarksById(int studentCode, int page, int numberPerPage) {
         return studentDao.findAllMarksById(studentCode, page, numberPerPage);
     }
-    public void deleteById(int studentId){
+
+    public void deleteById(int studentId) {
         studentDao.deleteById(studentId);
     }
 
+    public List<Student> findAllByYearSubjectGroupTeacherTrimCourse(String eduYear,
+                                                                    String subjectName,
+                                                                    String groupName,
+                                                                    String tutorName,
+                                                                    String trim,
+                                                                    String course,
+                                                                    String sortType,
+                                                                    String sortGrow,
+                                                                    int page,
+                                                                    int numberPerPage) {
+        return studentDao.findAllByYearSubjectGroupTeacherTrimCourse(
+                eduYear,
+                subjectName,
+                groupName,
+                tutorName,
+                trim,
+                course,
+                sortType,
+                sortGrow,
+                page,
+                numberPerPage);
+    }
 
 }

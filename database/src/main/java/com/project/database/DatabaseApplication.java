@@ -18,9 +18,18 @@ public class DatabaseApplication {
     }
 
     private static void test(ApplicationContext applicationContext) {
-        SubjectService subjectService = applicationContext.getBean(SubjectService.class);
-
-        subjectService.deleteByID(14);
+        StudentService studentService = applicationContext.getBean(StudentService.class);
+        System.out.println(studentService.findAllByYearSubjectGroupTeacherTrimCourse(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                1, 20
+        ));
     }
 
 }

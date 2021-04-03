@@ -221,4 +221,20 @@ public interface StudentDao {
     /** - delete student by ID */
     void deleteById(int studentId);
 
+
+    /**
+     * - отримати всіх боржників за роком навчання / предметом / групою / викладачем
+     */
+    List<Student> findAllByYearSubjectGroupTeacherTrimCourse(
+            String eduYear,
+            String subjectName,
+            String groupName,
+            String tutorName,
+            String trim,
+            String course,
+            String sortType,
+            String sortGrow,
+            int page,
+            int numberPerPage);
+
 }

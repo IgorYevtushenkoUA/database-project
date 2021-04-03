@@ -13,25 +13,26 @@ import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 @Repository
 public class StudentDaoImpl implements StudentDao {
 
-    private static  Connection connection;
+    private static Connection connection;
     private PreparedStatement preparedStatement;
 
     private final Connector connector;
     private int index = 1;
 
 
-//    @Autowired
+    //    @Autowired
     public StudentDaoImpl(Connector connector) {
         this.connector = connector;
     }
 
     //    @Autowired
-    public StudentDaoImpl(){
+    public StudentDaoImpl() {
         this.connector = new ProdConnector("jdbc:postgresql://localhost:5433/gulash_db?user=postgres&password=admin");
     }
 
@@ -568,8 +569,89 @@ public class StudentDaoImpl implements StudentDao {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(index++, studentId);
             int result = preparedStatement.executeUpdate();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    //********************************************************************
+    TreeMap<String, String> setParams(String eduYear, String subjectName, String groupName, String tutorName, String trim, String course, String sortType, String sortGrow) {
+        TreeMap<String , String> map = new TreeMap<>();
+        eduYear = eduYear == null ? "in (select distinct(gg.edu_year) from \"group\" gg) " : " = " + eduYear + " ";
+        subjectName = subjectName == null ? "in (select ss.subject_name from subject ss) " : " = " + subjectName + " ";
+        groupName = groupName == null ? "in (select distinct(gg.group_name) from \"group\" gg) " : " = " + groupName + " ";
+        tutorName = tutorName == null ? "in (select tt.tutor_name from tutor tt) " : " = " + tutorName + " ";
+        
+        trim = trim == null ? " in (select trim from \"group\") " : " = " + trim + " ";
+        course = course == null ? " in (select course from \"group\") " : " = " + course + " ";
+        sortType = sortType == null ? "  student_surname " : " complete_mark ";
+        sortGrow = sortGrow == null ? " ASC " : " DESC ";
+
+        map.put("eduYear", eduYear);
+        map.put("subjectName", subjectName);
+        map.put("groupName", groupName);
+        map.put("tutorName", tutorName);
+        map.put("trim", trim);
+        map.put("course", course);
+        map.put("sortType", sortType);
+        map.put("sortGrow", sortGrow);
+
+        return map;
+    }
+
+
+    @Override
+    public List<Student> findAllByYearSubjectGroupTeacherTrimCourse(
+            String eduYear,
+            String subjectName,
+            String groupName,
+            String tutorName,
+            String trim,
+            String course,
+            String sortType,
+            String sortGrow,
+            int page,
+            int numberPerPage) {
+        List<Student> students = new ArrayList<>();
+        index = 1;
+        TreeMap<String, String> params = setParams(eduYear, subjectName, groupName, tutorName, trim, course, sortType, sortGrow);
+        System.out.println(params);
+        try {
+            String sql = "select * " +
+                    "from student inner join vidomist_mark vm1 on student.student_code = vm1.student_code " +
+                    "where student.student_code in (select vm.student_code " +
+                    "                       from vidomist_mark vm " +
+                    "                       where vm.vidomist_no in (select v.vidomist_no " +
+                    "                                                from vidomist v " +
+                    "                                                where v.tutor_no in (select t.tutor_no " +
+                    "                                                                     from tutor t " +
+                    "                                                                     where tutor_name  " + params.get("tutorName") + " ) " +
+                    "                                                  and v.group_code in (select group_code " +
+                    "                                                                       from \"group\" g " +
+                    "                                                                       where g.group_code in (select gr.group_code " +
+                    "                                                                                              from \"group\" gr " +
+                    "                                                                                              where gr.group_name " + params.get("groupName") + " ) " +
+                    "                                                                         and g.trim " + params.get("trim")  + " " +
+                    "                                                                         and g.course " + params.get("course") + " " +
+                    "                                                                         and edu_year " + params.get("eduYear") + " " +
+                    "                                                                         and subject_no in (select s.subject_no" + " " +
+                    "                                                                                            from subject s" + " " +
+                    "                                                                                            where s.subject_name " + params.get("subjectName") + " )))" +
+                    "                         and vm.complete_mark >= 60) " +
+                    "order by " + params.get("sortType") + "   " + params.get("sortGrow") +
+                    "limit ? offset ?;";
+            System.out.println(sql);
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, numberPerPage);
+            preparedStatement.setInt(index++, (page - 1) * numberPerPage);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                students.add(createStudent(resultSet));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+        return students;
+    }
+
 }
