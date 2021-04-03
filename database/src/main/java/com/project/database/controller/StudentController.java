@@ -67,9 +67,8 @@ public class StudentController {
         List<Student> students;
         students = studentType.equals("student")
                 ? studentService.findAllByYearSubjectGroupTeacherTrimCourse(year, subject, group, tutor, String.valueOf(trim), String.valueOf(course), sortType, sortGrow, page, numberPerPage)
-                : studentService.findAllDebtorsByYearSubjectGroupTeacher(year, subject, group, tutor, page, numberPerPage);
+                : studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(year, subject, group, tutor, String.valueOf(trim), String.valueOf(course), sortType, sortGrow, page, numberPerPage);
         return students;
     }
-
 
 }

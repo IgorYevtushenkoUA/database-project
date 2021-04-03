@@ -93,4 +93,27 @@ public class StudentService {
                 numberPerPage);
     }
 
+    public List<Student> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(String eduYear,
+                                                                    String subjectName,
+                                                                    String groupName,
+                                                                    String tutorName,
+                                                                    String trim,
+                                                                    String course,
+                                                                    String sortType,
+                                                                    String sortGrow,
+                                                                    int page,
+                                                                    int numberPerPage) {
+        return studentDao.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+                eduYear,
+                subjectName,
+                groupName,
+                tutorName,
+                trim,
+                course,
+                sortType,
+                sortGrow,
+                page,
+                numberPerPage);
+    }
+
 }

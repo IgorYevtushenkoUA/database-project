@@ -237,4 +237,16 @@ public interface StudentDao {
             int page,
             int numberPerPage);
 
+    List<Student> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+            String eduYear,
+            String subjectName,
+            String groupName,
+            String tutorName,
+            String trim,
+            String course,
+            String sortType,
+            String sortGrow,
+            int page,
+            int numberPerPage);
+
 }
