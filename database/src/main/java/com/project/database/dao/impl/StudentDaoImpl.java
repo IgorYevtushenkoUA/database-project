@@ -1,6 +1,7 @@
 package com.project.database.dao.impl;
 
 import com.project.database.dao.connector.Connector;
+import com.project.database.dao.connector.ProdConnector;
 import com.project.database.dao.inter.StudentDao;
 import com.project.database.entity.Student;
 import com.project.database.entity.Subject;
@@ -17,15 +18,20 @@ import java.util.TreeMap;
 @Repository
 public class StudentDaoImpl implements StudentDao {
 
-    private Connection connection;
+    private static  Connection connection;
     private PreparedStatement preparedStatement;
 
     private final Connector connector;
 
 
-    @Autowired
+//    @Autowired
     public StudentDaoImpl(Connector connector) {
         this.connector = connector;
+    }
+
+    //    @Autowired
+    public StudentDaoImpl(){
+        this.connector = new ProdConnector("jdbc:postgresql://localhost:5433/gulash_db?user=postgres&password=admin");
     }
 
     @PostConstruct
@@ -39,7 +45,8 @@ public class StudentDaoImpl implements StudentDao {
 
 
 //    public static void main(String[] args) {
-//        StudentDaoImpl si = new StudentDaoImpl(connector);
+//
+//        StudentDaoImpl si = new StudentDaoImpl();
 //        System.out.println(si.findAllMarksForStudentByPIB("Вадим", "Кучерявий", "Юрійович", 1, 3));
 //        System.out.println(si.findAllMarksForStudentById(1, 1, 3));
 //    }
@@ -477,6 +484,7 @@ public class StudentDaoImpl implements StudentDao {
         }
         return averageMark;
     }
+
     public Subject createSubject(ResultSet resultSet) throws SQLException {
         Subject subject = new Subject();
         subject.setSubjectNo(resultSet.getInt("subject_no"));

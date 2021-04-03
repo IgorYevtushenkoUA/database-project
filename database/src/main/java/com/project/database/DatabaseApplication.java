@@ -2,6 +2,7 @@ package com.project.database;
 
 import com.project.database.dao.impl.StudentDaoImpl;
 import com.project.database.dao.inter.StudentDao;
+import com.project.database.service.StudentService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -15,8 +16,9 @@ public class DatabaseApplication {
 		test(applicationContext);
 	}
 	private static void test(ApplicationContext applicationContext){
-//		StudentDao student = new StudentDaoImpl();
-//		student.findAllStudent(1,20);
+		StudentService studentService = applicationContext.getBean(StudentService.class);
+
+		System.out.println(studentService.findAllVidomostyByStudentId(1,1, 20));
 	}
 
 }
