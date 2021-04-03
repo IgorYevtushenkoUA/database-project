@@ -11,6 +11,12 @@ public interface VidomistDao {
     /**
      * отримати відомість для заданого викладача\групи\предмету
      */
-    public List<Vidomist> findAllVidomistsByTutorGroupSubject(String tutorName, String groupName, String subjectName, int page, int numberPerPage);
+    List<Vidomist> findAllByTutorGroupSubject(String tutorName, String groupName, String subjectName, int page, int numberPerPage);
+
+    /**
+     * delete vidomist by ID
+     */
+    void deleteById(int vidomistId);
+
 
 }

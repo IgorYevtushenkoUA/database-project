@@ -1,7 +1,6 @@
 package com.project.database.dao.inter;
 
 import com.project.database.entity.Student;
-import com.project.database.entity.Subject;
 import com.project.database.entity.Vidomist;
 
 import java.util.List;
@@ -20,12 +19,12 @@ public interface StudentDao {
     /**
      * Знайти всіх Студентів
      */
-    public List<Student> findAllStudents(int page, int numberPerPage);
+    List<Student> findAll(int page, int numberPerPage);
 
     /**
      * Знайти студентів за (ім'я + прізвище + по-батькові)
      */
-    List<Student> findStudentsByPIB(String name,
+    List<Student> findByPIB(String name,
                                     String surname,
                                     String patronymic,
                                     int page,
@@ -34,7 +33,7 @@ public interface StudentDao {
     /**
      * Знайти студентів за (ім'я + прізвище + по-батькові)
      */
-    List<Student> findStudentsByNameSurname(String name,
+    List<Student> findByNameSurname(String name,
                                             String surname,
                                             int page,
                                             int numberPerPage);
@@ -64,7 +63,7 @@ public interface StudentDao {
     /**
      * - отримати всіх студентів за роком навчання/ предметом / групою / викладачем
      */
-    List<Student> findAllStudentsByYearSubjectGroupTeacher(
+    List<Student> findAllByYearSubjectGroupTeacher(
             String eduYear,
             String subject,
             String groupName,
@@ -75,7 +74,7 @@ public interface StudentDao {
     /**
      * - отримати всіх студентів за роком навчання/ предметом / групою / викладачем
      */
-    List<Student> findAllStudentsByYearSubjectGroupTeacher(
+    List<Student> findAllByYearSubjectGroupTeacher(
             String eduYear,
             int subjectNo,
             int groupCode,
@@ -171,21 +170,17 @@ public interface StudentDao {
             int page,
             int numberPerPage);
 
-/**
- - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ
- * */
-
     /**
      * - отримати бігунці студента за ПІБ
      */
-    public List<Vidomist> findAllVidomostyByStudentId(int studentId,
+    List<Vidomist> findAllVidomostyByStudentId(int studentId,
                                                       int page,
                                                       int numberPerPage);
 
     /**
      * - отримати бігунці студента за ПІБ
      */
-    public List<Vidomist> findAllVidomostyByStudentPIB(String name,
+    List<Vidomist> findAllVidomostyByStudentPIB(String name,
                                                        String surname,
                                                        String patronymic,
                                                        int page,
@@ -194,19 +189,19 @@ public interface StudentDao {
     /**
      * - отримати середній бал студента за ПІБ
      */
-    public double findAverageMarkForStudentById(int studentCode);
+    double findAverageMarkById(int studentCode);
 
     /**
      * - отримати середній бал студента за ПІБ
      */
-    public double findAverageMarkForStudentByPIB(String name,
+    double findAverageMarkByPIB(String name,
                                                  String surname,
                                                  String patronymic);
 
     /**
      * - отримати всі оцінки студента за ПІБ
      */
-    public TreeMap<Integer, List> findAllMarksForStudentByPIB(String name,
+    TreeMap<Integer, List> findAllMarksByPIB(String name,
                                                                  String surname,
                                                                  String patronymic,
                                                                  int page,
@@ -215,10 +210,15 @@ public interface StudentDao {
     /**
      * - отримати всі оцінки студента за ПІБ
      */
-    public TreeMap<Integer, List> findAllMarksForStudentById(int studentCode,
+    TreeMap<Integer, List> findAllMarksById(int studentCode,
                                                                 int page,
                                                                 int numberPerPage);
 
     /** - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ*/
+
+
+
+    /** - delete student by ID */
+    void deleteById(int studentId);
 
 }

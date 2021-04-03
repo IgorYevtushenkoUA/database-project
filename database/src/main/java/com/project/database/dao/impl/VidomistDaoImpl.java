@@ -5,7 +5,6 @@ import com.project.database.dao.connector.ProdConnector;
 import com.project.database.dao.inter.VidomistDao;
 import com.project.database.entity.Vidomist;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.sql.Connection;
@@ -43,7 +42,7 @@ public class VidomistDaoImpl implements VidomistDao {
 
 //    public static void main(String[] args) {
 //        VidomistDaoImpl vidomistDao = new VidomistDaoImpl(connector);
-//        vidomistDao.findAllVidomistsByTutorGroupSubject(null, null, null, 1, 20);
+//        vidomistDao.findAllByTutorGroupSubject(null, null, null, 1, 20);
 
 //    }
 
@@ -57,12 +56,10 @@ public class VidomistDaoImpl implements VidomistDao {
     }
 
     @Override
-    public List<Vidomist> findAllVidomistsByTutorGroupSubject(String tutorName, String groupName, String subjectName, int page, int numberPerPage) {
+    public List<Vidomist> findAllByTutorGroupSubject(String tutorName, String groupName, String subjectName, int page, int numberPerPage) {
         List<Vidomist> vidomists = new ArrayList<>();
         int index = 1;
-
         List<String> params = setParams(tutorName, groupName, subjectName);
-
         try {
             String sql = "select *  " +
                     "from vidomist v  " +
@@ -91,4 +88,18 @@ public class VidomistDaoImpl implements VidomistDao {
 
         return vidomists;
     }
+
+    @Override
+    public void deleteById(int vidomistId){
+        int index = 1;
+        try {
+            String sql = "delete from vidomist v where v.vidomist_no=?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, vidomistId);
+            int result = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

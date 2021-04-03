@@ -28,6 +28,6 @@ public class StudentController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ){
-        return studentService.findAllStudents(page, numberPerPage);
+        return studentService.findAll(page, numberPerPage);
     }
 }

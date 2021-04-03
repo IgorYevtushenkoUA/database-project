@@ -22,6 +22,7 @@ public class StudentDaoImpl implements StudentDao {
     private PreparedStatement preparedStatement;
 
     private final Connector connector;
+    private int index = 1;
 
 
 //    @Autowired
@@ -80,9 +81,9 @@ public class StudentDaoImpl implements StudentDao {
 
     // +
     @Override
-    public List<Student> findAllStudents(int page, int numberPerPage) {
+    public List<Student> findAll(int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
-        int index = 1;
+        index = 1;
         try {
             String sql = "select * from \"student\" order by student_surname limit ? offset ?";
             preparedStatement = connection.prepareStatement(sql);
@@ -100,9 +101,9 @@ public class StudentDaoImpl implements StudentDao {
 
     // +
     @Override
-    public List<Student> findStudentsByPIB(String name, String surname, String patronymic, int page, int numberPerPage) {
+    public List<Student> findByPIB(String name, String surname, String patronymic, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
-        int index = 1;
+        index = 1;
         try {
             String sql = "select * from \"student\" where student_name=? and student_surname=? and student_patronymic=?  order by student_surname limit ? offset ?";
             preparedStatement = connection.prepareStatement(sql);
@@ -123,9 +124,9 @@ public class StudentDaoImpl implements StudentDao {
 
     // +
     @Override
-    public List<Student> findStudentsByNameSurname(String name, String surname, int page, int numberPerPage) {
+    public List<Student> findByNameSurname(String name, String surname, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
-        int index = 1;
+        index = 1;
         try {
             String sql = "select * from \"student\" where student_name=? and student_surname=? order by student_surname limit ? offset ?";
             preparedStatement = connection.prepareStatement(sql);
@@ -155,7 +156,7 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> findAllDebtorsByYearSubjectGroupTeacher(String eduYear, String subjectName, String groupName, String tutorName, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
-        int index = 1;
+        index = 1;
         List<String> params = setParams(eduYear, subjectName, groupName, tutorName);
         System.out.println(params);
         try {
@@ -225,7 +226,7 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> findAllDebtorsByYearSubjectGroupTeacher(String eduYear, int subjectNo, int groupCode, int tutorNo, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
-        int index = 1;
+        index = 1;
         List<String> params = setParams(eduYear, subjectNo, groupCode, tutorNo);
         try {
             String sql = "select *   " +
@@ -272,9 +273,9 @@ public class StudentDaoImpl implements StudentDao {
 
     // +
     @Override
-    public List<Student> findAllStudentsByYearSubjectGroupTeacher(String eduYear, String subjectName, String groupName, String tutorName, int page, int numberPerPage) {
+    public List<Student> findAllByYearSubjectGroupTeacher(String eduYear, String subjectName, String groupName, String tutorName, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
-        int index = 1;
+        index = 1;
         List<String> params = setParams(eduYear, subjectName, groupName, tutorName);
         System.out.println(params);
         try {
@@ -315,9 +316,9 @@ public class StudentDaoImpl implements StudentDao {
 
     // +
     @Override
-    public List<Student> findAllStudentsByYearSubjectGroupTeacher(String eduYear, int subjectNo, int groupCode, int tutorNo, int page, int numberPerPage) {
+    public List<Student> findAllByYearSubjectGroupTeacher(String eduYear, int subjectNo, int groupCode, int tutorNo, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
-        int index = 1;
+        index = 1;
         List<String> params = setParams(eduYear, subjectNo, groupCode, tutorNo);
         try {
             String sql = "select * " +
@@ -353,7 +354,7 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> findBestPercentOfStudentByGroupCourse(int percent, int groupCode, int course, int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
-        int index = 1;
+        index = 1;
         try {
             String sql = "";
             preparedStatement = connection.prepareStatement(sql);
@@ -446,9 +447,9 @@ public class StudentDaoImpl implements StudentDao {
 
     // +
     @Override
-    public double findAverageMarkForStudentById(int studentCode) {
+    public double findAverageMarkById(int studentCode) {
         double averageMark = 0;
-        int index = 1;
+        index = 1;
         try {
             String sql = "select avg(bm.complete_mark) from bigunets_mark bm where bm.student_code = ?";
             preparedStatement = connection.prepareStatement(sql);
@@ -465,9 +466,9 @@ public class StudentDaoImpl implements StudentDao {
 
     // +
     @Override
-    public double findAverageMarkForStudentByPIB(String name, String surname, String patronymic) {
+    public double findAverageMarkByPIB(String name, String surname, String patronymic) {
         double averageMark = 0;
-        int index = 1;
+        index = 1;
         try {
             String sql = "select avg(bm.complete_mark) from bigunets_mark bm where bm.student_code in (select student_code from \"student\" where student_name = ? and student_surname = ? and student_patronymic= ?)";
             preparedStatement = connection.prepareStatement(sql);
@@ -496,9 +497,9 @@ public class StudentDaoImpl implements StudentDao {
 
     // +
     @Override
-    public TreeMap<Integer, List> findAllMarksForStudentByPIB(String name, String surname, String patronymic, int page, int numberPerPage) {
+    public TreeMap<Integer, List> findAllMarksByPIB(String name, String surname, String patronymic, int page, int numberPerPage) {
         TreeMap<Integer, List> statistics = new TreeMap<>();
-        int index = 1;
+        index = 1;
         try {
             String sql = "select sub.subject_no as subject_no, sub.subject_name as subject_name,sub.edu_level as edu_level, sub.faculty as faculty, vm.complete_mark as complete_mark   " +
                     "from \"student\" s, \"group\" g, subject sub, vidomist v, vidomist_mark vm   " +
@@ -529,9 +530,9 @@ public class StudentDaoImpl implements StudentDao {
 
     // +
     @Override
-    public TreeMap<Integer, List> findAllMarksForStudentById(int studentCode, int page, int numberPerPage) {
+    public TreeMap<Integer, List> findAllMarksById(int studentCode, int page, int numberPerPage) {
         TreeMap<Integer, List> statistics = new TreeMap<>();
-        int index = 1;
+        index = 1;
         try {
             String sql = "select sub.subject_no as subject_no, sub.subject_name as subject_name,sub.edu_level as edu_level, sub.faculty as faculty, vm.complete_mark as complete_mark   " +
                     "from \"student\" s, \"group\" g, subject sub, vidomist v, vidomist_mark vm   " +
@@ -556,5 +557,19 @@ public class StudentDaoImpl implements StudentDao {
         }
 
         return statistics;
+    }
+
+    // + 
+    @Override
+    public void deleteById(int studentId) {
+        index = 1;
+        try {
+            String sql = "delete from student s where s.student_code=?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, studentId);
+            int result = preparedStatement.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
