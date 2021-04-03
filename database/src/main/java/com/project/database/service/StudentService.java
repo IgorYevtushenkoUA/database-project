@@ -2,18 +2,15 @@ package com.project.database.service;
 
 import com.project.database.dao.inter.StudentDao;
 import com.project.database.entity.Student;
-import com.project.database.entity.Subject;
 import com.project.database.entity.Vidomist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.util.List;
 import java.util.TreeMap;
 
 @Service
-//@Transactional
 public class StudentService {
     @Autowired
     private StudentDao studentDao;

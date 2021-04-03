@@ -1,8 +1,11 @@
 package com.project.database.dao.impl;
 
 import com.project.database.dao.connector.Connector;
+import com.project.database.dao.connector.ProdConnector;
 import com.project.database.dao.inter.VidomistDao;
 import com.project.database.entity.Vidomist;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.sql.Connection;
@@ -12,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class VidomistDaoImpl implements VidomistDao {
 
     private Connection connection;
@@ -23,7 +27,9 @@ public class VidomistDaoImpl implements VidomistDao {
     public VidomistDaoImpl(Connector connector) {
         this.connector = connector;
     }
-
+    public VidomistDaoImpl() {
+        this.connector = new ProdConnector("jdbc:postgresql://localhost:5433/gulash_db?user=postgres&password=admin");
+    }
 
     @PostConstruct
     void initConnection() {
