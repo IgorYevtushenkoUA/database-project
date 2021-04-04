@@ -22,12 +22,6 @@ public class StudentsController {
 
     @GetMapping("/students")
     public List<Student> getAll(
-            @RequestParam(name = "year", defaultValue = "2020") String year,
-            @RequestParam(name = "subject", required = false) String subject,
-            @RequestParam(name = "tutor", required = false) String tutor,
-            @RequestParam(name = "group", required = false) String group,
-            @RequestParam(name = "semester", required = false) Integer semester,
-            @RequestParam(name = "course", required = false) Integer course,
             @RequestParam(name = "studentType", defaultValue = "student") String studentType, // думав стосовно boolean (чи студент чи боржник)
             @RequestParam(name = "sortBy", defaultValue = "rating") String sortBy, // {surname, rating}
             @RequestParam(name = "sortDesc", defaultValue = "true") Boolean sortDesc, // {high->low(desc);low->high(asc)}
