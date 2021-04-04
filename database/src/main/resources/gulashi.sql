@@ -11,7 +11,7 @@ create table tutor
     position         varchar(20)
 );
 
-create table "subject"
+create table subject
 (
     subject_no  serial       not null
         constraint subject_pk
