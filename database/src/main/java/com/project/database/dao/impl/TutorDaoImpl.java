@@ -4,6 +4,7 @@ import com.project.database.dao.connector.Connector;
 import com.project.database.dao.connector.ProdConnector;
 import com.project.database.dao.inter.TutorDao;
 import com.project.database.entity.Tutor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -23,8 +24,9 @@ public class TutorDaoImpl implements TutorDao {
     private final Connector connector;
     private int index = 1;
 
-    public TutorDaoImpl() {
-        this.connector = new ProdConnector("jdbc:postgresql://localhost:5433/gulash_db?user=postgres&password=admin");
+    @Autowired
+    public TutorDaoImpl(Connector connector) {
+        this.connector = connector;
     }
 
     @PostConstruct
@@ -67,7 +69,7 @@ public class TutorDaoImpl implements TutorDao {
         List<Tutor> tutors = new ArrayList<>();
         index = 1;
         try {
-            String sql = "select * from tutor order by tutor_surname limit ? offset ?";
+            String sql = "select * from \"tutor\" order by tutor_surname limit ? offset ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(index++, numberPerPage);
             preparedStatement.setInt(index++, (page - 1) * numberPerPage);

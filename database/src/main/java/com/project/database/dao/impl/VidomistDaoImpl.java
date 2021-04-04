@@ -1,9 +1,9 @@
 package com.project.database.dao.impl;
 
 import com.project.database.dao.connector.Connector;
-import com.project.database.dao.connector.ProdConnector;
 import com.project.database.dao.inter.VidomistDao;
 import com.project.database.entity.Vidomist;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -17,18 +17,16 @@ import java.util.List;
 @Repository
 public class VidomistDaoImpl implements VidomistDao {
 
+    private final Connector connector;
     private Connection connection;
     private PreparedStatement preparedStatement;
 
-    private final Connector connector;
 
-
+    @Autowired
     public VidomistDaoImpl(Connector connector) {
         this.connector = connector;
     }
-    public VidomistDaoImpl() {
-        this.connector = new ProdConnector("jdbc:postgresql://localhost:5433/gulash_db?user=postgres&password=admin");
-    }
+
 
     @PostConstruct
     void initConnection() {
@@ -40,11 +38,11 @@ public class VidomistDaoImpl implements VidomistDao {
     }
 
 
-//    public static void main(String[] args) {
-//        VidomistDaoImpl vidomistDao = new VidomistDaoImpl(connector);
-//        vidomistDao.findAllByTutorGroupSubject(null, null, null, 1, 20);
+    //    public static void main(String[] args) {
+    //        VidomistDaoImpl vidomistDao = new VidomistDaoImpl(connector);
+    //        vidomistDao.findAllByTutorGroupSubject(null, null, null, 1, 20);
 
-//    }
+    //    }
 
 
     List<String> setParams(String tutorName, String groupName, String subjectName) {
@@ -54,6 +52,7 @@ public class VidomistDaoImpl implements VidomistDao {
 
         return List.of(tutorName, groupName, subjectName);
     }
+
 
     @Override
     public List<Vidomist> findAllByTutorGroupSubject(String tutorName, String groupName, String subjectName, int page, int numberPerPage) {
@@ -89,8 +88,9 @@ public class VidomistDaoImpl implements VidomistDao {
         return vidomists;
     }
 
+
     @Override
-    public void deleteById(int vidomistId){
+    public void deleteById(int vidomistId) {
         int index = 1;
         try {
             String sql = "delete from vidomist v where v.vidomist_no=?";

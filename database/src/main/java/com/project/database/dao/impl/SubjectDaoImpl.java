@@ -1,14 +1,16 @@
 package com.project.database.dao.impl;
 
 import com.project.database.dao.connector.Connector;
-import com.project.database.dao.connector.ProdConnector;
 import com.project.database.dao.inter.SubjectDao;
-import com.project.database.entity.Student;
 import com.project.database.entity.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +23,9 @@ public class SubjectDaoImpl implements SubjectDao {
     private final Connector connector;
     private int index = 1;
 
-    public SubjectDaoImpl() {
-        this.connector = new ProdConnector("jdbc:postgresql://localhost:5433/gulash_db?user=postgres&password=admin");
+    @Autowired
+    public SubjectDaoImpl(Connector connector) {
+        this.connector = connector;
     }
 
     @PostConstruct

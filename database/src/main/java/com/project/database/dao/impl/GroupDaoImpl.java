@@ -1,10 +1,9 @@
 package com.project.database.dao.impl;
 
 import com.project.database.dao.connector.Connector;
-import com.project.database.dao.connector.ProdConnector;
 import com.project.database.dao.inter.GroupDao;
 import com.project.database.entity.Group;
-import com.project.database.entity.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -24,8 +23,9 @@ public class GroupDaoImpl implements GroupDao {
     private final Connector connector;
     private int index = 1;
 
-    public GroupDaoImpl(){
-        this.connector = new ProdConnector("jdbc:postgresql://localhost:5433/gulash_db?user=postgres&password=admin");
+    @Autowired
+    public GroupDaoImpl(Connector connector) {
+        this.connector = connector;
     }
 
     @PostConstruct

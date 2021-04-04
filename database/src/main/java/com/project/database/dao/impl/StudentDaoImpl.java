@@ -1,16 +1,19 @@
 package com.project.database.dao.impl;
 
 import com.project.database.dao.connector.Connector;
-import com.project.database.dao.connector.ProdConnector;
 import com.project.database.dao.inter.StudentDao;
 import com.project.database.entity.Bigunets;
 import com.project.database.entity.Student;
 import com.project.database.entity.Subject;
 import com.project.database.entity.Vidomist;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -18,21 +21,15 @@ import java.util.TreeMap;
 @Repository
 public class StudentDaoImpl implements StudentDao {
 
-    private static Connection connection;
+    private Connection connection;
     private PreparedStatement preparedStatement;
 
     private final Connector connector;
     private int index = 1;
 
-
-    //    @Autowired
+    @Autowired
     public StudentDaoImpl(Connector connector) {
         this.connector = connector;
-    }
-
-    //    @Autowired
-    public StudentDaoImpl() {
-        this.connector = new ProdConnector("jdbc:postgresql://localhost:5433/gulash_db?user=postgres&password=admin");
     }
 
     @PostConstruct
