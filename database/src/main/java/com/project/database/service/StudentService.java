@@ -1,6 +1,7 @@
 package com.project.database.service;
 
 import com.project.database.dao.inter.StudentDao;
+import com.project.database.entity.Bigunets;
 import com.project.database.entity.Student;
 import com.project.database.entity.Vidomist;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class StudentService {
 
     public List<Vidomist> findAllVidomostyByStudentPIB(String name, String surname, String patronymic, int page, int numberPerPage) {
         return studentDao.findAllVidomostyByStudentPIB(name, surname, patronymic, page, numberPerPage);
+    }
+
+    public List<Bigunets> findAllBigunetsByStudentId(int studentId, int page, int numberPerPage) {
+        return studentDao.findAllBigunetsByStudentId(studentId, page, numberPerPage);
+
     }
 
     public double findAverageMarkById(int studentCode) {

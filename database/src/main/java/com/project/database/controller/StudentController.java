@@ -1,17 +1,14 @@
 package com.project.database.controller;
 
-import com.project.database.entity.Student;
+import com.project.database.entity.Bigunets;
 import com.project.database.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/")
 public class StudentController {
-
     private final StudentService studentService;
 
 
@@ -21,54 +18,94 @@ public class StudentController {
     }
 
 
-    @GetMapping("students")
-    public List<Student> getAll(
-            @RequestParam(name = "year", defaultValue = "2020") String year,
-            @RequestParam(name = "subject") String subject,
-            @RequestParam(name = "tutor") String tutor,
-            @RequestParam(name = "group") String group,
-            @RequestParam(name = "trim") int trim,
-            @RequestParam(name = "course") int course,
-            @RequestParam(name = "studentType", defaultValue = "student") String studentType, // думав стосовно boolean (чи студент чи боржник)
-            @RequestParam(name = "sortType", defaultValue = "surname") String sortType, // {surname, rating}
-            @RequestParam(name = "sortGrow", defaultValue = "best") String sortGrow, // {high->low; low->high}
+    @GetMapping("/student")
+    public Object getStudentPIB(
+            @RequestParam(name = "name") String name,
+            @RequestParam(name = "surname") String surname,
+            @RequestParam(name = "patronymic") String patronymic,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
             Model model
     ) {
-        model.addAttribute("year", year);
-        model.addAttribute("subject", subject);
-        model.addAttribute("tutor", tutor);
-        model.addAttribute("group", group);
-        model.addAttribute("trim", trim);
-        model.addAttribute("course", course);
-        model.addAttribute("studentType", studentType);
-        model.addAttribute("sortType", sortType);
-        model.addAttribute("sortGrow", sortGrow);
 
-        return studentService.findAll(page, numberPerPage);
+        model.addAttribute("name", name);
+        model.addAttribute("surname", surname);
+        model.addAttribute("patronymic", patronymic);
+        model.addAttribute("page", page);
+        model.addAttribute("numberPerPage", numberPerPage);
+        return studentService.findByPIB(name, surname, patronymic, page, numberPerPage);
     }
 
-
-    @PostMapping("/students")
-    public List<Student> postAll(
-            @RequestParam(name = "year", defaultValue = "2020") String year,
-            @RequestParam(name = "subject") String subject,
-            @RequestParam(name = "tutor") String tutor,
-            @RequestParam(name = "group") String group,
-            @RequestParam(name = "trim") int trim,
-            @RequestParam(name = "course") int course,
-            @RequestParam(name = "studentType", defaultValue = "student") String studentType,
-            @RequestParam(name = "sortType", defaultValue = "surname") String sortType,
-            @RequestParam(name = "sortGrow", defaultValue = "best") String sortGrow,
+    @PostMapping("/student")
+    public Object postStudentPIB(
+            @RequestParam(name = "name") String name,
+            @RequestParam(name = "surname") String surname,
+            @RequestParam(name = "patronymic") String patronymic,
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
+            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
+            Model model
     ) {
-        List<Student> students;
-        students = studentType.equals("student")
-                ? studentService.findAllByYearSubjectGroupTeacherTrimCourse(year, subject, group, tutor, String.valueOf(trim), String.valueOf(course), sortType, sortGrow, page, numberPerPage)
-                : studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(year, subject, group, tutor, String.valueOf(trim), String.valueOf(course), sortType, sortGrow, page, numberPerPage);
-        return students;
+        model.addAttribute("name", name);
+        model.addAttribute("surname", surname);
+        model.addAttribute("patronymic", patronymic);
+        model.addAttribute("page", page);
+        model.addAttribute("numberPerPage", numberPerPage);
+        return studentService.findByPIB(name, surname, patronymic, page, numberPerPage);
+    }
+
+    @GetMapping("/student/{id}")
+    public Object getStudentInfo(
+            @RequestParam(name = "id") String id,
+            @RequestParam(name = "finalMark") boolean finalMark, // хз що це (запиту немає на це)
+            @RequestParam(name = "bigunets") boolean bigunets,
+            @RequestParam(name = "averageMark") boolean averageMark,
+            @RequestParam(name = "allMarks") boolean allMarks,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
+            Model model
+    ) {
+
+        model.addAttribute("id", id);
+        model.addAttribute("finalMark", finalMark);
+        model.addAttribute("bigunets", bigunets);
+        model.addAttribute("averageMark", averageMark);
+        model.addAttribute("allMarks", allMarks);
+        model.addAttribute("page", page);
+        model.addAttribute("numberPerPage", numberPerPage);
+
+        return 1;
+    }
+
+    @PostMapping("/student/{id}")
+    public Object postStudentInfo(
+            @PathVariable("id") int id,
+            @RequestParam(name = "finalMark") boolean finalMark, // хз що це (запиту немає на це)
+            @RequestParam(name = "bigunets") boolean bigunets,
+            @RequestParam(name = "averageMark") boolean averageMark,
+            @RequestParam(name = "allMarks") boolean allMarks,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
+            Model model
+    ) {
+
+        model.addAttribute("id", id);
+        model.addAttribute("finalMark", finalMark);
+        model.addAttribute("bigunets", bigunets);
+        model.addAttribute("averageMark", averageMark);
+        model.addAttribute("allMarks", allMarks);
+        model.addAttribute("page", page);
+        model.addAttribute("numberPerPage", numberPerPage);
+
+        if (finalMark) {
+            // code
+        } else if (bigunets) {
+            return studentService.findAllBigunetsByStudentId(id, page, numberPerPage);
+        } else if (averageMark) {
+            return studentService.findAverageMarkById(id);
+        } else if (allMarks) {
+            return studentService.findAllMarksById(id, page, numberPerPage);
+        }
+        return 1;
     }
 
 }

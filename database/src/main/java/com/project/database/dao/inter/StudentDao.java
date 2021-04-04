@@ -1,5 +1,6 @@
 package com.project.database.dao.inter;
 
+import com.project.database.entity.Bigunets;
 import com.project.database.entity.Student;
 import com.project.database.entity.Vidomist;
 
@@ -40,11 +41,18 @@ public interface StudentDao {
                                     int numberPerPage);
 
     /**
-     * - отримати бігунці студента за ПІБ
+     * - отримати відомості студента за ПІБ
      */
     List<Vidomist> findAllVidomostyByStudentId(int studentId,
                                                int page,
                                                int numberPerPage);
+
+    /**
+     * - отримати бігунці студента за ПІБ
+     */
+    List<Bigunets> findAllBigunetsByStudentId(int studentId,
+                                              int page,
+                                              int numberPerPage);
 
     /**
      * - отримати бігунці студента за ПІБ

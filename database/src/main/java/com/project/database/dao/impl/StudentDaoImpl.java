@@ -3,6 +3,7 @@ package com.project.database.dao.impl;
 import com.project.database.dao.connector.Connector;
 import com.project.database.dao.connector.ProdConnector;
 import com.project.database.dao.inter.StudentDao;
+import com.project.database.entity.Bigunets;
 import com.project.database.entity.Student;
 import com.project.database.entity.Subject;
 import com.project.database.entity.Vidomist;
@@ -76,6 +77,18 @@ public class StudentDaoImpl implements StudentDao {
         vidomist.setGroupCode(resultSet.getInt("group_code"));
 
         return vidomist;
+    }
+
+    private Bigunets createBigunets(ResultSet resultSet) throws SQLException {
+        Bigunets bigunets = new Bigunets();
+        bigunets.setBigunetsNo(resultSet.getInt("bigunets_no"));
+        bigunets.setExamDate(resultSet.getDate("exam_date"));
+        bigunets.setValidUntil(resultSet.getDate("valid_until"));
+        bigunets.setPostpReason(resultSet.getString("postp_reason"));
+        bigunets.setControlType(resultSet.getString("control_type"));
+        bigunets.setTutorCode(resultSet.getInt("tutor_code"));
+
+        return bigunets;
     }
 
     @Override
@@ -176,6 +189,26 @@ public class StudentDaoImpl implements StudentDao {
             sql.printStackTrace();
         }
         return vidomists;
+    }
+
+    @Override
+    public List<Bigunets> findAllBigunetsByStudentId(int studentId,
+                                              int page,
+                                              int numberPerPage){
+
+        List<Bigunets> bigunets = new ArrayList<>();
+        try {
+            String sql = "select * from bigunets where bigunets_no in (select bigunets_no from bigunets_mark where student_code = ?)";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, studentId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                bigunets.add(createBigunets(resultSet));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+        return bigunets;
     }
 
     @Override
@@ -300,6 +333,7 @@ public class StudentDaoImpl implements StudentDao {
             e.printStackTrace();
         }
     }
+
 
     //********************************************************************
     TreeMap<String, String> setParams(String eduYear, String subjectName, String groupName, String tutorName, String trim, String course, String sortType, String sortGrow) {
