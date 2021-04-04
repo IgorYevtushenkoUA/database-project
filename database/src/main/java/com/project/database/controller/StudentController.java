@@ -1,6 +1,5 @@
 package com.project.database.controller;
 
-import com.project.database.entity.Bigunets;
 import com.project.database.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -55,7 +54,7 @@ public class StudentController {
 
     @GetMapping("/student/{id}")
     public Object getStudentInfo(
-            @RequestParam(name = "id") String id,
+            @PathVariable(name = "id") String id,
             @RequestParam(name = "finalMark") boolean finalMark, // хз що це (запиту немає на це)
             @RequestParam(name = "bigunets") boolean bigunets,
             @RequestParam(name = "averageMark") boolean averageMark,
