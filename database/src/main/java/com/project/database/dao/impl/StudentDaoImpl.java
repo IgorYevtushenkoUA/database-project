@@ -375,7 +375,7 @@ public class StudentDaoImpl implements StudentDao {
         System.out.println(params);
         try {
             String sql = "select * " +
-                    "from \"student\" inner join \"vidomist_mark\" vm1 on student.student_code = vm1.student_code " +
+                    "from student inner join vidomist_mark vm1 on student.student_code = vm1.student_code " +
                     "where student.student_code in (select vm.student_code " +
                     "                       from vidomist_mark vm " +
                     "                       where vm.vidomist_no in (select v.vidomist_no " +
