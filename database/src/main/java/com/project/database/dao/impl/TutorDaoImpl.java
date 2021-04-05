@@ -82,4 +82,57 @@ public class TutorDaoImpl implements TutorDao {
         }
         return tutors;
     }
+
+    @Override
+    public List<String> findAllTutorNames() {
+        List<String> tutors = new ArrayList<>();
+        try {
+            String sql = "select * from tutor order by tutor_surname";
+            preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                StringBuilder pib = new StringBuilder("");
+                pib.append(resultSet.getString("tutor_surname"))
+                        .append(" ")
+                        .append(resultSet.getString("tutor_name"))
+                        .append(" ")
+                        .append(resultSet.getString("tutor_patronymic"));
+                tutors.add(String.valueOf(pib));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+
+        return tutors;
+    }
+
+    @Override
+    public List<String> findAllTutorNames(String name) {
+        List<String> tutors = new ArrayList<>();
+        index = 1;
+        name = "%" + name + "%";
+        try {
+            String sql = "select * from tutor where tutor_surname like ? or tutor_name like ? or tutor_patronymic like ? order by tutor_surname ";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(index++, name);
+            preparedStatement.setString(index++, name);
+            preparedStatement.setString(index++, name);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                StringBuilder pib = new StringBuilder("");
+                pib.append(resultSet.getString("tutor_surname"))
+                        .append(" ")
+                        .append(resultSet.getString("tutor_name"))
+                        .append(" ")
+                        .append(resultSet.getString("tutor_patronymic"));
+                tutors.add(String.valueOf(pib));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+
+        return tutors;
+    }
+
 }

@@ -21,8 +21,13 @@ public class DatabaseApplication {
     }
 
     private static void test(ApplicationContext applicationContext) {
-        GroupService groupService = applicationContext.getBean(GroupService.class);
-        System.out.println(groupService.findAllEduYears(1,20));
+
+        TutorService tutorService = applicationContext.getBean(TutorService.class);
+        System.out.println(tutorService.findAllTutorNames());
+
+
+        //        GroupService groupService = applicationContext.getBean(GroupService.class);
+//        System.out.println(groupService.findAllEduYears(1,20));
 
 //        StudentService studentService = applicationContext.getBean(StudentService.class);
 //        System.out.println(studentService.findById(14));

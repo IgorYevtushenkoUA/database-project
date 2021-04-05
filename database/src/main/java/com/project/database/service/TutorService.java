@@ -13,8 +13,16 @@ public class TutorService {
     @Autowired
     private TutorDao tutorDao;
 
-    public List<Tutor> findAll(int page, int numberPerPage){
+    public List<Tutor> findAll(int page, int numberPerPage) {
         return tutorDao.findAll(page, numberPerPage);
+    }
+
+    public List<String> findAllTutorNames() {
+        return tutorDao.findAllTutorNames();
+    }
+
+    public List<String> findAllTutorNames(String name) {
+        return tutorDao.findAllTutorNames(name);
     }
 
 }

@@ -8,4 +8,8 @@ public interface TutorDao {
     void deleteByID(int tutorId);
 
     List<Tutor> findAll(int page, int numberPerPage);
+
+    List<String> findAllTutorNames();
+
+    List<String> findAllTutorNames(String name);
 }
