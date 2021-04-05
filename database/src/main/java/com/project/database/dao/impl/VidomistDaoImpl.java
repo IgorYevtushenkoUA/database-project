@@ -20,7 +20,7 @@ public class VidomistDaoImpl implements VidomistDao {
     private final Connector connector;
     private Connection connection;
     private PreparedStatement preparedStatement;
-
+    private int index = 1;
 
     @Autowired
     public VidomistDaoImpl(Connector connector) {
@@ -37,14 +37,6 @@ public class VidomistDaoImpl implements VidomistDao {
         }
     }
 
-
-    //    public static void main(String[] args) {
-    //        VidomistDaoImpl vidomistDao = new VidomistDaoImpl(connector);
-    //        vidomistDao.findAllByTutorGroupSubject(null, null, null, 1, 20);
-
-    //    }
-
-
     List<String> setParams(String tutorName, String groupName, String subjectName) {
         tutorName = tutorName == null ? " " : " where t.tutor_name = " + tutorName + " ";
         groupName = groupName == null ? " " : " and g.group_name = " + groupName + " ";
@@ -57,7 +49,7 @@ public class VidomistDaoImpl implements VidomistDao {
     @Override
     public List<Vidomist> findAllByTutorGroupSubject(String tutorName, String groupName, String subjectName, int page, int numberPerPage) {
         List<Vidomist> vidomists = new ArrayList<>();
-        int index = 1;
+        index = 1;
         List<String> params = setParams(tutorName, groupName, subjectName);
         try {
             String sql = "select *  " +
@@ -91,7 +83,7 @@ public class VidomistDaoImpl implements VidomistDao {
 
     @Override
     public void deleteById(int vidomistId) {
-        int index = 1;
+        index = 1;
         try {
             String sql = "delete from vidomist v where v.vidomist_no=?";
             preparedStatement = connection.prepareStatement(sql);
@@ -100,6 +92,38 @@ public class VidomistDaoImpl implements VidomistDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private Vidomist createVidomist(ResultSet resultSet) throws SQLException {
+        Vidomist vidomist = new Vidomist();
+        vidomist.setVidomistNo(resultSet.getInt("vidomist_no"));
+        vidomist.setTutorNo(resultSet.getInt("tutor_no"));
+        vidomist.setPresentCount(resultSet.getInt("present_count"));
+        vidomist.setAbsentCount(resultSet.getInt("absent_count"));
+        vidomist.setRejectedCount(resultSet.getInt("rejected_count"));
+        vidomist.setControlType(resultSet.getString("control_type"));
+        vidomist.setExamDate(resultSet.getDate("exam_date"));
+        vidomist.setGroupCode(resultSet.getInt("group_code"));
+        return vidomist;
+    }
+
+    @Override
+    public List<Vidomist> findAll(int page, int numberPerPage) {
+        List<Vidomist> vidomists = new ArrayList<>();
+        index = 1;
+        try {
+            String sql = "select * from vidomist limit ? offset ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, numberPerPage);
+            preparedStatement.setInt(index++, (page - 1) * numberPerPage);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                vidomists.add(createVidomist(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vidomists;
     }
 
 }

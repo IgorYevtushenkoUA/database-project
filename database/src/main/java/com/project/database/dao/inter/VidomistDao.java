@@ -18,5 +18,10 @@ public interface VidomistDao {
      */
     void deleteById(int vidomistId);
 
+    /**
+     * find all vidomisty
+     */
+    List<Vidomist> findAll(int page, int numberPerPage);
+
 
 }

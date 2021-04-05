@@ -17,8 +17,11 @@ public class VidomistService {
         return vidomistDao.findAllByTutorGroupSubject(tutorName, groupName, subjectName, page, numberPerPage);
     }
 
-    public void deleteById(int vidomistId){
+    public void deleteById(int vidomistId) {
         vidomistDao.deleteById(vidomistId);
     }
 
+    public List<Vidomist> findAll(int page, int numberPerPage) {
+        return vidomistDao.findAll(page, numberPerPage);
+    }
 }
