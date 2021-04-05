@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class StudentsController {
 
 
     @GetMapping("/students")
-    public List<Student> getAllStudents(
+    public HashMap<String, Object> getAllStudents(
             @RequestParam(name = "year", defaultValue = "2020") String year,
             @RequestParam(name = "subject", required = false) String subject,
             @RequestParam(name = "tutor", required = false) String tutor,
@@ -37,13 +38,17 @@ public class StudentsController {
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
         List<Student> students;
-        students = studentService.findAllByYearSubjectGroupTeacherTrimCourse(
-                year, subject, group, tutor,
-                String.valueOf(semester), String.valueOf(course),
-                sortBy, sortDesc, page, numberPerPage
-        );
-
-        return students;
+//        students = studentService.findAllByYearSubjectGroupTeacherTrimCourse(
+//                year, subject, group, tutor,
+//                String.valueOf(semester), String.valueOf(course),
+//                sortBy, sortDesc, page, numberPerPage
+//        );
+        students = studentService.findAll(page, numberPerPage);
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("data", students);
+        response.put("totalElements", studentService.findAll(1, Integer.MAX_VALUE).size()); // загальна кількість записів
+        // потрібна
+        return response;
     }
 
 
