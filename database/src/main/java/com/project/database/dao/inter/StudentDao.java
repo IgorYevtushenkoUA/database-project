@@ -28,7 +28,7 @@ public interface StudentDao {
                                                                       int page,
                                                                       int numberPerPage);
 
-    TreeMap<String, Double> findAverageStudentMarksTrimCourse(int studentId,
+    List<Object> findAverageStudentMarksTrimCourse(int studentId,
                                                               String trim,
                                                               String course,
                                                               String eduYear,

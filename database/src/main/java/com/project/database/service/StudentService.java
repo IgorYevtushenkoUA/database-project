@@ -28,24 +28,24 @@ public class StudentService {
     }
 
     public List<List<Object>> findAverageStudentsMarksTrimCourse(String trim,
-                                                                             String course,
-                                                                             String eduYear,
-                                                                             String sortType,
-                                                                             String sortGrow,
-                                                                             int page,
-                                                                             int numberPerPage) {
+                                                                 String course,
+                                                                 String eduYear,
+                                                                 String sortType,
+                                                                 String sortGrow,
+                                                                 int page,
+                                                                 int numberPerPage) {
         return studentDao.findAverageStudentsMarksTrimCourse(trim, course,
                 eduYear, sortType, sortGrow, page, numberPerPage);
     }
 
-    public TreeMap<String, Double> findAverageStudentMarksTrimCourse(int studentId,
-                                                                     String trim,
-                                                                     String course,
-                                                                     String eduYear,
-                                                                     String sortType,
-                                                                     String sortGrow,
-                                                                     int page,
-                                                                     int numberPerPage) {
+    public List<Object> findAverageStudentMarksTrimCourse(int studentId,
+                                                          String trim,
+                                                          String course,
+                                                          String eduYear,
+                                                          String sortType,
+                                                          String sortGrow,
+                                                          int page,
+                                                          int numberPerPage) {
         return studentDao.findAverageStudentMarksTrimCourse(studentId, trim, course, eduYear, sortType, sortGrow, page, numberPerPage);
 
     }
