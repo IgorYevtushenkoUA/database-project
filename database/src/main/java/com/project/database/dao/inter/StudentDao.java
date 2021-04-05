@@ -9,10 +9,6 @@ import java.util.TreeMap;
 
 public interface StudentDao {
 
-    /**
-     * find by ID
-     */
-
     Student findById(int studentId);
 
     List<String> findNames();

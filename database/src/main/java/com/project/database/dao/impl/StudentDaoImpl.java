@@ -41,9 +41,7 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
-    /**
-     * method to create student by ResultSet
-     */
+
     private Student createStudent(ResultSet resultSet) throws SQLException {
         Student student = new Student();
         student.setStudentCode(resultSet.getLong("student_code"));
@@ -163,12 +161,8 @@ public class StudentDaoImpl implements StudentDao {
         trim = trim == null ? " in (select distinct(trim) from \"group\" ) " : " = " + trim + " ";
         course = course == null ? " " : " and gr.course = " + course + " ";
         eduYear = eduYear == null ? " " : " and gr.edu_year = " + eduYear + " ";
-        sortType = sortType == null
-                ? "  student_surname "
-                : sortType.equals("student_surname")
-                ? " s.student_name "
-                : " avg(vm.complete_mark) ";
-        sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
+        sortType = sortType.equals("student_surname") ? " s.student_name " : " avg(vm.complete_mark) ";
+        sortGrow = sortGrow.equalsIgnoreCase("asc") ? " ASC " : " DESC ";
 
         try {
             String sql = "select s.student_code, s.student_name, s.student_surname, s.student_patronymic, avg(vm.complete_mark)\n" +
@@ -216,12 +210,8 @@ public class StudentDaoImpl implements StudentDao {
         trim = trim == null ? " " : " and trim = " + trim + " ";
         course = course == null ? " " : " and gr.course = " + course + " ";
         eduYear = eduYear == null ? " " : " and gr.edu_year = " + eduYear + " ";
-        sortType = sortType == null
-                ? "  student_surname "
-                : sortType.equals(" s.student_surname ")
-                ? " s.student_name "
-                : " avg(vm.complete_mark) ";
-        sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
+        sortType = sortType.equals("student_surname") ? " s.student_name " : " avg(vm.complete_mark) ";
+        sortGrow = sortGrow.equalsIgnoreCase("asc") ? " ASC " : " DESC ";
 
         try {
             String sql = "select s.student_code, s.student_name, s.student_surname, s.student_patronymic, avg(vm.complete_mark)\n" +
