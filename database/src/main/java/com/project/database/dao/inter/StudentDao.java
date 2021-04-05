@@ -112,7 +112,7 @@ public interface StudentDao {
      * @param {String} sortGrow     -> [default: ASC, else DESC ]
      * @param {int} page
      * @param {int} numberPerPage
-     * @return
+     * @return List<Student></>
      */
 
     List<Student> findAllByYearSubjectGroupTeacherTrimCourse(
@@ -129,6 +129,18 @@ public interface StudentDao {
 
     /**
      * - отримати всіх боржників за роком навчання / предметом / групою / викладачем
+     *
+     * @param {String} eduYear      -> [2020-2021]
+     * @param {String} subjectName
+     * @param {String} groupName
+     * @param {String} tutorName    -> []
+     * @param {int} trim
+     * @param {int} course
+     * @param {String} sortType     -> [default: student_surname; else: or complete_mark or student_surname]
+     * @param {String} sortGrow     -> [default: ASC, else DESC ]
+     * @param {int} page
+     * @param {int} numberPerPage
+     * @return List<Student></>
      */
     List<Student> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
             String eduYear,

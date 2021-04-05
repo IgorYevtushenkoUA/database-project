@@ -60,6 +60,7 @@ public class StudentService {
         studentDao.deleteById(studentId);
     }
 
+
     public List<Student> findAllByYearSubjectGroupTeacherTrimCourse(String eduYear,
                                                                     String subjectName,
                                                                     String groupName,
@@ -82,6 +83,7 @@ public class StudentService {
                 page,
                 numberPerPage);
     }
+
 
     public List<Student> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(String eduYear,
                                                                            String subjectName,

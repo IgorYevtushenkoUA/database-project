@@ -411,6 +411,30 @@ public class StudentDaoImpl implements StudentDao {
         return students;
     }
 
+    TreeMap<String, String> setParamsDebtor(String eduYear, String subjectName, String groupName, String tutorName, String trim, String course, String sortType, String sortGrow) {
+        TreeMap<String, String> map = new TreeMap<>();
+        eduYear = eduYear == null ? " in (select distinct(gg.edu_year) from \"group\" gg) " : " = " + eduYear + " ";
+        subjectName = subjectName == null ? " " : " and subject_no in (select subject_no from subject where subject_no = " + subjectName + " ) ";
+        groupName = groupName == null ? " " : " and group_name = " + groupName + " ";
+        tutorName = tutorName == null ? " " : " and tutor_no in ( select tutor_no from tutor where tutor_name = " + tutorName + " ) ";
+
+        trim = trim == null ? " " : " and trim = " + trim + " ";
+        course = course == null ? " " : " and curse = " + course + " ";
+        sortType = sortType == null ? "  student_surname " : " " + sortType + " " ;
+        sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
+
+        map.put("eduYear", eduYear);
+        map.put("subjectName", subjectName);
+        map.put("groupName", groupName);
+        map.put("tutorName", tutorName);
+        map.put("trim", trim);
+        map.put("course", course);
+        map.put("sortType", sortType);
+        map.put("sortGrow", sortGrow);
+
+        return map;
+    }
+
     @Override
     public List<Student> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
             String eduYear,
@@ -425,52 +449,38 @@ public class StudentDaoImpl implements StudentDao {
             int numberPerPage) {
         List<Student> students = new ArrayList<>();
         index = 1;
-        TreeMap<String, String> params = setParams(eduYear, subjectName, groupName, tutorName, trim, course, sortType, sortGrow);
+        TreeMap<String, String> params = setParamsDebtor(eduYear, subjectName, groupName, tutorName, trim, course, sortType, sortGrow);
         try {
-            String sql = " select * " +
-                    " from student " +
-                    " where student_code in (select vm.student_code " +
-                    "                       from vidomist_mark vm " +
-                    "                       where vm.vidomist_no in (select v.vidomist_no " +
-                    "                                                from vidomist v " +
-                    "                                                where v.control_type = 'залік' " +
-                    "                                                  and v.tutor_no in (select t.tutor_no " +
-                    "                                                                     from tutor t " +
-                    "                                                                     where tutor_name  " + params.get("tutorName") + " ) " +
-                    "                                                  and v.group_code in (select group_code " +
-                    "                                                                       from \"group\" g " +
-                    "                                                                       where g.group_code in (select gr.group_code " +
-                    "                                                                                              from \"group\" gr " +
-                    "                                                                                              where gr.group_name " + params.get("groupName") + " ) " +
-                    "                                                                         and g.trim " + params.get("trim") + " " +
-                    "                                                                         and g.course " + params.get("course") + " " +
-                    "                                                                         and edu_year " + params.get("eduYear") + " " +
-                    "                                                                         and subject_no in (select s.subject_no " +
-                    "                                                                                            from subject s " +
-                    "                                                                                            where s.subject_name " + params.get("subjectName") + " ))) " +
-                    "                         and vm.complete_mark < 60) " +
-                    "   or student_code in (select vm.student_code " +
-                    "                       from vidomist_mark vm " +
-                    "                       where vm.vidomist_no in (select v.vidomist_no " +
-                    "                                                from vidomist v " +
-                    "                                                where v.control_type = 'екзамен' " +
-                    "                                                  and v.tutor_no in (select t.tutor_no " +
-                    "                                                                     from tutor t " +
-                    "                                                                     where tutor_name " + params.get("tutorName") + " ) " +
-                    "                                                  and v.group_code in (select group_code " +
-                    "                                                                       from \"group\" g " +
-                    "                                                                       where g.group_code in (select gr.group_code " +
-                    "                                                                                              from \"group\" gr " +
-                    "                                                                                              where gr.group_name " + params.get("groupName") + " ) " +
-                    "                                                                         and g.trim " + params.get("trim") + " " +
-                    "                                                                         and g.course " + params.get("course") + " " +
-                    "                                                                         and edu_year " + params.get("eduYear") + " " +
-                    "                                                                         and subject_no in (select s.subject_no " +
-                    "                                                                                            from subject s " +
-                    "                                                                                            where s.subject_name " + params.get("subjectName") + " ))) " +
-                    "                         and vm.complete_mark < 61) " +
-                    "order by " + params.get("sortType") + " " + params.get("sortGrow") + " " +
-                    "limit ? offset ?";
+            String sql = "select *\n" +
+                    "from student s\n" +
+                    "where exists(\n" +
+                    "              select *\n" +
+                    "              from vidomist_mark vm\n" +
+                    "              where vm.student_code = s.student_code\n" +
+                    "                and vm.ects_mark = 'F'\n" +
+                    "                and lower(vm.nat_mark) not like '%недоп%'\n" +
+                    "                and not exists(\n" +
+                    "                      select *\n" +
+                    "                      from bigunets_mark bm\n" +
+                    "                      where bm.vidomist_no = vm.vidomist_no\n" +
+                    "                        and bm.student_code = s.student_code\n" +
+                    "                  )\n" +
+                    "                and vm.vidomist_no in (\n" +
+                    "                  select vidomist_no\n" +
+                    "                  from vidomist\n" +
+                    "                           inner join \"group\" using (group_code)\n" +
+                    "                  where edu_year " + params.get("eduYear") +
+                    params.get("subjectName") +
+                    params.get("groupName") +
+                    params.get("tutorName") +
+                    params.get("trim") +
+                    params.get("course") +
+                    "\n" +
+                    "                   "+
+                    "              )\n" +
+                    "          )\n" +
+                    "order by " + params.get("sortType") + " "  + params.get("sortGrow") + "\n" +
+                    "limit ? offset ?;";
             System.out.println(sql);
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(index++, numberPerPage);

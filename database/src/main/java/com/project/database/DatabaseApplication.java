@@ -21,7 +21,7 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
         StudentService studentService = applicationContext.getBean(StudentService.class);
-        System.out.println(studentService.findAllByYearSubjectGroupTeacherTrimCourse(
+        System.out.println(studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
                 null,
                 null,
                 null,
