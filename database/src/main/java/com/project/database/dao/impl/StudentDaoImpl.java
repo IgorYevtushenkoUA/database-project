@@ -342,8 +342,8 @@ public class StudentDaoImpl implements StudentDao {
 
         trim = trim == null ? " in (select trim from \"group\") " : " = " + trim + " ";
         course = course == null ? " in (select course from \"group\") " : " = " + course + " ";
-        sortType = sortType == null ? "  student_surname " : " complete_mark ";
-        sortGrow = sortGrow == null ? " ASC " : " DESC ";
+        sortType = sortType == null ? "  student_surname " : " " + sortType + " " ;
+        sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
 
         map.put("eduYear", eduYear);
         map.put("subjectName", subjectName);

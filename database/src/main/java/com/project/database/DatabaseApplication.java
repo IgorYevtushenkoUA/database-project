@@ -1,5 +1,6 @@
 package com.project.database;
 
+import com.project.database.service.StudentService;
 import com.project.database.service.TutorService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,21 +20,21 @@ public class DatabaseApplication {
     }
 
     private static void test(ApplicationContext applicationContext) {
-//        StudentService studentService = applicationContext.getBean(StudentService.class);
-//        System.out.println(studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                1, 20
-//        ));
+        StudentService studentService = applicationContext.getBean(StudentService.class);
+        System.out.println(studentService.findAllByYearSubjectGroupTeacherTrimCourse(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "student_surname",
+                "desc",
+                1, 20
+        ));
 
-        TutorService subjectService = applicationContext.getBean(TutorService.class);
-        System.out.println(subjectService.findAll(1,20));
+//        TutorService subjectService = applicationContext.getBean(TutorService.class);
+//        System.out.println(subjectService.findAll(1,20));
 
 
     }
