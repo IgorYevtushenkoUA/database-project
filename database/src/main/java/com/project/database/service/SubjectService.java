@@ -20,4 +20,14 @@ public class SubjectService {
     public List<Subject> findAll(int page, int numberPerPage) {
         return subjectDao.findAll(page, numberPerPage);
     }
+
+    public List<String> findAllSubjectName() {
+        return subjectDao.findAllSubjectName();
+    }
+
+    public List<String> findAllSubjectName(String name) {
+        return subjectDao.findAllSubjectName(name);
+    }
+
 }
+

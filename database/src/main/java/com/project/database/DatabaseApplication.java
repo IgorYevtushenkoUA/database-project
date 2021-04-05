@@ -2,6 +2,7 @@ package com.project.database;
 
 import com.project.database.service.GroupService;
 import com.project.database.service.StudentService;
+import com.project.database.service.SubjectService;
 import com.project.database.service.TutorService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,8 +23,8 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        TutorService tutorService = applicationContext.getBean(TutorService.class);
-        System.out.println(tutorService.findAllTutorNames());
+        SubjectService subjectService = applicationContext.getBean(SubjectService.class);
+        System.out.println(subjectService.findAllSubjectName("ня"));
 
 
         //        GroupService groupService = applicationContext.getBean(GroupService.class);

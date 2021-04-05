@@ -78,4 +78,41 @@ public class SubjectDaoImpl implements SubjectDao {
         }
         return subject;
     }
+
+    @Override
+    public List<String> findAllSubjectName() {
+        List<String> subject = new ArrayList<>();
+        index = 1;
+        try {
+            String sql = "select subject_name from subject order by subject_name";
+            preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                subject.add(resultSet.getString("subject_name"));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+        return subject;
+    }
+
+    @Override
+    public List<String> findAllSubjectName(String name) {
+        List<String> subject = new ArrayList<>();
+        index = 1;
+        name = "%" + name + "%";
+        try {
+            String sql = "select subject_name from subject where subject_name like ? order by subject_name";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(index++, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                subject.add(resultSet.getString("subject_name"));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+        return subject;
+    }
+
 }

@@ -10,4 +10,8 @@ public interface SubjectDao {
 
     void deleteByID(int subjectId);
 
+    List<String> findAllSubjectName();
+
+    List<String> findAllSubjectName(String name);
+
 }
