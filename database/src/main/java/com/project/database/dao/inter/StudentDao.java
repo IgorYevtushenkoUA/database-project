@@ -43,6 +43,21 @@ public interface StudentDao {
                                               int page,
                                               int numberPerPage);
 
+    List<Object> findAllWhoHasRetakeSubjectTrimEduYear(String subjectName,
+                                                       String trim,
+                                                       String eduYear,
+                                                       String sortType,
+                                                       String sortGrow,
+                                                       int page,
+                                                       int numberPerPage);
+
+    List<Object> findAllRetakenSubjectForStudentTrimEduYear(int studentId,
+                                                            String trim,
+                                                            String eduYear,
+                                                            String sortType,
+                                                            String sortGrow,
+                                                            int page,
+                                                            int numberPerPage);
 
     /**
      * Знайти всіх Студентів

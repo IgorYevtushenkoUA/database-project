@@ -28,7 +28,7 @@ public class DatabaseApplication {
 //        System.out.println(groupService.findAllEduYears(1,20));
 
         StudentService studentService = applicationContext.getBean(StudentService.class);
-        System.out.println(studentService.findStudentMarksByTrimCourse(1,null,  null, 1, 20));
+        System.out.println(studentService.findAllRetakenSubjectForStudentTrimEduYear(1,null,  null, "student_surname","asc",1, 20));
 
 //        System.out.println(studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
 //                null,

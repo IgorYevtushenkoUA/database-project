@@ -58,6 +58,25 @@ public class StudentService {
         return studentDao.findStudentMarksByTrimCourse(studentId, trim, course, page, numberPerPage);
     }
 
+    public List<Object> findAllRetakenSubjectForStudentTrimEduYear(int studentId,
+                                                                   String trim,
+                                                                   String eduYear,
+                                                                   String sortType,
+                                                                   String sortGrow,
+                                                                   int page,
+                                                                   int numberPerPage) {
+        return studentDao.findAllRetakenSubjectForStudentTrimEduYear(studentId, trim, eduYear, sortType, sortGrow, page, numberPerPage);
+    }
+
+    public List<Object> findAllWhoHasRetakeSubjectTrimEduYear(String subjectName,
+                                                              String trim,
+                                                              String eduYear,
+                                                              String sortType,
+                                                              String sortGrow,
+                                                              int page,
+                                                              int numberPerPage) {
+        return studentDao.findAllWhoHasRetakeSubjectTrimEduYear(subjectName, trim, eduYear, sortType, sortGrow, page, numberPerPage);
+    }
 
     public List<Student> findAll(int page, int numberPerPage) {
         return studentDao.findAll(page, numberPerPage);
