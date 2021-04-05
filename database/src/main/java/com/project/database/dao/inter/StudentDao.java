@@ -19,6 +19,24 @@ public interface StudentDao {
 
     List<String> findNames(String name);
 
+
+    List<List<Object>> findAverageStudentsMarksTrimCourse(String trim,
+                                                                      String course,
+                                                                      String eduYear,
+                                                                      String sortType,
+                                                                      String sortGrow,
+                                                                      int page,
+                                                                      int numberPerPage);
+
+    TreeMap<String, Double> findAverageStudentMarksTrimCourse(int studentId,
+                                                              String trim,
+                                                              String course,
+                                                              String eduYear,
+                                                              String sortType,
+                                                              String sortGrow,
+                                                              int page,
+                                                              int numberPerPage);
+
     /**
      * Знайти всіх Студентів
      */

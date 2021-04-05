@@ -151,6 +151,72 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
+    public List<List<Object>> findAverageStudentsMarksTrimCourse(String trim,
+                                                                 String course,
+                                                                 String eduYear,
+                                                                 String sortType,
+                                                                 String sortGrow,
+                                                                 int page,
+                                                                 int numberPerPage) {
+        List<List<Object>> list = new ArrayList();
+        index = 1;
+        trim = trim == null ? " in (select distinct(trim) from \"group\" ) " : " = " + trim + " ";
+        course = course == null ? " " : " and gr.course = " + course + " ";
+        eduYear = eduYear == null ? " " : " and gr.edu_year = " + eduYear + " ";
+        sortType = sortType == null
+                ? "  student_surname "
+                : sortType.equals("student_surname")
+                ? " s.student_name "
+                : " avg(vm.complete_mark) ";
+        sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
+
+        try {
+            String sql = "select s.student_code, s.student_name, s.student_surname, s.student_patronymic, avg(vm.complete_mark)\n" +
+                    "from ((student s inner join vidomist_mark vm on s.student_code = vm.student_code)\n" +
+                    "    inner join vidomist v on vm.vidomist_no = v.vidomist_no)\n" +
+                    "         inner join \"group\" gr on gr.group_code = v.group_code\n" +
+                    "where gr.trim " + trim + " \n" + course + eduYear +
+                    "group by s.student_code, s.student_name, s.student_surname, s.student_patronymic \n" +
+                    "order by" + sortType + sortGrow +
+                    "limit ? offset ?";
+            System.out.println(sql);
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, numberPerPage);
+            preparedStatement.setInt(index++, (page - 1) * numberPerPage);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("student_code");
+                StringBuilder name = new StringBuilder();
+                name.append(resultSet.getString("student_surname"))
+                        .append(" ")
+                        .append(resultSet.getString("student_name"))
+                        .append(" ")
+                        .append(resultSet.getString("student_patronymic"));
+                double avg = resultSet.getDouble("avg");
+                list.add(List.of(id, name, avg));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+
+        return list;
+    }
+
+    @Override
+    public TreeMap<String, Double> findAverageStudentMarksTrimCourse(int studentId,
+                                                                     String trim,
+                                                                     String course,
+                                                                     String eduYear,
+                                                                     String sortType,
+                                                                     String sortGrow,
+                                                                     int page,
+                                                                     int numberPerPage) {
+        TreeMap<String, Double> map = new TreeMap<>();
+        return map;
+    }
+
+
+    @Override
     public List<Student> findAll(int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
         index = 1;

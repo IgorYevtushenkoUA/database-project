@@ -27,6 +27,29 @@ public class StudentService {
         return studentDao.findNames(name);
     }
 
+    public List<List<Object>> findAverageStudentsMarksTrimCourse(String trim,
+                                                                             String course,
+                                                                             String eduYear,
+                                                                             String sortType,
+                                                                             String sortGrow,
+                                                                             int page,
+                                                                             int numberPerPage) {
+        return studentDao.findAverageStudentsMarksTrimCourse(trim, course,
+                eduYear, sortType, sortGrow, page, numberPerPage);
+    }
+
+    public TreeMap<String, Double> findAverageStudentMarksTrimCourse(int studentId,
+                                                                     String trim,
+                                                                     String course,
+                                                                     String eduYear,
+                                                                     String sortType,
+                                                                     String sortGrow,
+                                                                     int page,
+                                                                     int numberPerPage) {
+        return studentDao.findAverageStudentMarksTrimCourse(studentId, trim, course, eduYear, sortType, sortGrow, page, numberPerPage);
+
+    }
+
 
     public List<Student> findAll(int page, int numberPerPage) {
         return studentDao.findAll(page, numberPerPage);

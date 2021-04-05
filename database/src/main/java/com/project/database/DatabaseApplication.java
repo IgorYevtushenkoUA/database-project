@@ -28,7 +28,7 @@ public class DatabaseApplication {
 //        System.out.println(groupService.findAllEduYears(1,20));
 
         StudentService studentService = applicationContext.getBean(StudentService.class);
-        System.out.println(studentService.findNames("ко"));
+        System.out.println(studentService.findAverageStudentsMarksTrimCourse(null, null, null, "avg(vm.complete_mark)", " desc ", 1, 20));
 
 //        System.out.println(studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
 //                null,
