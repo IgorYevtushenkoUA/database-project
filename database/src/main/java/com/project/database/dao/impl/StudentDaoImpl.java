@@ -41,14 +41,6 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
-
-//    public static void main(String[] args) {
-//
-//        StudentDaoImpl si = new StudentDaoImpl();
-//        System.out.println(si.findAllMarksForStudentByPIB("Вадим", "Кучерявий", "Юрійович", 1, 3));
-//        System.out.println(si.findAllMarksForStudentById(1, 1, 3));
-//    }
-
     /**
      * method to create student by ResultSet
      */
@@ -86,6 +78,24 @@ public class StudentDaoImpl implements StudentDao {
         bigunets.setTutorCode(resultSet.getInt("tutor_code"));
 
         return bigunets;
+    }
+
+    @Override
+    public Student findById(int studentId) {
+        Student student = new Student();
+        try {
+            String sql = "select * from student where student_code =?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, studentId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next())
+                student = createStudent(resultSet);
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+        return student.getStudentCode() == 0
+                ? null
+                : student;
     }
 
     @Override
@@ -190,8 +200,8 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Bigunets> findAllBigunetsByStudentId(int studentId,
-                                              int page,
-                                              int numberPerPage){
+                                                     int page,
+                                                     int numberPerPage) {
 
         List<Bigunets> bigunets = new ArrayList<>();
         try {
@@ -342,7 +352,7 @@ public class StudentDaoImpl implements StudentDao {
 
         trim = trim == null ? " in (select trim from \"group\") " : " = " + trim + " ";
         course = course == null ? " in (select course from \"group\") " : " = " + course + " ";
-        sortType = sortType == null ? "  student_surname " : " " + sortType + " " ;
+        sortType = sortType == null ? "  student_surname " : " " + sortType + " ";
         sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
 
         map.put("eduYear", eduYear);
@@ -420,7 +430,7 @@ public class StudentDaoImpl implements StudentDao {
 
         trim = trim == null ? " " : " and trim = " + trim + " ";
         course = course == null ? " " : " and curse = " + course + " ";
-        sortType = sortType == null ? "  student_surname " : " " + sortType + " " ;
+        sortType = sortType == null ? "  student_surname " : " " + sortType + " ";
         sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
 
         map.put("eduYear", eduYear);
@@ -476,10 +486,10 @@ public class StudentDaoImpl implements StudentDao {
                     params.get("trim") +
                     params.get("course") +
                     "\n" +
-                    "                   "+
+                    "                   " +
                     "              )\n" +
                     "          )\n" +
-                    "order by " + params.get("sortType") + " "  + params.get("sortGrow") + "\n" +
+                    "order by " + params.get("sortType") + " " + params.get("sortGrow") + "\n" +
                     "limit ? offset ?;";
             System.out.println(sql);
             preparedStatement = connection.prepareStatement(sql);

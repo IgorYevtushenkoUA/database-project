@@ -18,6 +18,12 @@ public interface StudentDao {
     * */
 
     /**
+     * find by ID
+     * */
+
+    Student findById(int studentId);
+
+    /**
      * Знайти всіх Студентів
      */
     List<Student> findAll(int page,

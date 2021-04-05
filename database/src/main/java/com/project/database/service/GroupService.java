@@ -18,7 +18,7 @@ public class GroupService {
         return groupDao.findAllGroupName(page, numberPerPage);
     }
 
-    public List<Group> findAllEduYears(int page, int numberPerPage) {
+    public List<String> findAllEduYears(int page, int numberPerPage) {
         return groupDao.findAllEduYears(page, numberPerPage);
     }
 

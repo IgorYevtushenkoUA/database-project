@@ -15,6 +15,10 @@ public class StudentService {
     @Autowired
     private StudentDao studentDao;
 
+    public Student findById(int studentId) {
+        return studentDao.findById(studentId);
+    }
+
     public List<Student> findAll(int page, int numberPerPage) {
         return studentDao.findAll(page, numberPerPage);
     }

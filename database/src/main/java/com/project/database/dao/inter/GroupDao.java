@@ -9,6 +9,7 @@ public interface GroupDao {
     void deleteByID(int groupId);
 
     List<Group> findAllGroupName(int page, int numberPerPage);
-    List<Group> findAllEduYears(int page, int numberPerPage);
+
+    List<String> findAllEduYears(int page, int numberPerPage);
 
 }

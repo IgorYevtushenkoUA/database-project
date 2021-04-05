@@ -83,21 +83,21 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public List<Group> findAllEduYears(int page, int numberPerPage) {
-        List<Group> groups = new ArrayList<>();
+    public List<String> findAllEduYears(int page, int numberPerPage) {
+        List<String> eduYears = new ArrayList<>();
         index = 1;
         try {
-            String sql = "select distinct(edu_year) from \"group\" order by group_name limit ? offset ?";
+            String sql = "select distinct(edu_year) from \"group\" limit ? offset ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(index++, numberPerPage);
             preparedStatement.setInt(index++, (page - 1) * numberPerPage);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                groups.add(createGroup(resultSet));
+                eduYears.add(resultSet.getString("edu_year"));
             }
         } catch (SQLException sql) {
             sql.printStackTrace();
         }
-        return groups;
+        return eduYears;
     }
 }
