@@ -126,4 +126,24 @@ public class VidomistDaoImpl implements VidomistDao {
         return vidomists;
     }
 
+    @Override
+    public Vidomist findById(int id) {
+        Vidomist vidomist = new Vidomist();
+        index = 1;
+        try {
+            String sql = "select * from vidomist where vidomist_no = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                vidomist = createVidomist(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vidomist.getVidomistNo() == null
+                ? null
+                : vidomist;
+    }
+
 }

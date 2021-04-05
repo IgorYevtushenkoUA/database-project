@@ -1,6 +1,7 @@
 package com.project.database.dao.inter;
 
 import com.project.database.entity.Vidomist;
+import com.project.database.service.VidomistService;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ public interface VidomistDao {
      * find all vidomisty
      */
     List<Vidomist> findAll(int page, int numberPerPage);
+
+    Vidomist findById(int id);
 
 
 }

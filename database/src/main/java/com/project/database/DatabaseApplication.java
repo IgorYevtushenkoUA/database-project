@@ -21,7 +21,7 @@ public class DatabaseApplication {
     private static void test(ApplicationContext applicationContext) {
 
         VidomistService vidomistService = applicationContext.getBean(VidomistService.class);
-        System.out.println(vidomistService.findAll(1,2));
+        System.out.println(vidomistService.findById(11));
 
 
         //        GroupService groupService = applicationContext.getBean(GroupService.class);

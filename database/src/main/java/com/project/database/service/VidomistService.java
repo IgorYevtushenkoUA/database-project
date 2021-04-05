@@ -24,4 +24,8 @@ public class VidomistService {
     public List<Vidomist> findAll(int page, int numberPerPage) {
         return vidomistDao.findAll(page, numberPerPage);
     }
+
+    public Vidomist findById(int id){
+        return vidomistDao.findById(id);
+    }
 }
