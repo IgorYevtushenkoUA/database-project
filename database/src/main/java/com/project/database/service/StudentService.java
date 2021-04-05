@@ -19,6 +19,15 @@ public class StudentService {
         return studentDao.findById(studentId);
     }
 
+    public List<String> findNames() {
+        return studentDao.findNames();
+    }
+
+    public List<String> findNames(String name) {
+        return studentDao.findNames(name);
+    }
+
+
     public List<Student> findAll(int page, int numberPerPage) {
         return studentDao.findAll(page, numberPerPage);
     }

@@ -20,15 +20,15 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        VidomistService vidomistService = applicationContext.getBean(VidomistService.class);
-        System.out.println(vidomistService.findById(11));
+//        VidomistService vidomistService = applicationContext.getBean(VidomistService.class);
+//        System.out.println(vidomistService.findById(11));
 
 
         //        GroupService groupService = applicationContext.getBean(GroupService.class);
 //        System.out.println(groupService.findAllEduYears(1,20));
 
-//        StudentService studentService = applicationContext.getBean(StudentService.class);
-//        System.out.println(studentService.findById(14));
+        StudentService studentService = applicationContext.getBean(StudentService.class);
+        System.out.println(studentService.findNames("ко"));
 
 //        System.out.println(studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
 //                null,

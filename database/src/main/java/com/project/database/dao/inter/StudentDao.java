@@ -9,19 +9,15 @@ import java.util.TreeMap;
 
 public interface StudentDao {
 
-    /*
-    - отримати всіх боржників за роком навчання / спеціальністю / предметом / групою / викладачем
-    - отримати всіх студентів за роком навчання / спеціальністю  / предметом / групою / викладачем
-    - отримати n% перших студентів за рейтингом (на спеціальності за семестр)
-    - генерувати список студентів за рейтингом для спеціальності\курсу
-    - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ
-    * */
-
     /**
      * find by ID
-     * */
+     */
 
     Student findById(int studentId);
+
+    List<String> findNames();
+
+    List<String> findNames(String name);
 
     /**
      * Знайти всіх Студентів
@@ -107,17 +103,16 @@ public interface StudentDao {
 
 
     /**
-     *
      * @param {String} eduYear      -> [2020-2021]
      * @param {String} subjectName
      * @param {String} groupName
      * @param {String} tutorName    -> []
-     * @param {int} trim
-     * @param {int} course
+     * @param {int}    trim
+     * @param {int}    course
      * @param {String} sortType     -> [default: student_surname; else: or complete_mark or student_surname]
      * @param {String} sortGrow     -> [default: ASC, else DESC ]
-     * @param {int} page
-     * @param {int} numberPerPage
+     * @param {int}    page
+     * @param {int}    numberPerPage
      * @return List<Student></>
      */
 
@@ -140,12 +135,12 @@ public interface StudentDao {
      * @param {String} subjectName
      * @param {String} groupName
      * @param {String} tutorName    -> []
-     * @param {int} trim
-     * @param {int} course
+     * @param {int}    trim
+     * @param {int}    course
      * @param {String} sortType     -> [default: student_surname; else: or complete_mark or student_surname]
      * @param {String} sortGrow     -> [default: ASC, else DESC ]
-     * @param {int} page
-     * @param {int} numberPerPage
+     * @param {int}    page
+     * @param {int}    numberPerPage
      * @return List<Student></>
      */
     List<Student> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(

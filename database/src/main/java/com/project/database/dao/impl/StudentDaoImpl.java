@@ -99,6 +99,58 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
+    public List<String> findNames() {
+        List<String> students = new ArrayList<>();
+        try {
+            String sql = "select * from student order by student_surname";
+            preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                StringBuilder pib = new StringBuilder("");
+                pib.append(resultSet.getString("student_surname"))
+                        .append(" ")
+                        .append(resultSet.getString("student_name"))
+                        .append(" ")
+                        .append(resultSet.getString("student_patronymic"));
+                students.add(String.valueOf(pib));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+
+        return students;
+    }
+
+    @Override
+    public List<String> findNames(String name) {
+        List<String> students = new ArrayList<>();
+        index = 1;
+        name = "%" + name + "%";
+        try {
+            String sql = "select * from student where student_surname like ? or student_name like ? or student_patronymic like ? order by student_surname ";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(index++, name);
+            preparedStatement.setString(index++, name);
+            preparedStatement.setString(index++, name);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                StringBuilder pib = new StringBuilder("");
+                pib.append(resultSet.getString("student_surname"))
+                        .append(" ")
+                        .append(resultSet.getString("student_name"))
+                        .append(" ")
+                        .append(resultSet.getString("student_patronymic"));
+                students.add(String.valueOf(pib));
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+
+        return students;
+    }
+
+    @Override
     public List<Student> findAll(int page, int numberPerPage) {
         List<Student> students = new ArrayList<>();
         index = 1;
