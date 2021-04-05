@@ -21,21 +21,28 @@ public interface StudentDao {
 
 
     List<List<Object>> findAverageStudentsMarksTrimCourse(String trim,
-                                                                      String course,
-                                                                      String eduYear,
-                                                                      String sortType,
-                                                                      String sortGrow,
-                                                                      int page,
-                                                                      int numberPerPage);
+                                                          String course,
+                                                          String eduYear,
+                                                          String sortType,
+                                                          String sortGrow,
+                                                          int page,
+                                                          int numberPerPage);
 
     List<Object> findAverageStudentMarksTrimCourse(int studentId,
-                                                              String trim,
-                                                              String course,
-                                                              String eduYear,
-                                                              String sortType,
-                                                              String sortGrow,
-                                                              int page,
-                                                              int numberPerPage);
+                                                   String trim,
+                                                   String course,
+                                                   String eduYear,
+                                                   String sortType,
+                                                   String sortGrow,
+                                                   int page,
+                                                   int numberPerPage);
+
+    List<Object> findStudentMarksByTrimCourse(int studentId,
+                                              String trim,
+                                              String course,
+                                              int page,
+                                              int numberPerPage);
+
 
     /**
      * Знайти всіх Студентів

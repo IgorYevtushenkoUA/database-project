@@ -50,6 +50,14 @@ public class StudentService {
 
     }
 
+    public List<Object> findStudentMarksByTrimCourse(int studentId,
+                                                     String trim,
+                                                     String course,
+                                                     int page,
+                                                     int numberPerPage) {
+        return studentDao.findStudentMarksByTrimCourse(studentId, trim, course, page, numberPerPage);
+    }
+
 
     public List<Student> findAll(int page, int numberPerPage) {
         return studentDao.findAll(page, numberPerPage);
@@ -77,7 +85,7 @@ public class StudentService {
     }
 
     public double findAverageMarkById(int studentCode) {
-        return findAverageMarkById(studentCode);
+        return studentDao.findAverageMarkById(studentCode);
     }
 
     public double findAverageMarkByPIB(String name, String surname, String patronymic) {

@@ -177,7 +177,7 @@ public class StudentDaoImpl implements StudentDao {
                     "         inner join \"group\" gr on gr.group_code = v.group_code\n" +
                     "where gr.trim " + trim + " \n" + course + eduYear +
                     "group by s.student_code, s.student_name, s.student_surname, s.student_patronymic \n" +
-                    "order by" + sortType + sortGrow +
+                    "order by " + sortType + sortGrow +
                     "limit ? offset ?";
             System.out.println(sql);
             preparedStatement = connection.prepareStatement(sql);
@@ -218,19 +218,19 @@ public class StudentDaoImpl implements StudentDao {
         eduYear = eduYear == null ? " " : " and gr.edu_year = " + eduYear + " ";
         sortType = sortType == null
                 ? "  student_surname "
-                : sortType.equals("student_surname")
+                : sortType.equals(" s.student_surname ")
                 ? " s.student_name "
                 : " avg(vm.complete_mark) ";
         sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
 
-        try{
+        try {
             String sql = "select s.student_code, s.student_name, s.student_surname, s.student_patronymic, avg(vm.complete_mark)\n" +
                     "from ((student s inner join vidomist_mark vm on s.student_code = vm.student_code)\n" +
                     "    inner join vidomist v on vm.vidomist_no = v.vidomist_no)\n" +
                     "         inner join \"group\" gr on gr.group_code = v.group_code\n" +
                     "where s.student_code= " + studentId + "\n" + trim + course + eduYear +
                     "group by s.student_code, s.student_name, s.student_surname, s.student_patronymic \n" +
-                    "order by" + sortType + sortGrow +
+                    "order by " + sortType + sortGrow +
                     "limit ? offset ?";
             System.out.println(sql);
             preparedStatement = connection.prepareStatement(sql);
@@ -248,7 +248,51 @@ public class StudentDaoImpl implements StudentDao {
                 double avg = resultSet.getDouble("avg");
                 list = List.of(id, name, avg);
             }
-        }catch (SQLException sql) {
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<Object> findStudentMarksByTrimCourse(int studentId,
+                                                     String trim,
+                                                     String course,
+                                                     int page,
+                                                     int numberPerPage) {
+        List<Object> list = new ArrayList<>();
+        index = 1;
+        trim = trim == null ? " " : " and gr.trim= " + trim + " ";
+        course = course == null ? " " : " and gr.course = " + course + " ";
+
+
+        try {
+            String sql = "select s.student_name, s.student_surname, s.student_patronymic, s2.subject_name, vm.complete_mark\n" +
+                    "from ((student s inner join vidomist_mark vm on s.student_code = vm.student_code)\n" +
+                    "    inner join vidomist v on vm.vidomist_no = v.vidomist_no)\n" +
+                    "         inner join \"group\" gr on gr.group_code = v.group_code\n" +
+                    "            inner join subject s2 on s2.subject_no = gr.subject_no\n" +
+                    "where s.student_code=" + studentId + "\n" + trim +  course +
+                    "group by s.student_name, s.student_surname, s.student_patronymic,s2.subject_name,  vm.complete_mark " +
+                    "limit ? offset ?";
+            System.out.println(sql);
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(index++, numberPerPage);
+            preparedStatement.setInt(index++, (page - 1) * numberPerPage);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                StringBuilder name = new StringBuilder();
+                name.append(resultSet.getString("student_surname"))
+                        .append(" ")
+                        .append(resultSet.getString("student_name"))
+                        .append(" ")
+                        .append(resultSet.getString("student_patronymic"));
+                String subject = resultSet.getString("subject_name");
+                int mark = resultSet.getInt("complete_mark");
+                list.add(List.of(name, subject, mark));
+            }
+        } catch (SQLException sql) {
             sql.printStackTrace();
         }
 
