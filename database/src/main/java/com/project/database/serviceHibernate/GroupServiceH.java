@@ -1,15 +1,14 @@
 package com.project.database.serviceHibernate;
 
 import com.project.database.entities.GroupEntity;
-import com.project.database.entity.Group;
 import com.project.database.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 @Service
