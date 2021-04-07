@@ -4,9 +4,6 @@ import com.project.database.entities.StudentEntity;
 import com.project.database.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,7 +74,7 @@ public class StudentServiceH {
                 ? " s.studentSurname " + sortDescStr
                 : " avg(vm.completeMark) " + sortDescStr;
 
-        return studentRepository.findAverageStudentsMarksTrimCourse(" (select distinct(g.trim) from GroupEntity g) ");
+        return studentRepository.findAverageStudentsMarksTrimCourse(" (select distinct g.trim from \"group\" g) ");
 
     }
 

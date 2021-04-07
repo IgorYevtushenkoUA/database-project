@@ -1,14 +1,13 @@
 package com.project.database.repository;
 
 import com.project.database.entities.StudentEntity;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
+public interface StudentRepository extends JpaRepository<StudentEntity, Integer>, StudentRepositoryCustom {
 
     StudentEntity findByStudentCode(int studentCode);
 
@@ -24,7 +23,8 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
-            "where gr.trim in (select distinct(g.trim) from GroupEntity g) and gr.course in (select distinct(g.course) from GroupEntity g) and gr.eduYear in (select distinct(g.eduYear) from GroupEntity g) " +
+            "where gr.trim in (:trim) and gr.course in (select distinct(g.course) from GroupEntity g) and gr.eduYear " +
+            "in (select distinct(g.eduYear) from GroupEntity g) " +
             "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic " +
             "order by s.studentSurname")
     List<List<String>> findAverageStudentsMarksTrimCourse(
@@ -34,4 +34,5 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
 //            @Param("sortBy") String sortBy);
 //                                                          Pageable pageable);
     );
+
 }
