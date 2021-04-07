@@ -1,5 +1,6 @@
 package com.project.database;
 
+import com.project.database.serviceHibernate.GroupServiceH;
 import com.project.database.serviceHibernate.SubjectServiceH;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,10 +20,8 @@ public class DatabaseApplication {
     }
 
     private static void test(ApplicationContext applicationContext) {
-        SubjectServiceH subjectService = applicationContext.getBean(SubjectServiceH.class);
-        System.out.println(subjectService.findAll());
-        System.out.println(subjectService.findAllSubjectNames());
-        System.out.println(subjectService.findAllSubjectNames("ння"));
+        GroupServiceH groupServiceH = applicationContext.getBean(GroupServiceH.class);
+        System.out.println(groupServiceH.findAllGroupEduYears());
     }
 
 
