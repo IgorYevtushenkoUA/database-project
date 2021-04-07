@@ -13,10 +13,10 @@ public interface TutorRepository extends JpaRepository<TutorEntity, Integer> {
 
     List<TutorEntity> findAll();
 
-    @Query("select t.tutorSurname, t.tutorName, t.tutorPatronymic from TutorEntity t")
+    @Query("select t.tutorSurname, t.tutorName, t.tutorPatronymic from TutorEntity t order by t.tutorSurname")
     List<List<String>> findAllTutorNames();
 
-    @Query("select t.tutorSurname, t.tutorName, t.tutorPatronymic from TutorEntity t where t.tutorSurname like: name or t.tutorName like:name or t.tutorPatronymic like:name")
+    @Query("select t.tutorSurname, t.tutorName, t.tutorPatronymic from TutorEntity t where t.tutorSurname like: name or t.tutorName like:name or t.tutorPatronymic like:name order by t.tutorSurname")
     List<List<String>> findAllTutorNamesByPartOFName(@Param("name") String name);
 
 
