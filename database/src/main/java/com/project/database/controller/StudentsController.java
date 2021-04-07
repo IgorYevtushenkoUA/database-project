@@ -3,9 +3,12 @@ package com.project.database.controller;
 import com.project.database.entity.Student;
 import com.project.database.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -22,69 +25,53 @@ public class StudentsController {
 
 
     @GetMapping("/students")
-    public List<Student> getAll(
+    public HashMap<String, Object> getAllStudents(
             @RequestParam(name = "year", defaultValue = "2020") String year,
             @RequestParam(name = "subject", required = false) String subject,
             @RequestParam(name = "tutor", required = false) String tutor,
             @RequestParam(name = "group", required = false) String group,
-            @RequestParam(name = "trim", required = false) Integer trim,
+            @RequestParam(name = "semester", required = false) Integer semester,
             @RequestParam(name = "course", required = false) Integer course,
-            @RequestParam(name = "studentType", defaultValue = "student") String studentType, // думав стосовно boolean (чи студент чи боржник)
-            @RequestParam(name = "sortType", defaultValue = "surname") String sortType, // {surname, rating}
-            @RequestParam(name = "sortGrow", defaultValue = "best") String sortGrow, // {high->low; low->high}
+            @RequestParam(name = "sortBy", defaultValue = "rating") String sortBy, // {surname, rating}
+            @RequestParam(name = "sortDesc", defaultValue = "true") Boolean sortDesc, // {high->low(desc);low->high(asc)}
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
-            Model model
+            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
-        model.addAttribute("year", year);
-        model.addAttribute("subject", subject);
-        model.addAttribute("tutor", tutor);
-        model.addAttribute("group", group);
-        model.addAttribute("trim", trim);
-        model.addAttribute("course", course);
-        model.addAttribute("studentType", studentType);
-        model.addAttribute("sortType", sortType);
-        model.addAttribute("sortGrow", sortGrow);
-        model.addAttribute("page", page);
-        model.addAttribute("numberPerPage", numberPerPage);
-
-        return studentService.findAll(page, numberPerPage);
+        List<Student> students;
+//        students = studentService.findAllByYearSubjectGroupTeacherTrimCourse(
+//                year, subject, group, tutor,
+//                String.valueOf(semester), String.valueOf(course),
+//                sortBy, sortDesc, page, numberPerPage
+//        );
+        students = studentService.findAll(page, numberPerPage);
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("data", students);
+        response.put("totalElements", studentService.findAll(1, Integer.MAX_VALUE).size()); // загальна кількість записів
+        // потрібна
+        return response;
     }
 
 
-    @PostMapping("/students")
-    public List<Student> postAll(
+    @GetMapping("/debtors")
+    public List<Student> getAllDebtors(
             @RequestParam(name = "year", defaultValue = "2020") String year,
-            @RequestParam(name = "subject") String subject,
-            @RequestParam(name = "tutor") String tutor,
-            @RequestParam(name = "group") String group,
-            @RequestParam(name = "trim") int trim,
-            @RequestParam(name = "course") int course,
-            @RequestParam(name = "studentType", defaultValue = "student") String studentType,
-            @RequestParam(name = "sortType", defaultValue = "surname") String sortType,
-            @RequestParam(name = "sortGrow", defaultValue = "best") String sortGrow,
+            @RequestParam(name = "subject", required = false) String subject,
+            @RequestParam(name = "tutor", required = false) String tutor,
+            @RequestParam(name = "group", required = false) String group,
+            @RequestParam(name = "semester", required = false) Integer semester,
+            @RequestParam(name = "course", required = false) Integer course,
+            @RequestParam(name = "sortBy", defaultValue = "rating") String sortBy, // {surname, rating}
+            @RequestParam(name = "sortDesc", defaultValue = "true") Boolean sortDesc, // {high->low(desc);low->high(asc)}
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
-            Model model
+            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
-        model.addAttribute("year", year);
-        model.addAttribute("subject", subject);
-        model.addAttribute("tutor", tutor);
-        model.addAttribute("group", group);
-        model.addAttribute("trim", trim);
-        model.addAttribute("course", course);
-        model.addAttribute("studentType", studentType);
-        model.addAttribute("sortType", sortType);
-        model.addAttribute("sortGrow", sortGrow);
-        model.addAttribute("page", page);
-        model.addAttribute("numberPerPage", numberPerPage);
-
-        List<Student> students;
-        students = studentType.equals("student")
-                ? studentService.findAllByYearSubjectGroupTeacherTrimCourse(year, subject, group, tutor, String.valueOf(trim), String.valueOf(course), sortType, sortGrow, page, numberPerPage)
-                : studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(year, subject, group, tutor, String.valueOf(trim), String.valueOf(course), sortType, sortGrow, page, numberPerPage);
-
-        return students;
+        List<Student> debtors;
+        debtors = studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+                year, subject, group, tutor,
+                String.valueOf(semester), String.valueOf(course),
+                sortBy, sortDesc, page, numberPerPage
+        );
+        return debtors;
     }
 
 }
