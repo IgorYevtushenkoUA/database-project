@@ -290,10 +290,11 @@ public class StudentService {
                                                                     String tutorName,
                                                                     String trim,
                                                                     String course,
-                                                                    String sortType,
-                                                                    String sortGrow,
+                                                                    String sortBy,
+                                                                    Boolean sortDesc,
                                                                     int page,
                                                                     int numberPerPage) {
+        String sortOrder = sortDesc ? "desc" : "asc";
         return studentDao.findAllByYearSubjectGroupTeacherTrimCourse(
                 eduYear,
                 subjectName,
@@ -301,8 +302,8 @@ public class StudentService {
                 tutorName,
                 trim,
                 course,
-                sortType,
-                sortGrow,
+                sortBy,
+                sortOrder,
                 page,
                 numberPerPage);
     }
@@ -327,10 +328,11 @@ public class StudentService {
                                                                            String tutorName,
                                                                            String trim,
                                                                            String course,
-                                                                           String sortType,
-                                                                           String sortGrow,
+                                                                           String sortBy,
+                                                                           Boolean sortDesc,
                                                                            int page,
                                                                            int numberPerPage) {
+        String sortOrder = sortDesc ? "desc" : "asc";
         return studentDao.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
                 eduYear,
                 subjectName,
@@ -338,8 +340,8 @@ public class StudentService {
                 tutorName,
                 trim,
                 course,
-                sortType,
-                sortGrow,
+                sortBy,
+                sortOrder,
                 page,
                 numberPerPage);
     }
