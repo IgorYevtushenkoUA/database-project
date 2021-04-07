@@ -160,7 +160,7 @@ public class StudentDaoImpl implements StudentDao {
         index = 1;
         trim = trim == null ? " in (select distinct(trim) from \"group\" ) " : " = " + trim + " ";
         course = course == null ? " " : " and gr.course = " + course + " ";
-        eduYear = eduYear == null ? " " : " and gr.edu_year = " + eduYear + " ";
+        eduYear = eduYear == null ? " " : " and gr.edu_year = '" + eduYear + "' ";
         sortType = sortType.equals("student_surname") ? " s.student_name " : " avg(vm.complete_mark) ";
         sortGrow = sortGrow.equalsIgnoreCase("asc") ? " ASC " : " DESC ";
 
@@ -207,9 +207,9 @@ public class StudentDaoImpl implements StudentDao {
                                                           int numberPerPage) {
         List<Object> list = new ArrayList<>();
         index = 1;
-        trim = trim == null ? " " : " and trim = " + trim + " ";
+        trim = trim == null ? " " : " and trim = '" + trim + "' ";
         course = course == null ? " " : " and gr.course = " + course + " ";
-        eduYear = eduYear == null ? " " : " and gr.edu_year = " + eduYear + " ";
+        eduYear = eduYear == null ? " " : " and gr.edu_year = '" + eduYear + "' ";
         sortType = sortType.equals("student_surname") ? " s.student_name " : " avg(vm.complete_mark) ";
         sortGrow = sortGrow.equalsIgnoreCase("asc") ? " ASC " : " DESC ";
 
@@ -253,7 +253,7 @@ public class StudentDaoImpl implements StudentDao {
                                                      int numberPerPage) {
         List<Object> list = new ArrayList<>();
         index = 1;
-        trim = trim == null ? " " : " and gr.trim= " + trim + " ";
+        trim = trim == null ? " " : " and gr.trim= '" + trim + "' ";
         course = course == null ? " " : " and gr.course = " + course + " ";
 
 
@@ -300,9 +300,9 @@ public class StudentDaoImpl implements StudentDao {
         List<Object> list = new ArrayList<>();
         index = 1;
         subjectName = subjectName == null ? " in ( select distinct(subject_name) from subject ) " : " = " + subjectName + " ";
-        trim = trim == null ? " " : " and gr.trim = " + trim + " ";
-        eduYear = eduYear == null ? " " : " and gr.edu_year = " + eduYear + " ";
-        sortType = sortType.equals("student_surname") ? " s.student_surname" : "bm.complete_mark";
+        trim = trim == null ? " " : " and gr.trim = '" + trim + "' ";
+        eduYear = eduYear == null ? " " : " and gr.edu_year = '" + eduYear + "' ";
+        sortType = sortType.equals("student_surname") ? " s.student_surname" : " bm.complete_mark ";
         sortGrow = sortGrow.equalsIgnoreCase("asc") ? " ASC " : " DESC ";
         try {
             String sql = "select s.student_surname, s.student_name, s.student_patronymic,s2.subject_name, bm.complete_mark\n" +
@@ -346,9 +346,9 @@ public class StudentDaoImpl implements StudentDao {
         List<Object> list = new ArrayList<>();
         index = 1;
 
-        trim = trim == null ? " " : " and gr.trim = " + trim + " ";
-        eduYear = eduYear == null ? " " : " and gr.edu_year = " + eduYear + " ";
-        sortType = sortType.equals("student_surname") ? " s.student_surname" : "bm.complete_mark";
+        trim = trim == null ? " " : " and gr.trim = '" + trim + "' ";
+        eduYear = eduYear == null ? " " : " and gr.edu_year = '" + eduYear + "' ";
+        sortType = sortType.equals("student_surname") ? " s.student_surname" : " bm.complete_mark ";
         sortGrow = sortGrow.equalsIgnoreCase("asc") ? " ASC " : " DESC ";
         try {
             String sql = "select s.student_surname, s.student_name, s.student_patronymic,s2.subject_name, bm.complete_mark\n" +
@@ -630,12 +630,12 @@ public class StudentDaoImpl implements StudentDao {
     //********************************************************************
     TreeMap<String, String> setParams(String eduYear, String subjectName, String groupName, String tutorName, String trim, String course, String sortType, String sortGrow) {
         TreeMap<String, String> map = new TreeMap<>();
-        eduYear = eduYear == null ? "in (select distinct(gg.edu_year) from \"group\" gg) " : " = " + eduYear + " ";
-        subjectName = subjectName == null ? "in (select ss.subject_name from subject ss) " : " = " + subjectName + " ";
-        groupName = groupName == null ? "in (select distinct(gg.group_name) from \"group\" gg) " : " = " + groupName + " ";
-        tutorName = tutorName == null ? "in (select tt.tutor_name from tutor tt) " : " = " + tutorName + " ";
+        eduYear = eduYear == null ? "in (select distinct(gg.edu_year) from \"group\" gg) " : " = '" + eduYear + "' ";
+        subjectName = subjectName == null ? "in (select ss.subject_name from subject ss) " : " = '" + subjectName + "' ";
+        groupName = groupName == null ? "in (select distinct(gg.group_name) from \"group\" gg) " : " = '" + groupName + "' ";
+        tutorName = tutorName == null ? "in (select tt.tutor_name from tutor tt) " : " = '" + tutorName + "' ";
 
-        trim = trim == null ? " in (select trim from \"group\") " : " = " + trim + " ";
+        trim = trim == null ? " in (select trim from \"group\") " : " = '" + trim + "' ";
         course = course == null ? " in (select course from \"group\") " : " = " + course + " ";
         sortType = sortType == null ? "  student_surname " : " " + sortType + " ";
         sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
@@ -713,7 +713,7 @@ public class StudentDaoImpl implements StudentDao {
         groupName = groupName == null ? " " : " and group_name = " + groupName + " ";
         tutorName = tutorName == null ? " " : " and tutor_no in ( select tutor_no from tutor where tutor_name = " + tutorName + " ) ";
 
-        trim = trim == null ? " " : " and trim = " + trim + " ";
+        trim = trim == null ? " " : " and trim = '" + trim + "' ";
         course = course == null ? " " : " and curse = " + course + " ";
         sortType = sortType == null ? "  student_surname " : " " + sortType + " ";
         sortGrow = sortGrow == null ? " ASC " : " " + sortGrow + " ";
