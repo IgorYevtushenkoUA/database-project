@@ -23,16 +23,20 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
-            "where gr.trim in (:trim) and gr.course in (select distinct(g.course) from GroupEntity g) and gr.eduYear " +
-            "in (select distinct(g.eduYear) from GroupEntity g) " +
+            "where " +
+            "   gr.trim in (:semesters) " +
+            "and " +
+            "   gr.course in (:courses) " +
+            "and " +
+            "   gr.eduYear in (:eduYears) " +
             "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic " +
             "order by s.studentSurname")
     List<List<String>> findAverageStudentsMarksTrimCourse(
-            @Param("trim") String trim
-//                                                          @Param("course") String course,
-//                                                          @Param("eduYear") String eduYear,
-//            @Param("sortBy") String sortBy);
-//                                                          Pageable pageable);
+            @Param("semesters") List<String> semesters,
+            @Param("courses") List<Integer> courses,
+            @Param("eduYears") List<String> eduYears
+            // @Param("sortBy") String sortBy);
+            // Pageable pageable);
     );
 
 }
