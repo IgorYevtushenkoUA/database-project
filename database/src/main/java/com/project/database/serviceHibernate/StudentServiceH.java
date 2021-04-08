@@ -203,6 +203,23 @@ public class StudentServiceH {
         return result;
     }
 
+    public List<StudentEntity> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(String eduYear,
+                                                                                 String groupName,
+                                                                                 Integer trim,
+                                                                                 Integer course,
+                                                                                 String subjectName,
+                                                                                 Integer tutorNo) {
+        List<String> eduYearList = getEduYearsList(eduYear);
+        List<String> groupList = getGroupList(groupName);
+        List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
+        List<Integer> courseList = getCourseList(course);
+        List<String> subjectNameList = getSubjectList(subjectName);
+        List<Integer> tutorList = getTutorList(tutorNo);
+        List<StudentEntity> result = studentRepository.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList)
+                .stream().distinct().collect(Collectors.toList());
+        return result;
+    }
 
     private List<String> getSubjectList(String subjectName) {
         return subjectName == null

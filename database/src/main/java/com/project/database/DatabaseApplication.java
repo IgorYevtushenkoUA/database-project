@@ -33,7 +33,7 @@ public class DatabaseApplication {
 
 
         StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-        System.out.println(studentServiceH.findAllStudentByYearSubjectGroupTeacherTrimCourse(null, null, null, null, null, null));
+        System.out.println(studentServiceH.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(null, null, null, null, null, null));
 
 //        System.out.println(studentServiceH.findAllStudentMarks(2, null,null));
         //        System.out.println(studentServiceH.findAverageStudentMarksTrimCourse(

@@ -159,5 +159,46 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             @Param("subjectName") List<String> subjectName,
             @Param("tutorNo") List<Integer> tutorNo);
 
+    @Query("select s " +
+            "from StudentEntity s " +
+            "where exists (" +
+            "   select vm " +
+            "   from VidomistMarkEntity vm " +
+            "   where vm.vidomistMarkId.studentCode =s.studentCode " +
+            "       and vm.ectsMark='F' " +
+            "       and lower(vm.natMark) not like '%недоп%' " +
+            "       and not exists(" +
+            "           select bm " +
+            "           from BigunetsMarkEntity bm " +
+            "           where bm.bigunetsMarkId.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "               and bm.bigunetsMarkId.studentCode=s.studentCode " +
+            "           ) " +
+            "   and vm.vidomistMarkId.vidomistNo in ( " +
+            "       select v1.vidomistNo " +
+            "       from VidomistEntity v1 " +
+            "           inner join GroupEntity g on g.groupCode=v1.group.groupCode " +
+            "           inner join SubjectEntity sub on g.subject.subjectNo=sub.subjectNo " +
+            "       where " +
+            "           g.eduYear in (:eduYear) " +
+            "       and " +
+            "           g.groupName in (:groupName) " +
+            "       and " +
+            "           g.trim in (:trim) " +
+            "       and " +
+            "           g.course in (:course) " +
+            "       and " +
+            "           sub.subjectName in (:subjectName) " +
+            "       and " +
+            "           v1.tutor.tutorNo in (:tutorNo) " +
+            ")" +
+            ")") // todo add order by and limit and offset
+    List<StudentEntity> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+            @Param("eduYear") List<String> eduYear,
+            @Param("groupName") List<String> groupName,
+            @Param("trim") List<String> trim,
+            @Param("course") List<Integer> course,
+            @Param("subjectName") List<String> subjectName,
+            @Param("tutorNo") List<Integer> tutorNo
+    );
 
 }
