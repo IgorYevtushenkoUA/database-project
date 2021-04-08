@@ -35,5 +35,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 
     // " select distinct(g.eduYear) from GroupEntity g where g.eduYear IN '" + eduYear + "' "
     List<GroupEntity> findDistinctAllByEduYearIn(@Param("eduYears") List<String> eduYears);
+
+    List<GroupEntity> findDistinctAllByGroupNameIn(@Param("groupName") List<String> groupName);
     /**********************************************************************************/
 }

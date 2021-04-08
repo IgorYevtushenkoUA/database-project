@@ -3,9 +3,11 @@ package com.project.database.serviceHibernate;
 import com.project.database.entities.GroupEntity;
 import com.project.database.entities.StudentEntity;
 import com.project.database.entities.SubjectEntity;
+import com.project.database.entities.TutorEntity;
 import com.project.database.repository.GroupRepository;
 import com.project.database.repository.StudentRepository;
 import com.project.database.repository.SubjectRepository;
+import com.project.database.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class StudentServiceH {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private final SubjectRepository subjectRepository;
+    private final TutorRepository tutorRepository;
 
     /**
      * @param studentCode
@@ -176,6 +179,31 @@ public class StudentServiceH {
         return studentRepository.findAllStudentMarks(studentCode, courseList, trimList);
     }
 
+    public void deleteByStudentCode(int studentCode) {
+        studentRepository.deleteByStudentCode(studentCode);
+    }
+
+    public List<List<String>> findAllStudentByYearSubjectGroupTeacherTrimCourse(String eduYear,
+                                                                                String groupName,
+                                                                                Integer trim,
+                                                                                Integer course,
+                                                                                String subjectName,
+                                                                                Integer tutorNo) {
+        List<String> eduYearList = getEduYearsList(eduYear);
+        List<String> groupList = getGroupList(groupName);
+        List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
+        List<Integer> courseList = getCourseList(course);
+        List<String> subjectNameList = getSubjectList(subjectName);
+        List<Integer> tutorList = getTutorList(tutorNo);
+
+        List<List<String>> result = studentRepository.findAllStudentByYearSubjectGroupTeacherTrimCourse(
+                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList)
+                .stream().distinct().collect(Collectors.toList());
+
+        return result;
+    }
+
+
     private List<String> getSubjectList(String subjectName) {
         return subjectName == null
                 ? subjectRepository.findAll()
@@ -211,7 +239,23 @@ public class StudentServiceH {
                 .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList());
     }
 
-    private static List<String> semestrParser(Integer course, Integer semestr) {
+    private List<String> getGroupList(String groupName) {
+        return groupName == null
+                ? groupRepository.findAll()
+                .stream().map(GroupEntity::getGroupName).distinct().collect(Collectors.toList())
+                : groupRepository.findDistinctAllByGroupNameIn(Collections.singletonList(groupName))
+                .stream().map(GroupEntity::getGroupName).distinct().collect(Collectors.toList());
+    }
+
+    private List<Integer> getTutorList(Integer tutorNo) {
+        return tutorNo == null
+                ? tutorRepository.findAll()
+                .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList())
+                : tutorRepository.findDistinctByTutorNoIn(Collections.singletonList(tutorNo))
+                .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList());
+    }
+
+    private List<String> semestrParser(Integer course, Integer semestr) {
         if (course != null) {
             if (semestr != null) {
                 if (semestr.equals(3))
@@ -234,8 +278,6 @@ public class StudentServiceH {
             }
         }
     }
-
-
 
 
 }

@@ -2,6 +2,7 @@ package com.project.database;
 
 import com.project.database.repository.GroupRepository;
 import com.project.database.repository.StudentRepository;
+import com.project.database.service.StudentService;
 import com.project.database.serviceHibernate.BigunetsServiceH;
 import com.project.database.serviceHibernate.StudentServiceH;
 import com.project.database.serviceHibernate.VidomistMarkServiceH;
@@ -30,8 +31,11 @@ public class DatabaseApplication {
 //        System.out.println(studentRepository.findTrims(null));
 //        System.out.println(studentRepository.findTrims("7"));
 
+
         StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-        System.out.println(studentServiceH.findAllStudentMarks(2, null,null));
+        System.out.println(studentServiceH.findAllStudentByYearSubjectGroupTeacherTrimCourse(null, null, null, null, null, null));
+
+//        System.out.println(studentServiceH.findAllStudentMarks(2, null,null));
         //        System.out.println(studentServiceH.findAverageStudentMarksTrimCourse(
 //                1,null, null, "2020-2021", "student_surname", true
 //        ));

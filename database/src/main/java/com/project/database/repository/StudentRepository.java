@@ -1,6 +1,7 @@
 package com.project.database.repository;
 
 import com.project.database.entities.StudentEntity;
+import com.project.database.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -128,6 +129,35 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
                                            @Param("course") List<Integer> course,
                                            @Param("trim") List<String> trim);
 
+    void deleteByStudentCode(int studentCode);
+
+    @Query("select s.studentCode, s.studentName, s.studentName, s.studentPatronymic " +
+            "from StudentEntity s " +
+            "inner join VidomistMarkEntity  vm on s.studentCode=vm.vidomistMarkId.studentCode " +
+            "inner join VidomistEntity v on vm.vidomistMarkId.studentCode=v.vidomistNo " +
+            "inner join TutorEntity t on v.tutor.tutorNo=t.tutorNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo = g.subject.subjectNo " +
+            "where " +
+            "   g.eduYear in (:eduYear) " +
+            "and " +
+            "   g.groupName in (:groupName)" +
+            "and " +
+            "   g.trim in (:trim) " +
+            "and " +
+            "   g.course in (:course)" +
+            "and " +
+            "   sub.subjectName in (:subjectName)" +
+            "and " +
+            "   t.tutorNo in (:tutorNo) ")
+        // add order by limit and offset
+    List<List<String>> findAllStudentByYearSubjectGroupTeacherTrimCourse(
+            @Param("eduYear") List<String> eduYear,
+            @Param("groupName") List<String> groupName,
+            @Param("trim") List<String> trim,
+            @Param("course") List<Integer> course,
+            @Param("subjectName") List<String> subjectName,
+            @Param("tutorNo") List<Integer> tutorNo);
 
 
 }
