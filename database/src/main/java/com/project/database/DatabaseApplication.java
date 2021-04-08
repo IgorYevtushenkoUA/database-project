@@ -31,12 +31,10 @@ public class DatabaseApplication {
 //        System.out.println(studentRepository.findTrims("7"));
 
         StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-//        System.out.println(studentServiceH.findAverageStudentMarksTrimCourse(
+        System.out.println(studentServiceH.findAllStudentMarks(2, null,null));
+        //        System.out.println(studentServiceH.findAverageStudentMarksTrimCourse(
 //                1,null, null, "2020-2021", "student_surname", true
 //        ));
-
-        BigunetsServiceH bigunetsServiceH = applicationContext.getBean(BigunetsServiceH.class);
-        System.out.println(bigunetsServiceH.findAllStudentBigunets(1));
 
 
     }

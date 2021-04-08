@@ -99,5 +99,35 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
 
     List<StudentEntity> findAllByStudentSurnameAndStudentNameAndStudentPatronymic(String surname, String name, String patronymic);
 
+    @Query("select avg(vm.completeMark) " +
+            "from VidomistMarkEntity vm " +
+            "inner join VidomistEntity v on vm.vidomistMarkId.vidomistNo=v.vidomistNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "where " +
+            "   vm.vidomistMarkId.studentCode=:studentCode " +
+            "and " +
+            "  g.course in (:course) " +
+            "and " +
+            "   g.trim in (:trim) ")
+    double findStudentAverageMarksForCourseTrim(@Param("studentCode") Integer studentCode,
+                                                @Param("course") List<Integer> course,
+                                                @Param("trim") List<String> trim);
+
+    @Query("select sub.subjectName, sub.eduLevel,sub.faculty, vm.completeMark " +
+            "from VidomistMarkEntity vm " +
+            "inner join VidomistEntity v on vm.vidomistMarkId.vidomistNo=v.vidomistNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
+            "where " +
+            "   vm.vidomistMarkId.studentCode=:studentCode " +
+            "and " +
+            "  g.course in (:course) " +
+            "and " +
+            "   g.trim in (:trim) ")
+    List<List<String>> findAllStudentMarks(@Param("studentCode") Integer studentCode,
+                                           @Param("course") List<Integer> course,
+                                           @Param("trim") List<String> trim);
+
+
 
 }

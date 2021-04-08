@@ -160,6 +160,22 @@ public class StudentServiceH {
         return studentRepository.findAllByStudentSurnameAndStudentNameAndStudentPatronymic(surname, name, patronymic);
     }
 
+    public double findStudentAverageMarksForCourseTrim(Integer studentCode, Integer course, Integer trim) {
+
+        List<Integer> courseList = getCourseList(course);
+        List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
+
+        return studentRepository.findStudentAverageMarksForCourseTrim(studentCode, courseList, trimList);
+    }
+
+    public List<List<String>> findAllStudentMarks(Integer studentCode, Integer course, Integer trim) {
+
+        List<Integer> courseList = getCourseList(course);
+        List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
+
+        return studentRepository.findAllStudentMarks(studentCode, courseList, trimList);
+    }
+
     private List<String> getSubjectList(String subjectName) {
         return subjectName == null
                 ? subjectRepository.findAll()
@@ -218,6 +234,8 @@ public class StudentServiceH {
             }
         }
     }
+
+
 
 
 }
