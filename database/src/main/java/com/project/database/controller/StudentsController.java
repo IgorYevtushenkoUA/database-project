@@ -26,24 +26,24 @@ public class StudentsController {
 
     @GetMapping("/students")
     public HashMap<String, Object> getAllStudents(
-            @RequestParam(name = "year", defaultValue = "2020") String year,
+            @RequestParam(name = "year", defaultValue = "2020-2021") String year,
             @RequestParam(name = "subject", required = false) String subject,
             @RequestParam(name = "tutor", required = false) String tutor,
             @RequestParam(name = "group", required = false) String group,
             @RequestParam(name = "semester", required = false) Integer semester,
             @RequestParam(name = "course", required = false) Integer course,
-            @RequestParam(name = "sortBy", defaultValue = "rating") String sortBy, // {surname, rating}
+            @RequestParam(name = "sortBy", defaultValue = "student_surname") String sortBy, // {surname, rating}
             @RequestParam(name = "sortDesc", defaultValue = "true") Boolean sortDesc, // {high->low(desc);low->high(asc)}
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
         List<Student> students;
-//        students = studentService.findAllByYearSubjectGroupTeacherTrimCourse(
-//                year, subject, group, tutor,
-//                String.valueOf(semester), String.valueOf(course),
-//                sortBy, sortDesc, page, numberPerPage
-//        );
-        students = studentService.findAll(page, numberPerPage);
+        students = studentService.findAllByYearSubjectGroupTeacherTrimCourse(
+                year, subject, group, tutor,
+                semester == null ? null : String.valueOf(semester), course == null ? null : String.valueOf(course),
+                sortBy, sortDesc, page, numberPerPage
+        );
+//        students = studentService.findAll(page, numberPerPage);
         HashMap<String, Object> response = new HashMap<>();
         response.put("data", students);
         response.put("totalElements", studentService.findAll(1, Integer.MAX_VALUE).size()); // загальна кількість записів
