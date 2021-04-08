@@ -9,6 +9,7 @@ import com.project.database.repository.StudentRepository;
 import com.project.database.repository.SubjectRepository;
 import com.project.database.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,15 +93,9 @@ public class StudentServiceH {
                 : groupRepository.findDistinctAllByEduYearIn(Collections.singletonList(eduYear))
                 .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList());
 
-        String sortDescStr = sortDesc
-                ? " DESC "
-                : " ASC ";
+        Sort sort = setSort(sortBy, sortDesc);
 
-        sortBy = sortBy.equals("student_surname")
-                ? "s.studentSurname"
-                : "avg(vm.completeMark)";
-
-        return studentRepository.findAverageStudentsMarksTrimCourse(semesters, courses, eduYears);
+        return studentRepository.findAverageStudentsMarksTrimCourse(semesters, courses, eduYears, sort);
     }
 
     public List<List<String>> findAverageStudentMarksTrimCourse(Integer studentCode,
@@ -117,22 +112,18 @@ public class StudentServiceH {
 
         List<String> eduYears = getEduYearsList(eduYear);
 
-        String sortDescStr = sortDesc
-                ? " DESC "
-                : " ASC ";
+        Sort sort = setSort(sortBy, sortDesc);
 
-        sortBy = sortBy.equals("student_surname")
-                ? "s.studentSurname"
-                : "avg(vm.completeMark)";
-
-        return studentRepository.findAverageStudentMarksTrimCourse(studentCode, semesters, courses, eduYears);
+        return studentRepository.findAverageStudentMarksTrimCourse(studentCode, semesters, courses, eduYears, sort);
     }
 
 
     public List<List<String>> findAllWhoHasRetakeSubjectTrimEduYear(String subjectName,
                                                                     Integer semestr,
                                                                     Integer course,
-                                                                    String eduYear) {
+                                                                    String eduYear,
+                                                                    String sortBy,
+                                                                    boolean sortDesc) {
 
         List<String> subjects = getSubjectList(subjectName);
 
@@ -142,17 +133,24 @@ public class StudentServiceH {
 
         List<String> eduYears = getEduYearsList(eduYear);
 
-        return studentRepository.findAllWhoHasRetakeSubjectTrimEduYear(subjects, semesters, courses, eduYears);
+        Sort sort = setSort(sortBy, sortDesc);
+
+        return studentRepository.findAllWhoHasRetakeSubjectTrimEduYear(subjects, semesters, courses, eduYears, sort);
     }
 
     public List<List<String>> findAllRetakenSubjectForStudentTrimEduYear(Integer studentCode,
                                                                          Integer trim,
-                                                                         String eduYear) {
+                                                                         String eduYear,
+                                                                         String sortBy,
+                                                                         boolean sortDesc) {
 
         List<String> trimList = getSemestrList(trim, semestrParser(null, trim));
+
         List<String> eduYearList = getEduYearsList(eduYear);
 
-        return studentRepository.findAllRetakenSubjectForStudentTrimEduYear(studentCode, trimList, eduYearList);
+        Sort sort = setSort(sortBy, sortDesc);
+
+        return studentRepository.findAllRetakenSubjectForStudentTrimEduYear(studentCode, trimList, eduYearList, sort);
     }
 
     public List<StudentEntity> findAll() {
@@ -166,17 +164,20 @@ public class StudentServiceH {
     public double findStudentAverageMarksForCourseTrim(Integer studentCode, Integer course, Integer trim) {
 
         List<Integer> courseList = getCourseList(course);
+
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
 
         return studentRepository.findStudentAverageMarksForCourseTrim(studentCode, courseList, trimList);
     }
 
-    public List<List<String>> findAllStudentMarks(Integer studentCode, Integer course, Integer trim) {
+    public List<List<String>> findAllStudentMarks(Integer studentCode, Integer course, Integer trim,String sortBy, boolean sortDesc) {
 
         List<Integer> courseList = getCourseList(course);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
 
-        return studentRepository.findAllStudentMarks(studentCode, courseList, trimList);
+        Sort sort = setSort(sortBy, sortDesc);
+
+        return studentRepository.findAllStudentMarks(studentCode, courseList, trimList, sort);
     }
 
     public void deleteByStudentCode(int studentCode) {
@@ -188,7 +189,9 @@ public class StudentServiceH {
                                                                                 Integer trim,
                                                                                 Integer course,
                                                                                 String subjectName,
-                                                                                Integer tutorNo) {
+                                                                                Integer tutorNo,
+                                                                                String sortBy,
+                                                                                boolean sortDesc) {
         List<String> eduYearList = getEduYearsList(eduYear);
         List<String> groupList = getGroupList(groupName);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
@@ -196,8 +199,10 @@ public class StudentServiceH {
         List<String> subjectNameList = getSubjectList(subjectName);
         List<Integer> tutorList = getTutorList(tutorNo);
 
+        Sort sort = setSort(sortBy, sortDesc);
+
         List<List<String>> result = studentRepository.findAllStudentByYearSubjectGroupTeacherTrimCourse(
-                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList)
+                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort)
                 .stream().distinct().collect(Collectors.toList());
 
         return result;
@@ -208,15 +213,18 @@ public class StudentServiceH {
                                                                                  Integer trim,
                                                                                  Integer course,
                                                                                  String subjectName,
-                                                                                 Integer tutorNo) {
+                                                                                 Integer tutorNo,
+                                                                                 String sortBy,
+                                                                                 boolean sortDesc) {
         List<String> eduYearList = getEduYearsList(eduYear);
         List<String> groupList = getGroupList(groupName);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
         List<Integer> courseList = getCourseList(course);
         List<String> subjectNameList = getSubjectList(subjectName);
         List<Integer> tutorList = getTutorList(tutorNo);
+        Sort sort = setSort(sortBy, sortDesc);
         List<StudentEntity> result = studentRepository.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
-                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList)
+                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort)
                 .stream().distinct().collect(Collectors.toList());
         return result;
     }
@@ -296,5 +304,13 @@ public class StudentServiceH {
         }
     }
 
+    private Sort setSort(String sortBy, boolean sortDesc) {
+        sortBy = sortBy.equals("student_surname")
+                ? "studentSurname"
+                : "completeMark";
+        return sortDesc
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+    }
 
 }

@@ -1,7 +1,7 @@
 package com.project.database.repository;
 
 import com.project.database.entities.StudentEntity;
-import com.project.database.entity.Student;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +20,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     @Query("select s.studentSurname, s.studentName, s.studentPatronymic from StudentEntity s where s.studentSurname like:name or s.studentName like:name or s.studentPatronymic like:name")
     List<List<String>> findAllStudentNames(@Param("name") String name);
 
-    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, avg(vm.completeMark) " +
+    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, avg(vm.completeMark) as completeMark " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
@@ -30,15 +30,15 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "   gr.course in (:courses) " +
             "and " +
             "   gr.eduYear in (:eduYears) " +
-            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic " +
-            "order by s.studentSurname ASC")
+            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic ")
     List<List<String>> findAverageStudentsMarksTrimCourse(
             @Param("semesters") List<String> semesters,
             @Param("courses") List<Integer> courses,
-            @Param("eduYears") List<String> eduYears
+            @Param("eduYears") List<String> eduYears,
+            Sort sort
     );
 
-    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, avg(vm.completeMark) " +
+    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, avg(vm.completeMark) as completeMark " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
@@ -49,16 +49,15 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "   gr.course in (:courses) " +
             "and " +
             "   gr.eduYear in (:eduYears) " +
-            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic " +
-            "order by s.studentSurname ASC")
+            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic ")
     List<List<String>> findAverageStudentMarksTrimCourse(
             @Param("studentCode") Integer studentCode,
             @Param("semesters") List<String> semesters,
             @Param("courses") List<Integer> courses,
-            @Param("eduYears") List<String> eduYears
-    );
+            @Param("eduYears") List<String> eduYears,
+            Sort sort);
 
-    @Query("select s.studentSurname, s.studentName, s.studentPatronymic, s2.subjectName, bm.completeMark " +
+    @Query("select s.studentSurname, s.studentName, s.studentPatronymic, s2.subjectName, bm.completeMark as completeMark " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
@@ -71,14 +70,14 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "   g.course in (:course) " +
             "and " +
-            "   g.eduYear in (:eduYear) " +
-            "order by s.studentSurname")
-        // todo offset, limit, order by
+            "   g.eduYear in (:eduYear) ")
     List<List<String>> findAllWhoHasRetakeSubjectTrimEduYear(@Param("subjectName") List<String> subjectName,
                                                              @Param("trim") List<String> trim,
-                                                             @Param("course") List<Integer> course, @Param("eduYear") List<String> eduYear);
+                                                             @Param("course") List<Integer> course,
+                                                             @Param("eduYear") List<String> eduYear,
+                                                             Sort sort);
 
-    @Query("select s.studentSurname, s.studentName, s.studentPatronymic, s2.subjectName, bm.completeMark " +
+    @Query("select s.studentSurname, s.studentName, s.studentPatronymic, s2.subjectName, bm.completeMark as completeMark " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
@@ -89,12 +88,11 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "   g.trim in (:trim) " +
             "and " +
-            "   g.eduYear in (:eduYear) " +
-            "order by s.studentSurname")
-        // todo offset, limit, order by
+            "   g.eduYear in (:eduYear) ")
     List<List<String>> findAllRetakenSubjectForStudentTrimEduYear(@Param("studentCode") Integer studentCode,
                                                                   @Param("trim") List<String> trim,
-                                                                  @Param("eduYear") List<String> eduYear);
+                                                                  @Param("eduYear") List<String> eduYear,
+                                                                  Sort sort);
 
     List<StudentEntity> findAll();
 
@@ -114,7 +112,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
                                                 @Param("course") List<Integer> course,
                                                 @Param("trim") List<String> trim);
 
-    @Query("select sub.subjectName, sub.eduLevel,sub.faculty, vm.completeMark " +
+    @Query("select sub.subjectName, sub.eduLevel,sub.faculty, vm.completeMark as completeMark " +
             "from VidomistMarkEntity vm " +
             "inner join VidomistEntity v on vm.vidomistMarkId.vidomistNo=v.vidomistNo " +
             "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
@@ -127,7 +125,8 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "   g.trim in (:trim) ")
     List<List<String>> findAllStudentMarks(@Param("studentCode") Integer studentCode,
                                            @Param("course") List<Integer> course,
-                                           @Param("trim") List<String> trim);
+                                           @Param("trim") List<String> trim,
+                                           Sort sort);
 
     void deleteByStudentCode(int studentCode);
 
@@ -150,14 +149,14 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "   sub.subjectName in (:subjectName)" +
             "and " +
             "   t.tutorNo in (:tutorNo) ")
-        // add order by limit and offset
     List<List<String>> findAllStudentByYearSubjectGroupTeacherTrimCourse(
             @Param("eduYear") List<String> eduYear,
             @Param("groupName") List<String> groupName,
             @Param("trim") List<String> trim,
             @Param("course") List<Integer> course,
             @Param("subjectName") List<String> subjectName,
-            @Param("tutorNo") List<Integer> tutorNo);
+            @Param("tutorNo") List<Integer> tutorNo,
+            Sort sort);
 
     @Query("select s " +
             "from StudentEntity s " +
@@ -190,15 +189,15 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "           sub.subjectName in (:subjectName) " +
             "       and " +
             "           v1.tutor.tutorNo in (:tutorNo) " +
-            ")" +
-            ")") // todo add order by and limit and offset
+            "   )" +
+            ")")
     List<StudentEntity> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
             @Param("eduYear") List<String> eduYear,
             @Param("groupName") List<String> groupName,
             @Param("trim") List<String> trim,
             @Param("course") List<Integer> course,
             @Param("subjectName") List<String> subjectName,
-            @Param("tutorNo") List<Integer> tutorNo
-    );
+            @Param("tutorNo") List<Integer> tutorNo,
+            Sort sort);
 
 }
