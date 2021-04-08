@@ -26,7 +26,7 @@ public class VidomistEntity {
     @Column(name = "present_count")
     private int presentCount;
 
-    @Column(name = "adsent_count")
+    @Column(name = "absent_count")
     private int absentCount;
 
     @Column(name = "rejected_count")

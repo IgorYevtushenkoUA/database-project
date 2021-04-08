@@ -2,9 +2,12 @@ package com.project.database.serviceHibernate;
 
 import com.project.database.entities.GroupEntity;
 import com.project.database.entities.StudentEntity;
+import com.project.database.entities.SubjectEntity;
 import com.project.database.repository.GroupRepository;
 import com.project.database.repository.StudentRepository;
+import com.project.database.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +22,7 @@ public class StudentServiceH {
 
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
-
+    private final SubjectRepository subjectRepository;
 
     /**
      * @param studentCode
@@ -55,7 +58,7 @@ public class StudentServiceH {
         return studentRepository.findAllStudentNames('%' + name + '%');
     }
 
-    public List<String> findTrims(String str){
+    public List<String> findTrims(String str) {
         return studentRepository.findTrims(str);
     }
 
@@ -66,44 +69,131 @@ public class StudentServiceH {
                                                                  String sortBy,
                                                                  boolean sortDesc
     ) {
-        // TODO semester is {1, 2, 3} as {Осінь, Весна, Літо}. Map it to {1, 2, 2д, 3...}
-        // For example:
-        // course 2 semester 3 is 4д
-        // course 3 semester 1 is 5
-
-        List<String> list = List.of("2");
+        List<String> list = semestrParser(course, semestr);
 
         List<String> semesters = semestr == null
                 ? groupRepository.findAll() //            🔽🔽🔽🔽
-                    .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList())
-//                : groupRepository.findDistinctAllByTrimIn(Collections.singletonList(String.valueOf(semestr)))
+                .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList())
                 : groupRepository.findDistinctAllByTrimIn(list)
-                    .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList());
+                .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList());
 
         List<Integer> courses = course == null
                 ? groupRepository.findAll()//              🔽🔽🔽🔽
-                    .stream().map(GroupEntity::getCourse).distinct().collect(Collectors.toList())
+                .stream().map(GroupEntity::getCourse).distinct().collect(Collectors.toList())
                 : groupRepository.findDistinctAllByCourseIn(Collections.singletonList(course))
-                    .stream().map(GroupEntity::getCourse).distinct().collect(Collectors.toList());
+                .stream().map(GroupEntity::getCourse).distinct().collect(Collectors.toList());
 
         List<String> eduYears = eduYear == null
                 ? groupRepository.findAll()
-                    .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList())
+                .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList())
                 : groupRepository.findDistinctAllByEduYearIn(Collections.singletonList(eduYear))
-                    .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList());
+                .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList());
 
         String sortDescStr = sortDesc
                 ? " DESC "
                 : " ASC ";
 
         sortBy = sortBy.equals("student_surname")
-                ? " s.studentSurname " + sortDescStr
-                : " avg(vm.completeMark) " + sortDescStr;
+                ? "s.studentSurname"
+                : "avg(vm.completeMark)";
 
         return studentRepository.findAverageStudentsMarksTrimCourse(semesters, courses, eduYears);
+    }
+
+    public List<List<String>> findAverageStudentMarksTrimCourse(Integer studentCode,
+                                                                Integer semestr,
+                                                                Integer course,
+                                                                String eduYear,
+                                                                String sortBy,
+                                                                boolean sortDesc
+    ) {
+
+        List<String> semesters = getSemestrList(semestr, semestrParser(course, semestr));
+
+        List<Integer> courses = getCourseList(course);
+
+        List<String> eduYears = getEduYearsList(eduYear);
+
+        String sortDescStr = sortDesc
+                ? " DESC "
+                : " ASC ";
+
+        sortBy = sortBy.equals("student_surname")
+                ? "s.studentSurname"
+                : "avg(vm.completeMark)";
+
+        return studentRepository.findAverageStudentMarksTrimCourse(studentCode, semesters, courses, eduYears);
+    }
+
+
+    public List<List<String>> findAllWhoHasRetakeSubjectTrimEduYear(String subjectName,
+                                                                    Integer semestr,
+                                                                    Integer course,
+                                                                    String eduYear) {
+
+        List<String> subjects = getSubjectList(subjectName);
+
+        List<String> semesters = getSemestrList(semestr, semestrParser(course, semestr));
+
+        List<Integer> courses = getCourseList(course);
+
+        List<String> eduYears = getEduYearsList(eduYear);
+
+        return studentRepository.findAllWhoHasRetakeSubjectTrimEduYear(subjects, semesters, courses, eduYears);
+    }
+
+    public List<List<String>> findAllRetakenSubjectForStudentTrimEduYear(Integer studentCode,
+                                                                         Integer trim,
+                                                                         String eduYear) {
+
+        List<String> trimList = getSemestrList(trim, semestrParser(null, trim));
+        List<String> eduYearList = getEduYearsList(eduYear);
+
+        return studentRepository.findAllRetakenSubjectForStudentTrimEduYear(studentCode, trimList, eduYearList);
+    }
+
+    public List<StudentEntity> findAll() {
+        return studentRepository.findAll();
+    }
+
+    public List<StudentEntity> findAllByStudentSurnameAndStudentNameAndStudentPatronymic(String surname, String name, String patronymic) {
+        return studentRepository.findAllByStudentSurnameAndStudentNameAndStudentPatronymic(surname, name, patronymic);
+    }
+
+    private List<String> getSubjectList(String subjectName) {
+        return subjectName == null
+                ? subjectRepository.findAll()
+                .stream().map(SubjectEntity::getSubjectName).distinct().collect(Collectors.toList())
+                : subjectRepository.findDistinctBySubjectNameIn(Collections.singletonList(subjectName))
+                .stream().map(SubjectEntity::getSubjectName).distinct().collect(Collectors.toList());
+    }
+
+    private List<String> getSemestrList(Integer semestr, List<String> semestrList) {
+        return semestr == null
+                ? groupRepository.findAll() //            🔽🔽🔽🔽
+                .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList())
+                : groupRepository.findDistinctAllByTrimIn(semestrList)
+                .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList());
 
     }
 
+    private List<Integer> getCourseList(Integer course) {
+        return course == null
+                ? groupRepository.findAll()//              🔽🔽🔽🔽
+                .stream().map(GroupEntity::getCourse).distinct().collect(Collectors.toList())
+                : groupRepository.findDistinctAllByCourseIn(Collections.singletonList(course))
+                .stream().map(GroupEntity::getCourse).distinct().collect(Collectors.toList());
+
+
+    }
+
+    private List<String> getEduYearsList(String eduYear) {
+        return eduYear == null
+                ? groupRepository.findAll()
+                .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList())
+                : groupRepository.findDistinctAllByEduYearIn(Collections.singletonList(eduYear))
+                .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList());
+    }
 
     private static List<String> semestrParser(Integer course, Integer semestr) {
         if (course != null) {
@@ -128,7 +218,6 @@ public class StudentServiceH {
             }
         }
     }
-
 
 
 }
