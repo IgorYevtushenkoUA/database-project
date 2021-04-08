@@ -21,6 +21,7 @@ public class DatabaseApplication {
     private static void test(ApplicationContext applicationContext) {
         StudentRepository studentRepository = applicationContext.getBean(StudentRepository.class);
 
+        System.out.println(studentRepository.findAverageStudentsMarksTrimCourse());
         System.out.println(studentRepository.findTrims(null));
         System.out.println(studentRepository.findTrims("7"));
     }

@@ -48,6 +48,10 @@ public class StudentServiceH {
         return studentRepository.findAllStudentNames('%' + name + '%');
     }
 
+    public List<String> findTrims(String str){
+        return studentRepository.findTrims(str);
+    }
+
     public List<List<String>> findAverageStudentsMarksTrimCourse(Integer semestr,
                                                                  Integer course,
                                                                  String eduYear,

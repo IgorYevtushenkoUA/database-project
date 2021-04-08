@@ -29,10 +29,6 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "order by s.studentSurname")
     List<List<String>> findAverageStudentsMarksTrimCourse(
             @Param("trim") String trim
-//                                                          @Param("course") String course,
-//                                                          @Param("eduYear") String eduYear,
-//            @Param("sortBy") String sortBy);
-//                                                          Pageable pageable);
     );
 
 }
