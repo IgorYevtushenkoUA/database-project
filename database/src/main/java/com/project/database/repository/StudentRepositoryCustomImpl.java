@@ -52,26 +52,4 @@ public class StudentRepositoryCustomImpl implements StudentRepositoryCustom {
 
         return resultList;
     }
-
-    /*    select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, avg(vm.completeMark) " +
-            "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
-            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
-            "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
-            "where gr.trim in (select distinct(g.trim) from GroupEntity g) and gr.course in (select distinct(g.course) from GroupEntity g) and gr.eduYear in (select distinct(g.eduYear) from GroupEntity g) " +
-            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic " +
-            "order by s.studentSurname"    */
-
-    @Override
-    public List<GroupEntity> findAverageStudentsMarksTrimCourse() {
-
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<GroupEntity> criteriaQuery = cb.createQuery(GroupEntity.class);
-        Root<GroupEntity> root = criteriaQuery.from(GroupEntity.class);
-        Join<GroupEntity,SubjectEntity > groupInnerJoinSubject = root.join(GroupEntity_.subject);
-        criteriaQuery.where(cb.equal(groupInnerJoinSubject.get(SubjectEntity_.subjectNo),5));
-        TypedQuery<GroupEntity> query = entityManager.createQuery(criteriaQuery);
-        List<GroupEntity> resultList = query.getResultList();
-        return resultList;
-    }
-
 }

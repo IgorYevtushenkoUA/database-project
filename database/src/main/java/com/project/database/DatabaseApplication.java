@@ -1,9 +1,13 @@
 package com.project.database;
 
+import com.project.database.repository.GroupRepository;
 import com.project.database.repository.StudentRepository;
+import com.project.database.serviceHibernate.StudentServiceH;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+
+import java.util.List;
 
 @SpringBootApplication
 public class DatabaseApplication {
@@ -20,11 +24,17 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
         StudentRepository studentRepository = applicationContext.getBean(StudentRepository.class);
-
-        System.out.println(studentRepository.findAverageStudentsMarksTrimCourse());
+        GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
         System.out.println(studentRepository.findTrims(null));
         System.out.println(studentRepository.findTrims("7"));
+
+        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
+        System.out.println(studentServiceH.findAverageStudentsMarksTrimCourse(
+                2, 3, "2020-2021", "student_surname", false
+        ));
     }
+
+
 
 
 }

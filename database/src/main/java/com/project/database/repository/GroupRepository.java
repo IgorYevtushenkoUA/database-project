@@ -5,12 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
-
-    List<GroupEntity> findAll();
 
     void deleteByGroupCode(int groupId);
 
@@ -25,4 +24,16 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 
     @Query("select distinct(g.eduYear) from GroupEntity g")
     List<String> findAllGroupEduYears();
+
+    //
+    /******************************* ALL YOU NEED *************************************/
+    //    @Query("SELECT distinct g.trim FROM GroupEntity g WHERE g.trim IN :semesters")
+    List<GroupEntity> findDistinctAllByTrimIn(@Param("semesters") List<String> semesters);
+
+    //    @Query("SELECT distinct(g.course) FROM GroupEntity g WHERE g.course IN :courses")
+    List<GroupEntity> findDistinctAllByCourseIn(@Param("courses") List<Integer> courses);
+
+    // " select distinct(g.eduYear) from GroupEntity g where g.eduYear IN '" + eduYear + "' "
+    List<GroupEntity> findDistinctAllByEduYearIn(@Param("eduYears") List<String> eduYears);
+    /**********************************************************************************/
 }
