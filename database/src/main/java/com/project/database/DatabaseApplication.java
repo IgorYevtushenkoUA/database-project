@@ -2,6 +2,7 @@ package com.project.database;
 
 import com.project.database.repository.GroupRepository;
 import com.project.database.repository.StudentRepository;
+import com.project.database.serviceHibernate.BigunetsServiceH;
 import com.project.database.serviceHibernate.StudentServiceH;
 import com.project.database.serviceHibernate.VidomistMarkServiceH;
 import com.project.database.serviceHibernate.VidomistRepositoryH;
@@ -34,11 +35,9 @@ public class DatabaseApplication {
 //                1,null, null, "2020-2021", "student_surname", true
 //        ));
 
-//        VidomistMarkServiceH vidomistMarkServiceH = applicationContext.getBean(VidomistMarkServiceH.class);
-//        System.out.println(vidomistMarkServiceH.findAllByStudentCode(1));
+        BigunetsServiceH bigunetsServiceH = applicationContext.getBean(BigunetsServiceH.class);
+        System.out.println(bigunetsServiceH.findAllStudentBigunets(1));
 
-        VidomistRepositoryH vidomistRepositoryH = applicationContext.getBean(VidomistRepositoryH.class);
-        System.out.println(vidomistRepositoryH.findAllStudentVidomosties(1));
 
     }
 
