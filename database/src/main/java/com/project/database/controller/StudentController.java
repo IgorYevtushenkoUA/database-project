@@ -52,9 +52,9 @@ public class StudentController {
         return studentService.findByPIB(name, surname, patronymic, page, numberPerPage);
     }
 
-    @GetMapping("/student/{id}")
+    @GetMapping("/student/{studentRecordBook}")
     public Object getStudentInfo(
-            @PathVariable(name = "id") int id,
+            @PathVariable(name = "studentRecordBook") String studentRecordBook,
             @RequestParam(name = "finalMark", required = false) boolean finalMark, // хз що це (запиту немає на це)
             @RequestParam(name = "bigunets", required = false) boolean bigunets,
             @RequestParam(name = "averageMark", required = false) boolean averageMark,
@@ -63,7 +63,7 @@ public class StudentController {
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
 
-        return studentService.findById(id);
+        return studentService.findByStudentRecordBook(studentRecordBook);
     }
 
     @PostMapping("/student/{id}")
