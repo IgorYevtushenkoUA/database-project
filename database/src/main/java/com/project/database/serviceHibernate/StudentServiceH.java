@@ -1,5 +1,6 @@
 package com.project.database.serviceHibernate;
 
+import com.project.database.additionalEntities.StudentMark;
 import com.project.database.entities.GroupEntity;
 import com.project.database.entities.StudentEntity;
 import com.project.database.entities.SubjectEntity;
@@ -207,8 +208,31 @@ public class StudentServiceH {
 
         return result;
     }
+    public List<List<String>> findAllStudents(String eduYear,
+                                                                                String groupName,
+                                                                                Integer trim,
+                                                                                Integer course,
+                                                                                String subjectName,
+                                                                                Integer tutorNo,
+                                                                                String sortBy,
+                                                                                boolean sortDesc) {
+        List<String> eduYearList = getEduYearsList(eduYear);
+        List<String> groupList = getGroupList(groupName);
+        List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
+        List<Integer> courseList = getCourseList(course);
+        List<String> subjectNameList = getSubjectList(subjectName);
+        List<Integer> tutorList = getTutorList(tutorNo);
 
-    public List<StudentEntity> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(String eduYear,
+        Sort sort = setSort(sortBy, sortDesc);
+
+        List<List<String>> result = studentRepository.findAllStudents(
+                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort)
+                .stream().distinct().collect(Collectors.toList());
+
+        return result;
+    }
+
+    public List<List<String>> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(String eduYear,
                                                                                  String groupName,
                                                                                  Integer trim,
                                                                                  Integer course,
@@ -223,7 +247,7 @@ public class StudentServiceH {
         List<String> subjectNameList = getSubjectList(subjectName);
         List<Integer> tutorList = getTutorList(tutorNo);
         Sort sort = setSort(sortBy, sortDesc);
-        List<StudentEntity> result = studentRepository.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+        List<List<String>> result = studentRepository.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
                 eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort)
                 .stream().distinct().collect(Collectors.toList());
         return result;

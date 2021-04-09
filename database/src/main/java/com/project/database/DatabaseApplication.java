@@ -1,17 +1,11 @@
 package com.project.database;
 
-import com.project.database.repository.GroupRepository;
 import com.project.database.repository.StudentRepository;
-import com.project.database.service.StudentService;
-import com.project.database.serviceHibernate.BigunetsServiceH;
-import com.project.database.serviceHibernate.StudentServiceH;
-import com.project.database.serviceHibernate.VidomistMarkServiceH;
-import com.project.database.serviceHibernate.VidomistRepositoryH;
+import com.project.database.serviceHibernate.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
-import java.util.List;
 
 @SpringBootApplication
 public class DatabaseApplication {
@@ -33,10 +27,16 @@ public class DatabaseApplication {
 
 
         StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-        // student_surname
-        System.out.println(studentServiceH.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(null,null,null,null,null,null,"student_surname",false));
+        System.out.println(studentServiceH.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "student_surname",
+                false));
 
-//        System.out.println(studentServiceH.findAllStudentMarks(2, null,null));
         //        System.out.println(studentServiceH.findAverageStudentMarksTrimCourse(
 //                1,null, null, "2020-2021", "student_surname", true
 //        ));
