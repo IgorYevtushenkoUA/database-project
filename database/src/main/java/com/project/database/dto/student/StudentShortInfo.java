@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentShortInfo {
-    private Integer studentCode; // Example: 4,
+    private Integer studentId; // Example: 4,
     private String studentSurname; // Example: "Бойко",
     private String studentName; // Example: "Данило",
     private String studentPatronymic; // Example: "Романович",
