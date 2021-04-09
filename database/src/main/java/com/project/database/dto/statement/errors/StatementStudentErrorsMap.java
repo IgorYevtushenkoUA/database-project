@@ -18,9 +18,9 @@ public class StatementStudentErrorsMap {
     /**
      * Errors' text for the each student in {@link StatementStudent}
      * <ul>
-     *     <li>key: Student's ID</li>
+     *     <li>key: Student's record book no</li>
      *     <li>value: {@link StatementStudentError}</li>
      * </ul>
      */
-    private HashMap<Integer, List<StatementStudentError>> statementStudentsErrorsMap;
+    private HashMap<String, List<StatementStudentError>> statementStudentsErrorsMap;
 }
