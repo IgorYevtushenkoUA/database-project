@@ -1,6 +1,8 @@
 package com.project.database.repository;
 
 import com.project.database.entities.BigunetsEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,8 +20,9 @@ public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Intege
             "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
             "inner join StudentEntity s on s.studentCode=bm.bigunetsMarkId.studentCode " +
             "where s.studentCode =:studentCode")
-    List<List<String>> findAllStudentBigunets(
-            @Param("studentCode") Integer studentCode
+    Page<List<String>> findAllStudentBigunets(
+            @Param("studentCode") Integer studentCode,
+            Pageable pageable
     );
 
 }
