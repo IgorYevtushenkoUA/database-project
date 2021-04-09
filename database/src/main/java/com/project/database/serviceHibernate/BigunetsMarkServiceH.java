@@ -12,7 +12,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class BigunetsMarkServiceH {
     private final BigunetsMarkRepository bigunetsMarkRepository;
 
-    public void insertBigunetsMark(BigunetsMarkEntity bigunetsMark){
+    public void insertBigunetsMark(BigunetsMarkEntity bigunetsMark) {
         bigunetsMarkRepository.save(bigunetsMark);
+    }
+
+    public void updateMark(BigunetsMarkEntity bigunetsMark) {
+        BigunetsMarkEntity updatedBigunets = bigunetsMarkRepository.
+                findByBigunetsMarkIdBigunetsNoAndBigunetsMarkIdStudentCodeAndBigunetsMarkIdVidomistNoAndBigunetsMarkIdTutorNo(
+                        bigunetsMark.getBigunetsMarkId().getBigunetsNo(),
+                        bigunetsMark.getBigunetsMarkId().getStudentCode(),
+                        bigunetsMark.getBigunetsMarkId().getVidomistNo(),
+                        bigunetsMark.getBigunetsMarkId().getTutorNo());
+
+        updatedBigunets.setTrimMark(bigunetsMark.getTrimMark());
+        updatedBigunets.setMarkCheck(bigunetsMark.getMarkCheck());
+        updatedBigunets.setCompleteMark(bigunetsMark.getCompleteMark());
+        updatedBigunets.setNatMark(bigunetsMark.getNatMark());
+        updatedBigunets.setEctsMark(bigunetsMark.getEctsMark());
+
+        bigunetsMarkRepository.save(updatedBigunets);
     }
 }

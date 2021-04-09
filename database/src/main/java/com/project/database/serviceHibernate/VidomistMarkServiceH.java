@@ -30,4 +30,15 @@ public class VidomistMarkServiceH {
         }
     }
 
+    public void updateMark(VidomistMarkEntity vidomistMark){
+        VidomistMarkEntity updatedVidomist = vidomistMarkRepository.findByVidomistMarkIdVidomistNoAndVidomistMarkIdStudentCode(
+                vidomistMark.getVidomistMarkId().getVidomistNo(), vidomistMark.getVidomistMarkId().getStudentCode());
+        updatedVidomist.setTrimMark(vidomistMark.getTrimMark());
+        updatedVidomist.setNatMark(vidomistMark.getNatMark());
+        updatedVidomist.setMarkCheck(vidomistMark.getMarkCheck());
+        updatedVidomist.setCompleteMark(vidomistMark.getCompleteMark());
+        updatedVidomist.setEctsMark(vidomistMark.getEctsMark());
+        vidomistMarkRepository.save(updatedVidomist);
+    }
+
 }

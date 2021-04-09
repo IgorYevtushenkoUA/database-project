@@ -5,4 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BigunetsMarkRepository extends JpaRepository<BigunetsMarkEntity, Integer> {
 
+    BigunetsMarkEntity findByBigunetsMarkIdBigunetsNoAndBigunetsMarkIdStudentCodeAndBigunetsMarkIdVidomistNoAndBigunetsMarkIdTutorNo(
+        Integer bigunetsNo,
+        Integer studentCode,
+        Integer vidomistNo,
+        Integer tutorNo
+    );
+
 }
