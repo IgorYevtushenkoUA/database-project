@@ -275,6 +275,11 @@ public class StudentServiceH {
             studentRepository.save(student);
     }
 
+    // delete by id
+    public void deleteStudentById(int studentCode){
+        studentRepository.deleteById(studentCode);
+    }
+
     private List<String> getSubjectList(String subjectName) {
         return subjectName == null
                 ? subjectRepository.findAll()
@@ -358,7 +363,5 @@ public class StudentServiceH {
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
     }
-
-
 
 }

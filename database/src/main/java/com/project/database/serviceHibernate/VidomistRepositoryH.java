@@ -19,9 +19,13 @@ public class VidomistRepositoryH {
         return vidomistRepository.findAllStudentVidomosties(studentCode);
     }
 
-    public void insertVidomist(VidomistEntity vidomist){
-        if (vidomistRepository.findByVidomistNo(vidomist.getVidomistNo())==null){
+    public void insertVidomist(VidomistEntity vidomist) {
+        if (vidomistRepository.findByVidomistNo(vidomist.getVidomistNo()) == null) {
             vidomistRepository.save(vidomist);
         }
+    }
+
+    public void deleteVidomistById(int vidomistNo) {
+        vidomistRepository.deleteById(vidomistNo);
     }
 }

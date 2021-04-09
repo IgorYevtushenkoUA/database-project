@@ -53,8 +53,14 @@ public class GroupServiceH {
         return groupRepository.findAllGroupEduYears();
     }
 
+    // insert
     public void insertGroup(GroupEntity group){
         groupRepository.save(group);
+    }
+
+    // delete
+    public void deleteGroupById(int groupCode){
+        groupRepository.deleteByGroupCode(groupCode);
     }
 
 }

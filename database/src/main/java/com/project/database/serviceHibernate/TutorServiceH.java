@@ -46,10 +46,15 @@ public class TutorServiceH {
         return tutorRepository.findAllTutorNamesByPartOFName("%" + name + "%");
     }
 
+    // insert
     public void insertTutor(TutorEntity tutor) {
         if (tutorRepository.findByTutorSurnameAndTutorNameAndTutorPatronymic(tutor.getTutorSurname(), tutor.getTutorName(), tutor.getTutorPatronymic()) == null)
             tutorRepository.save(tutor);
     }
 
+    // delete
+    public void deleteTutorById(int tutorNo){
+        tutorRepository.deleteByTutorNo(tutorNo);
+    }
 
 }

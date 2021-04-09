@@ -59,10 +59,16 @@ public class SubjectServiceH {
         return subjectRepository.findAllSubjectNames("%" + name + "%");
     }
 
+    // insert
     public void insertSubject(SubjectEntity subject){
         if (subjectRepository.findBySubjectName(subject.getSubjectName())==null){
             subjectRepository.save(subject);
         }
+    }
+
+    // delete
+    public void deleteSubjectById(int subjectno){
+        subjectRepository.deleteBySubjectNo(subjectno);
     }
 
 
