@@ -17,7 +17,7 @@ public class StatementStudentErrorsMap {
     /**
      * Errors' text for the each student in {@link StatementStudent}
      * <ul>
-     *     <li>key: Student's record book no</li>
+     *     <li>key: Student's surname and name</li>
      *     <li>value: {@link StatementStudentError}</li>
      * </ul>
      */

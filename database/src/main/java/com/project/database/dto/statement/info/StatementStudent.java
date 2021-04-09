@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StatementStudent {
     private Integer studentId; // Example: 23,
-    private String studentPIB; // Example: "Бойчук Олег Романович",
+    private String studentPI; // Example: "Бойчук Олег",
+    private String studentPatronymic; // Example: "Романович",
     private String studentRecordBook; // Example: "І 303/10 бп",
     private Integer semesterGrade; // Example: 60,
     private Integer controlGrade; // Example: 30,
