@@ -10,4 +10,6 @@ public interface VidomistMarkRepository extends JpaRepository<VidomistMarkEntity
     List<VidomistMarkEntity> findAllByVidomistMarkIdStudentCode(int studentCode);
 
     List<VidomistMarkEntity> findAllByVidomistMarkIdVidomistNo(int vidomistNo);
+
+    VidomistMarkEntity findByVidomistMarkIdVidomistNoAndVidomistMarkIdStudentCode(Integer vidomistNo, Integer StudentCode);
 }

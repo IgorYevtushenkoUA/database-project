@@ -38,4 +38,6 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 
     List<GroupEntity> findDistinctAllByGroupNameIn(@Param("groupName") List<String> groupName);
     /**********************************************************************************/
+
+
 }

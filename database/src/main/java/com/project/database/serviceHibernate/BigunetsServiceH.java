@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -20,7 +19,14 @@ public class BigunetsServiceH {
 
     public Page<List<String>> findAllStudentBigunets(int studentCode, Pageable pageable){
         return bigunetsRepository.findAllStudentBigunets(studentCode, pageable);
-
     }
+
+    public void insertBigunets(BigunetsEntity bigunets){
+        if (bigunetsRepository.findByBigunetsNo(bigunets.getBigunetsNo())==null){
+            bigunetsRepository.save(bigunets);
+        }
+    }
+
+
 
 }

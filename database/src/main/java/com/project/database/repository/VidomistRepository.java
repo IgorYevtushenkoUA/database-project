@@ -19,5 +19,6 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "   s.studentCode=:studentCode ")
     List<List<String>> findAllStudentVidomosties(@Param("studentCode") int studentCode);
 
+    VidomistEntity findByVidomistNo(Integer vidomistNo);
 
 }

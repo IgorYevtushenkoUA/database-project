@@ -18,10 +18,9 @@ public class TutorServiceH {
     private TutorRepository tutorRepository;
 
     /**
-     *
      * @param tutorNo
      */
-    public void deleteByTutorNo(int tutorNo){
+    public void deleteByTutorNo(int tutorNo) {
         tutorRepository.deleteByTutorNo(tutorNo);
     }
 
@@ -40,12 +39,16 @@ public class TutorServiceH {
     }
 
     /**
-     *
      * @param name
      * @return [[Ющенко, Юрій, Олексійович],....]
      */
     public List<List<String>> findAllTutorNamesByPartOFName(String name) {
         return tutorRepository.findAllTutorNamesByPartOFName("%" + name + "%");
+    }
+
+    public void insertTutor(TutorEntity tutor) {
+        if (tutorRepository.findByTutorSurnameAndTutorNameAndTutorPatronymic(tutor.getTutorSurname(), tutor.getTutorName(), tutor.getTutorPatronymic()) == null)
+            tutorRepository.save(tutor);
     }
 
 

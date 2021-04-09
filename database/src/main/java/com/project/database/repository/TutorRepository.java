@@ -22,4 +22,6 @@ public interface TutorRepository extends JpaRepository<TutorEntity, Integer> {
     // List<GroupEntity> findDistinctAllByGroupNameIn(@Param("groupName") List<String> groupName);
     List<TutorEntity> findDistinctByTutorNoIn(@Param("tutorNo") List<Integer> tutorNo);
 
+    TutorEntity findByTutorSurnameAndTutorNameAndTutorPatronymic(String surname, String name, String patronymic);
+
 }

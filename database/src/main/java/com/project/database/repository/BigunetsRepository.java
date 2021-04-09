@@ -25,4 +25,6 @@ public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Intege
             Pageable pageable
     );
 
+    BigunetsEntity findByBigunetsNo(Integer bigunetsNo);
+
 }

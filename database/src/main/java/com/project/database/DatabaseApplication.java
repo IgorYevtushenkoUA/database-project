@@ -25,17 +25,10 @@ public class DatabaseApplication {
 //        System.out.println(studentRepository.findTrims(null));
 //        System.out.println(studentRepository.findTrims("7"));
 
+//        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
 
-        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-        System.out.println(studentServiceH.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                "student_surname",
-                false));
+        GroupServiceH groupServiceH = applicationContext.getBean(GroupServiceH.class);
+
 
         //        System.out.println(studentServiceH.findAverageStudentMarksTrimCourse(
 //                1,null, null, "2020-2021", "student_surname", true

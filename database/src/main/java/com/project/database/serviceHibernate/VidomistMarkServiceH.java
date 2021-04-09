@@ -22,4 +22,12 @@ public class VidomistMarkServiceH {
     public List<VidomistMarkEntity> findAllByVidomistMarkIdVidomistNo(int vidomistNo) {
         return vidomistMarkRepository.findAllByVidomistMarkIdVidomistNo(vidomistNo);
     }
+
+    public void insertVidomistMark(VidomistMarkEntity vidomistMark) {
+        if (vidomistMarkRepository.findByVidomistMarkIdVidomistNoAndVidomistMarkIdStudentCode(vidomistMark.getVidomistMarkId().getVidomistNo(),
+                vidomistMark.getVidomistMarkId().getStudentCode()) == null) {
+            vidomistMarkRepository.save(vidomistMark);
+        }
+    }
+
 }

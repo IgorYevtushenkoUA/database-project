@@ -21,8 +21,7 @@ public class GroupServiceH {
     private GroupRepository groupRepository;
 
     /**
-     *
-     * @return [GroupEntity(groupCode=1, groupName=Група1, eduYear=2020-2021, trim=2 , course=3, subject=SubjectEntity(subjectNo=1, subjectName=БД, eduLevel=бакалавр, faculty=ФІ)),...]
+     * @return [GroupEntity(groupCode = 1, groupName = Група1, eduYear = 2020 - 2021, trim = 2, course = 3, subject = SubjectEntity ( subjectNo = 1, subjectName = БД, eduLevel = бакалавр, faculty = ФІ)),...]
      */
     public List<GroupEntity> findAll() {
         return groupRepository.findAll();
@@ -37,7 +36,6 @@ public class GroupServiceH {
     }
 
     /**
-     *
      * @return [Група1, Група2, Група3, Група4]
      */
     public List<String> findAllGroupNames() {
@@ -49,11 +47,14 @@ public class GroupServiceH {
     }
 
     /**
-     *
      * @return [2020-2021, 2021-2022]
      */
     public List<String> findAllGroupEduYears() {
         return groupRepository.findAllGroupEduYears();
+    }
+
+    public void insertGroup(GroupEntity group){
+        groupRepository.save(group);
     }
 
 }

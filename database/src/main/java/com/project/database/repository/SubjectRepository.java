@@ -26,4 +26,5 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, Integer>
 
     List<SubjectEntity> findDistinctBySubjectNameIn(@Param("subjectName") List<String> subjectName);
 
+    SubjectEntity findBySubjectName(String subjectName);
 }

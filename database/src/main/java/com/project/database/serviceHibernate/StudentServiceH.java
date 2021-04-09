@@ -9,13 +9,12 @@ import com.project.database.repository.StudentRepository;
 import com.project.database.repository.SubjectRepository;
 import com.project.database.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,12 +68,11 @@ public class StudentServiceH {
     }
 
 
-    public Page<List<String>> findAverageStudentsMarksTrimCourse(Integer semestr,
+    public List<List<String>> findAverageStudentsMarksTrimCourse(Integer semestr,
                                                                  Integer course,
                                                                  String eduYear,
                                                                  String sortBy,
-                                                                 boolean sortDesc,
-                                                                 Pageable pageable
+                                                                 boolean sortDesc
     ) {
         List<String> list = semestrParser(course, semestr);
 
@@ -98,16 +96,15 @@ public class StudentServiceH {
 
         Sort sort = setSort(sortBy, sortDesc);
 
-        return studentRepository.findAverageStudentsMarksTrimCourse(semesters, courses, eduYears, sort, pageable);
+        return studentRepository.findAverageStudentsMarksTrimCourse(semesters, courses, eduYears, sort);
     }
 
-    public Page<List<String>> findAverageStudentMarksTrimCourse(Integer studentCode,
+    public List<List<String>> findAverageStudentMarksTrimCourse(Integer studentCode,
                                                                 Integer semestr,
                                                                 Integer course,
                                                                 String eduYear,
                                                                 String sortBy,
-                                                                boolean sortDesc,
-                                                                Pageable pageable
+                                                                boolean sortDesc
     ) {
 
         List<String> semesters = getSemestrList(semestr, semestrParser(course, semestr));
@@ -118,17 +115,16 @@ public class StudentServiceH {
 
         Sort sort = setSort(sortBy, sortDesc);
 
-        return studentRepository.findAverageStudentMarksTrimCourse(studentCode, semesters, courses, eduYears, sort, pageable);
+        return studentRepository.findAverageStudentMarksTrimCourse(studentCode, semesters, courses, eduYears, sort);
     }
 
 
-    public Page<List<String>> findAllWhoHasRetakeSubjectTrimEduYear(String subjectName,
+    public List<List<String>> findAllWhoHasRetakeSubjectTrimEduYear(String subjectName,
                                                                     Integer semestr,
                                                                     Integer course,
                                                                     String eduYear,
                                                                     String sortBy,
-                                                                    boolean sortDesc,
-                                                                    Pageable pageable) {
+                                                                    boolean sortDesc) {
 
         List<String> subjects = getSubjectList(subjectName);
 
@@ -140,15 +136,14 @@ public class StudentServiceH {
 
         Sort sort = setSort(sortBy, sortDesc);
 
-        return studentRepository.findAllWhoHasRetakeSubjectTrimEduYear(subjects, semesters, courses, eduYears, sort, pageable);
+        return studentRepository.findAllWhoHasRetakeSubjectTrimEduYear(subjects, semesters, courses, eduYears, sort);
     }
 
-    public Page<List<String>> findAllRetakenSubjectForStudentTrimEduYear(Integer studentCode,
+    public List<List<String>> findAllRetakenSubjectForStudentTrimEduYear(Integer studentCode,
                                                                          Integer trim,
                                                                          String eduYear,
                                                                          String sortBy,
-                                                                         boolean sortDesc,
-                                                                         Pageable pageable) {
+                                                                         boolean sortDesc) {
 
         List<String> trimList = getSemestrList(trim, semestrParser(null, trim));
 
@@ -156,15 +151,15 @@ public class StudentServiceH {
 
         Sort sort = setSort(sortBy, sortDesc);
 
-        return studentRepository.findAllRetakenSubjectForStudentTrimEduYear(studentCode, trimList, eduYearList, sort, pageable);
+        return studentRepository.findAllRetakenSubjectForStudentTrimEduYear(studentCode, trimList, eduYearList, sort);
     }
 
-    public Page<StudentEntity> findAll(Pageable pageable) {
-        return studentRepository.findAll(pageable);
+    public List<StudentEntity> findAll() {
+        return studentRepository.findAll();
     }
 
-    public Page<StudentEntity> findAllByStudentSurnameAndStudentNameAndStudentPatronymic(String surname, String name, String patronymic, Pageable pageable) {
-        return studentRepository.findAllByStudentSurnameAndStudentNameAndStudentPatronymic(surname, name, patronymic, pageable);
+    public List<StudentEntity> findAllByStudentSurnameAndStudentNameAndStudentPatronymic(String surname, String name, String patronymic) {
+        return studentRepository.findAllByStudentSurnameAndStudentNameAndStudentPatronymic(surname, name, patronymic);
     }
 
     public double findStudentAverageMarksForCourseTrim(Integer studentCode, Integer course, Integer trim) {
@@ -176,29 +171,28 @@ public class StudentServiceH {
         return studentRepository.findStudentAverageMarksForCourseTrim(studentCode, courseList, trimList);
     }
 
-    public Page<List<String>> findAllStudentMarks(Integer studentCode, Integer course, Integer trim, String sortBy, boolean sortDesc, Pageable pageable) {
+    public List<List<String>> findAllStudentMarks(Integer studentCode, Integer course, Integer trim, String sortBy, boolean sortDesc) {
 
         List<Integer> courseList = getCourseList(course);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
 
         Sort sort = setSort(sortBy, sortDesc);
 
-        return studentRepository.findAllStudentMarks(studentCode, courseList, trimList, sort, pageable);
+        return studentRepository.findAllStudentMarks(studentCode, courseList, trimList, sort);
     }
 
     public void deleteByStudentCode(int studentCode) {
         studentRepository.deleteByStudentCode(studentCode);
     }
 
-    public Page<List<String>> findAllStudentByYearSubjectGroupTeacherTrimCourse(String eduYear,
+    public List<List<String>> findAllStudentByYearSubjectGroupTeacherTrimCourse(String eduYear,
                                                                                 String groupName,
                                                                                 Integer trim,
                                                                                 Integer course,
                                                                                 String subjectName,
                                                                                 Integer tutorNo,
                                                                                 String sortBy,
-                                                                                boolean sortDesc,
-                                                                                Pageable pageable) {
+                                                                                boolean sortDesc) {
         List<String> eduYearList = getEduYearsList(eduYear);
         List<String> groupList = getGroupList(groupName);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
@@ -209,25 +203,24 @@ public class StudentServiceH {
         Sort sort = setSort(sortBy, sortDesc);
 
         List<List<String>> result = studentRepository.findAllStudentByYearSubjectGroupTeacherTrimCourse(
-                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort, pageable)
+                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort)
                 .stream().distinct().collect(Collectors.toList());
 
-        final int start = (int) pageable.getOffset();
-        final int end = Math.min((start + pageable.getPageSize()), result.size());
-        final Page<List<String>> page = new PageImpl<>(result.subList(start, end), pageable, result.size());
-
-        return page;
+//        final int start = (int) pageable.getOffset();
+//        final int end = Math.min((start + pageable.getPageSize()), result.size());
+//        final List<List<String>> page = new PageImpl<>(result.subList(start, end), pageable, result.size());
+//        return page;
+        return result;
     }
 
-    public Page<List<String>> findAllStudents(String eduYear,
+    public List<List<String>> findAllStudents(String eduYear,
                                               String groupName,
                                               Integer trim,
                                               Integer course,
                                               String subjectName,
                                               Integer tutorNo,
                                               String sortBy,
-                                              boolean sortDesc,
-                                              Pageable pageable) {
+                                              boolean sortDesc) {
         List<String> eduYearList = getEduYearsList(eduYear);
         List<String> groupList = getGroupList(groupName);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
@@ -238,25 +231,20 @@ public class StudentServiceH {
         Sort sort = setSort(sortBy, sortDesc);
 
         List<List<String>> result = studentRepository.findAllStudents(
-                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort, pageable)
+                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort)
                 .stream().distinct().collect(Collectors.toList());
 
-        final int start = (int) pageable.getOffset();
-        final int end = Math.min((start + pageable.getPageSize()), result.size());
-        final Page<List<String>> page = new PageImpl<>(result.subList(start, end), pageable, result.size());
-
-        return page;
+        return result;
     }
 
-    public Page<List<String>> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(String eduYear,
+    public List<List<String>> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(String eduYear,
                                                                                 String groupName,
                                                                                 Integer trim,
                                                                                 Integer course,
                                                                                 String subjectName,
                                                                                 Integer tutorNo,
                                                                                 String sortBy,
-                                                                                boolean sortDesc,
-                                                                                Pageable pageable) {
+                                                                                boolean sortDesc) {
         List<String> eduYearList = getEduYearsList(eduYear);
         List<String> groupList = getGroupList(groupName);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
@@ -265,14 +253,26 @@ public class StudentServiceH {
         List<Integer> tutorList = getTutorList(tutorNo);
         Sort sort = setSort(sortBy, sortDesc);
         List<List<String>> result = studentRepository.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
-                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort, pageable)
+                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, sort)
                 .stream().distinct().collect(Collectors.toList());
 
-        final int start = (int) pageable.getOffset();
-        final int end = Math.min((start + pageable.getPageSize()), result.size());
-        final Page<List<String>> page = new PageImpl<>(result.subList(start, end), pageable, result.size());
+        return result;
+    }
 
-        return page;
+
+    Integer findMaxStudentCourse(Integer studentCode) {
+        return studentRepository.findMaxStudentCourse(studentCode).stream().findFirst().orElse(null);
+    }
+
+    String findMaxStudentTrim(Integer studentCode){
+        return studentRepository.findMaxStudentTrim(studentCode).stream().findFirst().orElse(null);
+    }
+
+
+    // insert student
+    public void insertStudent(StudentEntity student) {
+        if (studentRepository.findByStudentRecordBook(student.getStudentRecordBook())==null)
+            studentRepository.save(student);
     }
 
     private List<String> getSubjectList(String subjectName) {
@@ -358,5 +358,7 @@ public class StudentServiceH {
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
     }
+
+
 
 }

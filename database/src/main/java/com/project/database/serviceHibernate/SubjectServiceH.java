@@ -58,4 +58,12 @@ public class SubjectServiceH {
     public List<String> findAllSubjectNames(String name) {
         return subjectRepository.findAllSubjectNames("%" + name + "%");
     }
+
+    public void insertSubject(SubjectEntity subject){
+        if (subjectRepository.findBySubjectName(subject.getSubjectName())==null){
+            subjectRepository.save(subject);
+        }
+    }
+
+
 }
