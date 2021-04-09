@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
-import java.util.List;
 
 @Data
 @Builder
@@ -22,5 +21,5 @@ public class StatementStudentErrorsMap {
      *     <li>value: {@link StatementStudentError}</li>
      * </ul>
      */
-    private HashMap<String, List<StatementStudentError>> statementStudentsErrorsMap;
+    private HashMap<String, StatementStudentError> statementStudentsErrorsMap;
 }
