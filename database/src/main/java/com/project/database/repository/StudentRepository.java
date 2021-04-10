@@ -70,8 +70,6 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "group by s.student_code, Y, gr.course, gr.trim ", nativeQuery = true)
     List<List<Object>>findStudentsWithRatingDefault();
 
-
-
     @Query("select s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, gr.course as course, avg(vm.completeMark) as completeMark " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
@@ -91,8 +89,6 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             @Param("eduYears" ) List<String> eduYears,
             Sort sort
     );
-
-
 
     @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course as course, gr.trim, avg(bme.complete_mark) as completeMark " +
             "from \"group\" gr " +
@@ -338,5 +334,24 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "order by g.trim desc " )
     List<String> findMaxStudentTrim(@Param("studentCode" ) Integer studentCode);
 
+    @Query("select sub.subjectNo, sub.subjectName, s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, vm.completeMark " +
+            "from StudentEntity s " +
+            "inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
+            "inner join VidomistEntity v on vm.vidomistMarkId.studentCode=v.vidomistNo " +
+            "inner join TutorEntity t on v.tutor.tutorNo=t.tutorNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo = g.subject.subjectNo " +
+            "where " +
+            "   s.studentCode=:studentCode " +
+            "and " +
+            "   g.course=:course " +
+            "and " +
+            "   g.trim=:trim " +
+            "group by sub.subjectNo, sub.subjectName, s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, vm.completeMark ")
+    List<List<String>> findStudentMarks (
+            @Param("studentCode") Integer studentCode,
+            @Param("course") Integer course,
+            @Param("trim") String trim
+    );
 
 }

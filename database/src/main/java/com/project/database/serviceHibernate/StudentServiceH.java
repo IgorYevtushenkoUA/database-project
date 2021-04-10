@@ -158,8 +158,10 @@ public class StudentServiceH {
         return studentRepository.findAverageStudentMarksTrimCourse(studentCode, semesters, courses, eduYears, sort);
     }
 
-    /**todo (тут проблеми із сортуванням, із Pageable мають вирішитися)
+    /**
+     * todo (тут проблеми із сортуванням, із Pageable мають вирішитися)
      * Знайти всіх боржників
+     *
      * @param eduYear
      * @param groupName
      * @param trim
@@ -197,9 +199,14 @@ public class StudentServiceH {
 
     }
 
+    public List<List<String>> findStudentMarks(Integer studentCode, Integer course, String trim) {
+        return studentRepository.findStudentMarks(studentCode, course, trim);
+    }
+
     /**
      * Знайти всіх боржників
      * todo(add count average, teacher, group )
+     *
      * @param subjectName
      * @param semestr
      * @param course
