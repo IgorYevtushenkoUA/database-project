@@ -26,24 +26,21 @@ public class SubjectServiceH {
     }
 
     /**
-     *
      * @param pageable
-     * @return [SubjectEntity(subjectNo=1, subjectName=БД, eduLevel=бакалавр, faculty=ФІ),...]
+     * @return [SubjectEntity(subjectNo = 1, subjectName = БД, eduLevel = бакалавр, faculty = ФІ), ...]
      */
     public Page<SubjectEntity> findAll(Pageable pageable) {
         return subjectRepository.findAll(pageable);
     }
 
     /**
-     *
-     * @return [SubjectEntity(subjectNo=1, subjectName=БД, eduLevel=бакалавр, faculty=ФІ),...]
+     * @return [SubjectEntity(subjectNo = 1, subjectName = БД, eduLevel = бакалавр, faculty = ФІ), ...]
      */
     public List<SubjectEntity> findAll() {
         return subjectRepository.findAll();
     }
 
     /**
-     *
      * @return [БД, Веб-програмування, Вірусологія, Логічне програмування,...]
      */
     public List<String> findAllSubjectNames() {
@@ -51,25 +48,28 @@ public class SubjectServiceH {
     }
 
     /**
-     *
      * @param name
      * @return [Веб-програмування, Логічне програмування, Моделювання інформаційних процесів]
      */
     public List<String> findAllSubjectNames(String name) {
-        return subjectRepository.findAllSubjectNames("%" + name + "%");
+        return subjectRepository.findAllSubjectNames("%" + name + "%" );
     }
 
     // insert
-    public void insertSubject(SubjectEntity subject){
-        if (subjectRepository.findBySubjectName(subject.getSubjectName())==null){
+    public void insertSubject(SubjectEntity subject) {
+        if (subjectRepository.findBySubjectName(subject.getSubjectName()) == null) {
             subjectRepository.save(subject);
         }
     }
 
     // delete
-    public void deleteSubjectById(int subjectno){
+    public void deleteSubjectById(int subjectno) {
         subjectRepository.deleteBySubjectNo(subjectno);
     }
 
+
+    public List<List<String>> findAverageSubjectMarks() {
+        return subjectRepository.findSubjectAverageMark();
+    }
 
 }
