@@ -85,7 +85,7 @@ public class StudentServiceH {
 
     /**
      * Знайти Середню оцінку (РЕЙТИНГ) студентів за певний проміжок часу
-     * todo(add count average, teacher, group )
+     * МЕТОД ДЛЯ РЕЙТИНГУ (коли є хоча б 1 параметр)
      *
      * @param semestr
      * @param course
@@ -94,35 +94,37 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public List<List<String>> findAverageStudentsMarksTrimCourse(Integer semestr,
-                                                                 Integer course,
-                                                                 String eduYear,
-                                                                 String sortBy,
-                                                                 boolean sortDesc
+    public List<List<String>> findStudentsWithRating(
+            String eduYear,
+            String subjectName,
+            Integer tutorNo,
+            String groupName,
+            Integer semestr,
+            Integer course,
+            String sortBy,
+            boolean sortDesc
     ) {
-        List<String> list = semestrParser(course, semestr);
 
-        List<String> semesters = semestr == null
-                ? groupRepository.findAll()
-                .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList())
-                : groupRepository.findDistinctAllByTrimIn(list)
-                .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList());
+        List<String> eduYearList = getEduYearsList(eduYear);
 
-        List<Integer> courses = course == null
-                ? groupRepository.findAll()
-                .stream().map(GroupEntity::getCourse).distinct().collect(Collectors.toList())
-                : groupRepository.findDistinctAllByCourseIn(Collections.singletonList(course))
-                .stream().map(GroupEntity::getCourse).distinct().collect(Collectors.toList());
+        List<String> subjectList = getSubjectList(subjectName);
 
-        List<String> eduYears = eduYear == null
-                ? groupRepository.findAll()
-                .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList())
-                : groupRepository.findDistinctAllByEduYearIn(Collections.singletonList(eduYear))
-                .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList());
+        List<Integer> tutorList = getTutorList(tutorNo);
+
+        List<String> groupList = getGroupList(groupName);
+
+        List<String> semesterList = getSemestrList(semestr, semestrParser(course, semestr));
+
+        List<Integer> courseList = getCourseList(course);
 
         Sort sort = setSort(sortBy, sortDesc);
 
-        return studentRepository.findAverageStudentsMarksTrimCourse(semesters, courses, eduYears, sort);
+        return studentRepository.findStudentsWithRating(
+                eduYearList, subjectList, tutorList, groupList, semesterList, courseList, sort);
+    }
+
+    public List<List<Object>> findStudentsWithRatingDefault() {
+        return studentRepository.findStudentsWithRatingDefault();
     }
 
     /**
@@ -156,10 +158,18 @@ public class StudentServiceH {
         return studentRepository.findAverageStudentMarksTrimCourse(studentCode, semesters, courses, eduYears, sort);
     }
 
-    public List<List<Object>> findStudentRatingDefault() {
-        return studentRepository.findStudentRatingDefault();
-    }
-
+    /**todo (тут проблеми із сортуванням, із Pageable мають вирішитися)
+     * Знайти всіх боржників
+     * @param eduYear
+     * @param groupName
+     * @param trim
+     * @param course
+     * @param subjectName
+     * @param tutorNo
+     * @param sortBy
+     * @param sortDesc
+     * @return
+     */
     public List<List<Object>> findDebtorsRatingDefault(
             String eduYear,
             String groupName,
@@ -175,11 +185,12 @@ public class StudentServiceH {
         List<String> groupList = getGroupList(groupName);
         List<Integer> courseList = getCourseList(course);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
-        List<String> subjectNameList = getSubjectList(subjectName);
+        List<String> subjectList = getSubjectList(subjectName);
         List<Integer> tutorList = getTutorList(tutorNo);
         Sort sort = setSort(sortBy, sortDesc);
+
         List<List<Object>> result = studentRepository.findDebtorsRatingDefault(
-                eduYearList, groupList, trimList, courseList, subjectNameList, tutorList)
+                eduYearList, subjectList, tutorList, groupList, trimList, courseList)
                 .stream().distinct().collect(Collectors.toList());
 
         return result;
@@ -189,7 +200,6 @@ public class StudentServiceH {
     /**
      * Знайти всіх боржників
      * todo(add count average, teacher, group )
-     *
      * @param subjectName
      * @param semestr
      * @param course
@@ -429,7 +439,8 @@ public class StudentServiceH {
     }
 
 
-    /** insert student
+    /**
+     * insert student
      *
      * @param student
      */
@@ -438,7 +449,8 @@ public class StudentServiceH {
             studentRepository.save(student);
     }
 
-    /** delete by id
+    /**
+     * delete by id
      *
      * @param studentCode
      */
@@ -501,22 +513,22 @@ public class StudentServiceH {
         if (course != null) {
             if (semestr != null) {
                 if (semestr.equals(3))
-                    return List.of(course * 2 + "д" );
+                    return List.of(course * 2 + "д");
                 return semestr == 1
                         ? List.of(String.valueOf(course * semestr - 1))
                         : List.of(String.valueOf(course * semestr));
             } else {
-                return List.of(String.valueOf(course * 2 - 1), String.valueOf(course * 2), String.valueOf(course * 2) + "д" );
+                return List.of(String.valueOf(course * 2 - 1), String.valueOf(course * 2), String.valueOf(course * 2) + "д");
             }
         } else {
             if (semestr != null) {
                 if (semestr == 3)
-                    return List.of("2д", "4д", "6д", "8д" );
+                    return List.of("2д", "4д", "6д", "8д");
                 return semestr == 1
-                        ? List.of("1", "3", "5", "7" )
-                        : List.of("2", "4", "6", "8" );
+                        ? List.of("1", "3", "5", "7")
+                        : List.of("2", "4", "6", "8");
             } else {
-                return List.of("1", "2", "2д", "3", "4", "4д", "5", "6", "6д", "7", "8", "8д" );
+                return List.of("1", "2", "2д", "3", "4", "4д", "5", "6", "6д", "7", "8", "8д");
             }
         }
     }
@@ -533,7 +545,7 @@ public class StudentServiceH {
         switch (sortBy) {
             case "surname":
                 return "studentSurname";
-            case "mark":
+            case "completeMark":
                 return "completeMark";
             case "course":
                 return "course";

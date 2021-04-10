@@ -26,41 +26,32 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "inner join SubjectEntity sub on sub.subjectNo=gr.subject.subjectNo " +
             "where " +
-            "   gr.trim in (:semesters) " +
-            "and " +
-            "   gr.course in (:courses) " +
-            "and " +
             "   gr.eduYear in (:eduYears) " +
-            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,gr.course " )
-    List<List<String>> findAverageStudentsMarksTrimCourse(
-            @Param("semesters" ) List<String> semesters,
-            @Param("courses" ) List<Integer> courses,
-            @Param("eduYears" ) List<String> eduYears,
-            Sort sort
-    );
-
-    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, avg(vm.completeMark) as completeMark " +
-            "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
-            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
-            "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
-            "where s.studentCode = :studentCode " +
+            "and " +
+            "   sub.subjectName in (:subjectName) " +
+            "and " +
+            "   t.tutorNo in (:tutorNo) " +
+            "and " +
+            "   gr.groupName in (:groupName)" +
             "and " +
             "   gr.trim in (:semesters) " +
             "and " +
             "   gr.course in (:courses) " +
-            "and " +
-            "   gr.eduYear in (:eduYears) " +
-            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic " )
-    List<List<String>> findAverageStudentMarksTrimCourse(
-            @Param("studentCode" ) Integer studentCode,
+            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, gr.course " )
+    List<List<String>> findStudentsWithRating(
+            @Param("eduYears" ) List<String> eduYears,
+            @Param("subjectName") List<String> subjectName,
+            @Param("tutorNo" ) List<Integer> tutorNo,
+            @Param("groupName" ) List<String> groupName,
             @Param("semesters" ) List<String> semesters,
             @Param("courses" ) List<Integer> courses,
-            @Param("eduYears" ) List<String> eduYears,
             Sort sort
     );
 
-    @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year as Y , gr.course, gr.trim, avg(vm.complete_mark) " +
+    @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course as course, gr.trim , avg(vm.complete_mark) " +
             "from \"group\" gr " +
             "inner join vidomist v on gr.group_code = v.group_code " +
             "inner join vidomist_mark vm on v.vidomist_no = vm.vidomist_no " +
@@ -77,9 +68,33 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and gr.trim = max(gr0.trim) " +
             ") " +
             "group by s.student_code, Y, gr.course, gr.trim ", nativeQuery = true)
-    List<List<Object>>findStudentRatingDefault();
+    List<List<Object>>findStudentsWithRatingDefault();
 
-    @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course, gr.trim, avg(bme.complete_mark) as completeMark " +
+
+
+    @Query("select s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, gr.course as course, avg(vm.completeMark) as completeMark " +
+            "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
+            "where s.studentCode = :studentCode " +
+            "and " +
+            "   gr.trim in (:semesters) " +
+            "and " +
+            "   gr.course in (:courses) " +
+            "and " +
+            "   gr.eduYear in (:eduYears) " +
+            "group by s.studentCode,s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, gr.course " )
+    List<List<String>> findAverageStudentMarksTrimCourse(
+            @Param("studentCode" ) Integer studentCode,
+            @Param("semesters" ) List<String> semesters,
+            @Param("courses" ) List<Integer> courses,
+            @Param("eduYears" ) List<String> eduYears,
+            Sort sort
+    );
+
+
+
+    @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course as course, gr.trim, avg(bme.complete_mark) as completeMark " +
             "from \"group\" gr " +
             "inner join vidomist v on gr.group_code = v.group_code " +
             "inner join vidomist_mark vm on v.vidomist_no = vm.vidomist_no " +
@@ -123,11 +138,11 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             , nativeQuery = true)
     List<List<Object>> findDebtorsRatingDefault(
             @Param("eduYear" ) List<String> eduYear,
+            @Param("subjectName" ) List<String> subjectName,
+            @Param("tutorNo" ) List<Integer> tutorNo,
             @Param("groupName" ) List<String> groupName,
             @Param("trim" ) List<String> trim,
-            @Param("course" ) List<Integer> course,
-            @Param("subjectName" ) List<String> subjectName,
-            @Param("tutorNo" ) List<Integer> tutorNo
+            @Param("course" ) List<Integer> course
     );
 
     @Query("select s.studentSurname, s.studentName, s.studentPatronymic, s2.subjectName, bm.completeMark as completeMark " +

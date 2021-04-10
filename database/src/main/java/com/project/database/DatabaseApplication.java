@@ -35,20 +35,16 @@ public class DatabaseApplication {
         StudentService studentService = applicationContext.getBean(StudentService.class);
         StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
         SubjectServiceH subjectServiceH = applicationContext.getBean(SubjectServiceH.class);
-        System.out.println(subjectServiceH.findAverageSubjectMarks());
-
-//        System.out.println(studentServiceH.findDebtorsRatingDefault(
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                "student_surname",
-//                true
-////                , 1, 20
-//        ));
-
+        System.out.println(studentServiceH.findDebtorsRatingDefault(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "completeMark",
+                true
+        ));
 
     }
 
