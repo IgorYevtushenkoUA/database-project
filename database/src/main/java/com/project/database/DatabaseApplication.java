@@ -33,17 +33,20 @@ public class DatabaseApplication {
 
 
         StudentService studentService = applicationContext.getBean(StudentService.class);
+        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
 
-        System.out.println(studentService.findAllByYearSubjectGroupTeacherTrimCourse(
-                "2020-2021",
-                "predmet",
+        System.out.println(studentServiceH.findDebtorsRatingDefault(
                 null,
                 null,
                 null,
-                "3",
+                null,
+                null,
+                null,
                 "student_surname",
-                true,
-                1, 20
+                true
+//                , 1, 20
+
+
         ));
 
 
