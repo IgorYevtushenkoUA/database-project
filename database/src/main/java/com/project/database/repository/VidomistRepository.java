@@ -41,5 +41,24 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
     )
     List<VidomistEntity> findAllByGroupName(@Param("groupName") String groupName);
 
+    // недопуски
+    @Query("select sum(v.rejectedCount)" +
+            "from VidomistEntity v " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "where g.groupCode=:groupCode")
+    int nonAdmissionByGroupCode(@Param("groupCode") Integer groupCode);
+
+    @Query("select sum(v.rejectedCount)" +
+            "from VidomistEntity v " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
+            "where sub.subjectNo=:subjectNo")
+    int nonAdmissionBySubjectCode(@Param("subjectNo") Integer subjectNo);
+
+    @Query("select sum(v.rejectedCount)" +
+            "from VidomistEntity v " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "where t.tutorNo=:tutorNo")
+    int nonAdmissionByTeacherNo(@Param("tutorNo") Integer tutorNo);
 
 }

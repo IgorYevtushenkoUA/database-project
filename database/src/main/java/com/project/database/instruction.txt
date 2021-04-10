@@ -68,5 +68,17 @@
 
 
 
+                            Сторінка обрахунків
+Знайти кількість недопусків для групи
+    * nonAdmissionByGroupCode
+Знайти кількість недопусків у групи
+    * nonAdmissionBySubjectCode
+Знайти кількість недопусків у викладача
+    * nonAdmissionByTeacherNo
+
+
+
+
+
 
 

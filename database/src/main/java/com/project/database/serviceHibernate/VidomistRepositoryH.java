@@ -30,16 +30,28 @@ public class VidomistRepositoryH {
         vidomistRepository.deleteById(vidomistNo);
     }
 
-    public List<VidomistEntity> findAllByTutorNo(Integer tutorNo){
+    public List<VidomistEntity> findAllByTutorNo(Integer tutorNo) {
         return vidomistRepository.findAllByTutorNo(tutorNo);
     }
 
-    public List<VidomistEntity> findAllBySubjectNo(Integer subjectNo){
+    public List<VidomistEntity> findAllBySubjectNo(Integer subjectNo) {
         return vidomistRepository.findAllBySubjectNo(subjectNo);
     }
 
-    public List<VidomistEntity> findAllByGroupName(String groupName){
+    public List<VidomistEntity> findAllByGroupName(String groupName) {
         return vidomistRepository.findAllByGroupName(groupName);
+    }
+
+    public int nonAdmissionByGroupCode(Integer groupCode) {
+        return vidomistRepository.nonAdmissionByGroupCode(groupCode);
+    }
+
+    public int nonAdmissionBySubjectCode(Integer subjectNo) {
+        return vidomistRepository.nonAdmissionBySubjectCode(subjectNo);
+    }
+
+    public int nonAdmissionByTeacherNo(Integer tutorNo) {
+        return vidomistRepository.nonAdmissionByTeacherNo(tutorNo);
     }
 
 
