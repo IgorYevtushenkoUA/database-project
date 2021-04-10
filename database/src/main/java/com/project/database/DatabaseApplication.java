@@ -1,6 +1,7 @@
 package com.project.database;
 
 import com.project.database.repository.StudentRepository;
+import com.project.database.service.StudentService;
 import com.project.database.serviceHibernate.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,15 +31,23 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-        System.out.println(studentServiceH.findStudentRatingDefault());
 
-        //        System.out.println(studentServiceH.findAverageStudentMarksTrimCourse(
-//                1,null, null, "2020-2021", "student_surname", true
-//        ));
+        StudentService studentService = applicationContext.getBean(StudentService.class);
+
+        System.out.println(studentService.findAllByYearSubjectGroupTeacherTrimCourse(
+                "2020-2021",
+                "predmet",
+                null,
+                null,
+                null,
+                "3",
+                "student_surname",
+                true,
+                1, 20
+        ));
 
 
     }
 
-
 }
+
