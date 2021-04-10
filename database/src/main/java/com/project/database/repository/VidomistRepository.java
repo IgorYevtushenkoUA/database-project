@@ -21,4 +21,25 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
 
     VidomistEntity findByVidomistNo(Integer vidomistNo);
 
+    @Query("select v " +
+            "from VidomistEntity v " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "where t.tutorNo=:tutorNo ")
+    List<VidomistEntity> findAllByTutorNo(@Param("tutorNo") Integer tutorNo);
+
+    @Query("select v " +
+            "from VidomistEntity v " +
+            "inner join GroupEntity g on v.group.groupCode = g.groupCode " +
+            "inner join SubjectEntity s on s.subjectNo=g.subject.subjectNo " +
+            "where s.subjectNo=:subjectNo")
+    List<VidomistEntity> findAllBySubjectNo(@Param("subjectNo") Integer subjectNo);
+
+    @Query("select v " +
+            "from VidomistEntity v " +
+            "inner join GroupEntity g on v.group.groupCode=g.groupCode " +
+            "where g.groupName=:groupName "
+    )
+    List<VidomistEntity> findAllByGroupName(@Param("groupName") String groupName);
+
+
 }
