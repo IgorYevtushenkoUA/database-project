@@ -505,7 +505,7 @@ public class StudentServiceH {
         List<Object[]> list = studentsP.getContent();
         for (int i = 0; i < studentsP.getNumberOfElements(); i++) {
             StudentShortInfo studentInfo = new StudentShortInfo();
-            Object[] obj = list.get(0);
+            Object[] obj = list.get(i);
             int index = 0;
             studentInfo.setStudentId((Integer) obj[index++]);
             studentInfo.setStudentSurname((String) obj[index++]);
