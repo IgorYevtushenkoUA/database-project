@@ -24,6 +24,10 @@ public class StudentService {
         return studentDao.findById(studentId);
     }
 
+    public Student findByStudentRecordBook(String studentRecordBook) {
+        return studentDao.findByStudentRecordBook(studentRecordBook);
+    }
+
     /**
      * method finds List od Student with their pib(surname, name, patronymic)
      * @return ["Кравченко Борис Іванович","",""]

@@ -96,6 +96,26 @@ public class StudentDaoImpl implements StudentDao {
                 : student;
     }
 
+
+    @Override
+    public Student findByStudentRecordBook(String studentRecordBook) {
+        Student student = new Student();
+        try {
+            String sql = "select * from student where student_record_book =?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, studentRecordBook);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next())
+                student = createStudent(resultSet);
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+        return student.getStudentCode() == 0
+                ? null
+                : student;
+    }
+
+
     @Override
     public List<String> findNames() {
         List<String> students = new ArrayList<>();

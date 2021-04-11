@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+
 @SpringBootApplication
 public class DatabaseApplication {
 
@@ -37,6 +38,8 @@ public class DatabaseApplication {
         ));
 
         PageRequest.of(2, 20, Sort.by("surname"));
+
     }
 
 }
+
