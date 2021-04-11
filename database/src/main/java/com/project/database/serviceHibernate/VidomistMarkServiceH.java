@@ -29,7 +29,8 @@ public class VidomistMarkServiceH {
     }
 
     public void insertVidomistMark(VidomistMarkEntity vidomistMark) {
-        if (vidomistMarkRepository.findByVidomistMarkIdVidomistNoAndVidomistMarkIdStudentCode(vidomistMark.getVidomistMarkId().getVidomistNo(),
+        if (vidomistMarkRepository.findByVidomistMarkIdVidomistNoAndVidomistMarkIdStudentCode(
+                vidomistMark.getVidomistMarkId().getVidomistNo(),
                 vidomistMark.getVidomistMarkId().getStudentCode()) == null) {
             vidomistMarkRepository.save(vidomistMark);
         }

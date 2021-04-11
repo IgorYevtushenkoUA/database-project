@@ -16,7 +16,6 @@ import java.util.Date;
 public class VidomistEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vidomist_no")
     private Integer vidomistNo;
 

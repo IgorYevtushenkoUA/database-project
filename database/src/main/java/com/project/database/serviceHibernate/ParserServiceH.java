@@ -34,6 +34,8 @@ public class ParserServiceH {
     private final VidomistServiceH vidomistServiceH;
     @Autowired
     private final BigunetsMarkServiceH bigunetsMarkServiceH;
+    @Autowired
+    private final VidomistMarkServiceH vidomistMarkServiceH;
 
     // not tested -> todo test
     public void insertBigunets(BigunetsInfo bigunetsInfo) {
@@ -155,7 +157,7 @@ public class ParserServiceH {
         tutor.setTutorSurname(tutorFullName[0]);
         tutor.setTutorName(tutorFullName[1]);
         tutor.setTutorPatronymic(tutorFullName[2]);
-        tutor.setScienceDegree("");
+        tutor.setScienceDegree(""); // todo бігунець це не повертає
         tutor.setAcademStatus(header.getTutorAcademicStatus());
         tutor.setPosition(header.getTutorPosition());
         tutorServiceH.insertTutor(tutor);
@@ -163,8 +165,11 @@ public class ParserServiceH {
         // subject
         SubjectEntity subject = new SubjectEntity();
         subject.setSubjectName(header.getSubjectName());
+        List<GroupEntity> gropsList = groupServiceH.findAllBySubjectName(subject.getSubjectName());
+
         subject.setEduLevel(header.getEduLevel());
         subject.setFaculty(header.getFaculty());
+        subject.setGroup(gropsList);
         subjectServiceH.insertSubject(subject);
 
         // group
@@ -179,6 +184,7 @@ public class ParserServiceH {
         group.setEduYear(eduYear);
         group.setTrim(header.getSemester());
         group.setCourse(header.getCourse());
+        group.setSubject(subjectServiceH.findBySubjectName(header.getSubjectName()));
         groupServiceH.insertGroup(group, subject);
 
         // vidomist
@@ -195,6 +201,8 @@ public class ParserServiceH {
         vidomist.setExamDate(header.getExamDate());
         GroupEntity groupEntity = groupServiceH.findGroupByNameYearTrimCourseSubject(group, subject);
         vidomist.setGroup(groupEntity);
+        vidomistServiceH.insertVidomist(vidomist);
+
 
         for (int i = 0; i < students.size(); i++) {
             StatementStudent ss = students.get(i);
@@ -212,7 +220,8 @@ public class ParserServiceH {
             VidomistMarkId vidomistMarkId = new VidomistMarkId();
             StudentEntity studentEntity = studentServiceH.findByStudentRecordBook(student.getStudentRecordBook());
             vidomistMarkId.setStudentCode(studentEntity.getStudentCode());
-            vidomistMarkId.setStudentCode(header.getStatementNo());
+//            vidomistMarkId.setVidomistNo(header.getStatementNo());
+            vidomistMarkId.setVidomistNo(header.getStatementNo());
 
             vidomistMark.setVidomistMarkId(vidomistMarkId);
             vidomistMark.setTrimMark(ss.getSemesterGrade());
@@ -221,7 +230,7 @@ public class ParserServiceH {
             vidomistMark.setCompleteMark(ss.getTotalGrade());
             vidomistMark.setEctsMark(ss.getEctsGrade());
             // todo may check
-            vidomistServiceH.insertVidomist(vidomist);
+            vidomistMarkServiceH.insertVidomistMark(vidomistMark);
         }
     }
 
