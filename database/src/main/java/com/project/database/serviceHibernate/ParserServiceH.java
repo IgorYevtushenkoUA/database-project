@@ -58,12 +58,17 @@ public class ParserServiceH {
         tutor.setAcademStatus(header.getTutorAcademicStatus());
         tutor.setPosition(header.getTutorPosition());
         tutorServiceH.insertTutor(tutor);
+
         // subject
         SubjectEntity subject = new SubjectEntity();
         subject.setSubjectName(header.getSubjectName());
+        List<GroupEntity> gropsList = groupServiceH.findAllBySubjectName(subject.getSubjectName());
+
         subject.setEduLevel(header.getEduLevel());
         subject.setFaculty(header.getFaculty());
+        subject.setGroup(gropsList);
         subjectServiceH.insertSubject(subject);
+
         // group
         GroupEntity group = new GroupEntity();
         int groupYear = header.getExamDate().getYear();
@@ -76,7 +81,9 @@ public class ParserServiceH {
         group.setEduYear(eduYear);
         group.setTrim(header.getSemester());
         group.setCourse(header.getCourse());
+        group.setSubject(subjectServiceH.findBySubjectName(header.getSubjectName()));
         groupServiceH.insertGroup(group, subject);
+
         // bigunets
         BigunetsEntity bigunets = new BigunetsEntity();
         bigunets.setBigunetsNo(header.getBigunNo());
@@ -104,24 +111,26 @@ public class ParserServiceH {
             // vidomistNO
             VidomistEntity vidomistEntity = vidomistServiceH.findVidomistNoByStudentRecordBookAndSubjectName(bs.getStudentRecordBook(), subject.getSubjectName());
             StudentEntity studentEntity = studentServiceH.findByStudentRecordBook(bs.getStudentRecordBook());
+            // додав цю перевірку на випадок, коли відомості (за НОМЕРОМ студента та предметм ще немає)
+            if (vidomistEntity != null) {
+                // bigunetsMark
+                BigunetsMarkEntity bigunetsMark = new BigunetsMarkEntity();
+                // bigunetsMarkId
+                BigunetsMarkId bigunetsMarkId = new BigunetsMarkId();
+                bigunetsMarkId.setBigunetsNo(header.getBigunNo());
+                bigunetsMarkId.setStudentCode(studentEntity.getStudentCode());
+                bigunetsMarkId.setVidomistNo(vidomistEntity.getVidomistNo());
+                bigunetsMarkId.setTutorNo(tutorEntity.getTutorNo());
 
-            // bigunetsMark
-            BigunetsMarkEntity bigunetsMark = new BigunetsMarkEntity();
-            // bigunetsMarkId
-            BigunetsMarkId bigunetsMarkId = new BigunetsMarkId();
-            bigunetsMarkId.setBigunetsNo(header.getBigunNo());
-            bigunetsMarkId.setStudentCode(studentEntity.getStudentCode());
-            bigunetsMarkId.setVidomistNo(vidomistEntity.getVidomistNo());
-            bigunetsMarkId.setTutorNo(tutorEntity.getTutorNo());
+                bigunetsMark.setBigunetsMarkId(bigunetsMarkId);
+                bigunetsMark.setTrimMark(bs.getSemesterGrade());
+                bigunetsMark.setMarkCheck(bs.getControlGrade());
+                bigunetsMark.setCompleteMark(bs.getTotalGrade());
+                bigunetsMark.setNatMark(bs.getNationalGrade());
+                bigunetsMark.setEctsMark(bs.getEctsGrade());
 
-            bigunetsMark.setBigunetsMarkId(bigunetsMarkId);
-            bigunetsMark.setTrimMark(bs.getSemesterGrade());
-            bigunetsMark.setMarkCheck(bs.getControlGrade());
-            bigunetsMark.setCompleteMark(bs.getTotalGrade());
-            bigunetsMark.setNatMark(bs.getNationalGrade());
-            bigunetsMark.setEctsMark(bs.getEctsGrade());
-
-            bigunetsMarkServiceH.insertBigunetsMark(bigunetsMark);
+                bigunetsMarkServiceH.insertBigunetsMark(bigunetsMark);
+            }
         }
 
     }
@@ -184,10 +193,10 @@ public class ParserServiceH {
         vidomist.setRejectedCount(footer.getRejectedCount());
         vidomist.setControlType(header.getControlType());
         vidomist.setExamDate(header.getExamDate());
-        GroupEntity groupEntity =  groupServiceH.findGroupByNameYearTrimCourseSubject(group, subject);
+        GroupEntity groupEntity = groupServiceH.findGroupByNameYearTrimCourseSubject(group, subject);
         vidomist.setGroup(groupEntity);
 
-        for(int i = 0 ; i < students.size(); i++){
+        for (int i = 0; i < students.size(); i++) {
             StatementStudent ss = students.get(i);
             // student
             StudentEntity student = new StudentEntity();

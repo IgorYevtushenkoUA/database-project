@@ -60,4 +60,11 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
             @Param("course") Integer course,
             @Param("subjectName") String subjectName);
 
+
+    @Query("select gr " +
+            "from GroupEntity gr " +
+            "inner join SubjectEntity sub on gr.subject.subjectNo=sub.subjectNo " +
+            "where sub.subjectName=:subjectName ")
+    List<GroupEntity> findAllBySubjectName(@Param("subjectName") String subjectName);
+
 }

@@ -75,5 +75,8 @@ public class GroupServiceH {
                 group.getGroupName(), group.getEduYear(), group.getTrim(), group.getCourse(), subject.getSubjectName());
     }
 
+    public List<GroupEntity> findAllBySubjectName(String subjectName){
+        return groupRepository.findAllBySubjectName(subjectName);
+    }
 
 }

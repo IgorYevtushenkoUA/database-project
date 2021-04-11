@@ -89,4 +89,8 @@ public class SubjectServiceH {
 
     }
 
+    public SubjectEntity findBySubjectName(String subjectName){
+        return subjectRepository.findBySubjectName(subjectName);
+    }
+
 }

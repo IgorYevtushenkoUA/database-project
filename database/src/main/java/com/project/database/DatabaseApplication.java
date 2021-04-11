@@ -1,5 +1,7 @@
 package com.project.database;
 
+import com.project.database.dto.bigunets.BigunetsReport;
+import com.project.database.parser.parserBigunets.BigunetsParser;
 import com.project.database.service.StudentService;
 import com.project.database.serviceHibernate.ParserServiceH;
 import com.project.database.serviceHibernate.StudentServiceH;
@@ -32,6 +34,10 @@ public class DatabaseApplication {
 //        subjectServiceH.findSubjectAverageMark(1, 2);
 
         ParserServiceH parserServiceH = applicationContext.getBean(ParserServiceH.class);
+        BigunetsParser parser = new BigunetsParser();
+        BigunetsReport bigunetsReport = parser.getBigunReportByRoot("/pdfs/unix_bigunetsDONE.pdf");
+        System.out.println(bigunetsReport);
+        parserServiceH.insertBigunets(bigunetsReport.getBigunetsInfo());
         //        Page page = studentServiceH.findStudentsWithRating(null,null,null,null,null,null,"",true, 1,20);
 
     }
