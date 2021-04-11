@@ -1,8 +1,8 @@
 package com.project.database;
 
-import com.project.database.repository.StudentRepository;
 import com.project.database.service.StudentService;
 import com.project.database.serviceHibernate.*;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -40,7 +40,6 @@ public class DatabaseApplication {
                 3,
                 "2"
         ));
-
     }
 
 }
