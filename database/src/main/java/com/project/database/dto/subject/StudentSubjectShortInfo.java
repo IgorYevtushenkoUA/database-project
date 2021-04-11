@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubjectShortInfo {
+public class StudentSubjectShortInfo {
     private Integer subjectID; // Example: 1,
     private String subjectName; // Example: 'Технології сучасних дата - центрів',
     private String tutorFullName; // Example: "Черкасов Дмитро Іванович",
