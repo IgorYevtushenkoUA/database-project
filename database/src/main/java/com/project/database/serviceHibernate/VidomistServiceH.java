@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class VidomistRepositoryH {
+public class VidomistServiceH {
     private final VidomistRepository vidomistRepository;
 
     public Page<List<String>> findAllStudentVidomosties(int studentCode, int page, int numberPerPage) {
@@ -59,5 +60,9 @@ public class VidomistRepositoryH {
         return vidomistRepository.nonAdmissionByTeacherNo(tutorNo);
     }
 
+    public VidomistEntity findVidomistNoByStudentRecordBookAndSubjectName(
+            String studentRecordBook, String subjectName) {
+        return vidomistRepository.findVidomistNoByStudentRecordBookAndSubjectName(studentRecordBook, subjectName);
+    }
 
 }

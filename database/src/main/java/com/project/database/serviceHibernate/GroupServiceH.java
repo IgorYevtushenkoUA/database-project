@@ -1,12 +1,14 @@
 package com.project.database.serviceHibernate;
 
 import com.project.database.entities.GroupEntity;
+import com.project.database.entities.SubjectEntity;
 import com.project.database.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,13 +58,22 @@ public class GroupServiceH {
     }
 
     // insert
-    public void insertGroup(GroupEntity group) {
-        groupRepository.save(group);
+    public void insertGroup(GroupEntity group, SubjectEntity subject) {
+        // тут треба перевірити за назвагрупи+назвапредмету+навчальний рік+семестр+курс
+        if (findGroupByNameYearTrimCourseSubject(group, subject) == null) {
+            groupRepository.save(group);
+        }
     }
 
     // delete
     public void deleteGroupById(int groupCode) {
         groupRepository.deleteByGroupCode(groupCode);
     }
+
+    public GroupEntity findGroupByNameYearTrimCourseSubject(GroupEntity group, SubjectEntity subject) {
+        return groupRepository.findGroupByNameYearTrimCourseSubject(
+                group.getGroupName(), group.getEduYear(), group.getTrim(), group.getCourse(), subject.getSubjectName());
+    }
+
 
 }

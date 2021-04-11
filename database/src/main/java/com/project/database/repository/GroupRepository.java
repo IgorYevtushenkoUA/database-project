@@ -26,6 +26,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
     List<String> findAllGroupEduYears();
 
     //
+
     /******************************* ALL YOU NEED *************************************/
     //    @Query("SELECT distinct g.trim FROM GroupEntity g WHERE g.trim IN :semesters")
     List<GroupEntity> findDistinctAllByTrimIn(@Param("semesters") List<String> semesters);
@@ -37,7 +38,26 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
     List<GroupEntity> findDistinctAllByEduYearIn(@Param("eduYears") List<String> eduYears);
 
     List<GroupEntity> findDistinctAllByGroupNameIn(@Param("groupName") List<String> groupName);
+
     /**********************************************************************************/
 
+    @Query("select gr " +
+            "from GroupEntity gr " +
+            "inner join SubjectEntity sub on sub.subjectNo=gr.subject.subjectNo " +
+            "where gr.groupName=:groupName " +
+            "and " +
+            "   gr.eduYear=:eduYear " +
+            "and " +
+            "   gr.trim=:trim " +
+            "and " +
+            "   gr.course=:course " +
+            "and " +
+            "   sub.subjectName=:subjectName ")
+    GroupEntity findGroupByNameYearTrimCourseSubject(
+            @Param("groupName") String groupName,
+            @Param("eduYear") String eduYear,
+            @Param("trim") String trim,
+            @Param("course") Integer course,
+            @Param("subjectName") String subjectName);
 
 }

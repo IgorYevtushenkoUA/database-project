@@ -55,7 +55,7 @@ public class StatementParser {
     public static void main(String[] args) throws IOException {
         StatementParser parser = new StatementParser();
 
-        StatementsReport statementsReport = parser.getStatementsReportByRoot("/pdfs/Bigunets.pdf");
+        StatementsReport statementsReport = parser.getStatementsReportByRoot("/pdfs/ios_wrong_sumDONE.pdf");
         System.out.println(statementsReport);
     }
 

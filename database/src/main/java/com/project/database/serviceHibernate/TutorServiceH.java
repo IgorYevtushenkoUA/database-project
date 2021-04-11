@@ -52,13 +52,21 @@ public class TutorServiceH {
 
     // insert
     public void insertTutor(TutorEntity tutor) {
-        if (tutorRepository.findByTutorSurnameAndTutorNameAndTutorPatronymic(tutor.getTutorSurname(), tutor.getTutorName(), tutor.getTutorPatronymic()) == null)
-            tutorRepository.save(tutor);
+        if (tutorRepository.findByTutorSurnameAndTutorNameAndTutorPatronymic(tutor.getTutorSurname(), tutor.getTutorName(), tutor.getTutorPatronymic()) == null) {
+//            tutorRepository.save(tutor);
+            System.out.println("tutorRepository.save(tutor);");
+        }
+        System.out.println("WE ARE HERE; all is working ypa");
     }
 
     // delete
     public void deleteTutorById(int tutorNo) {
         tutorRepository.deleteByTutorNo(tutorNo);
+    }
+
+    public TutorEntity findByPIB(String surname, String name, String patronymic) {
+        return tutorRepository.findByTutorSurnameAndTutorNameAndTutorPatronymic(
+                surname, name, patronymic);
     }
 
 }

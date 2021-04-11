@@ -3,6 +3,7 @@ package com.project.database.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -20,10 +21,10 @@ public class BigunetsEntity {
     private Integer bigunetsNo;
 
     @Column(name = "exam_date")
-    private Date examDate;
+    private LocalDate examDate;
 
     @Column(name = "valid_until")
-    private Date validUntil;
+    private LocalDate validUntil;
 
     @Column(name = "postp_reason")
     private String postpReason;

@@ -19,7 +19,7 @@ public class BigunetsServiceH {
     private final BigunetsRepository bigunetsRepository;
 
     public Page<List<String>> findAllStudentBigunets(int studentCode, int page, int numberPerPage) {
-        Pageable pageable = PageRequest.of(page-1, numberPerPage);
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
         return bigunetsRepository.findAllStudentBigunets(studentCode, pageable);
     }
 
@@ -30,17 +30,17 @@ public class BigunetsServiceH {
     }
 
     public Page<BigunetsEntity> findAllByTutorNo(Integer tutorNo, int page, int numberPerPage) {
-        Pageable pageable = PageRequest.of(page-1, numberPerPage);
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
         return bigunetsRepository.findAllByTutorNo(tutorNo, pageable);
     }
 
     public Page<BigunetsEntity> findAllByGroupName(String groupName, int page, int numberPerPage) {
-        Pageable pageable = PageRequest.of(page-1, numberPerPage);
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
         return bigunetsRepository.findAllByGroupName(groupName, pageable);
     }
 
     public Page<BigunetsEntity> findAllBySubjectNo(Integer subjectNo, int page, int numberPerPage) {
-        Pageable pageable = PageRequest.of(page-1, numberPerPage);
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
         return bigunetsRepository.findAllBySubjectNo(subjectNo, pageable);
     }
 

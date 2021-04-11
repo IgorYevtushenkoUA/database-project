@@ -63,4 +63,19 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "where t.tutorNo=:tutorNo")
     int nonAdmissionByTeacherNo(@Param("tutorNo") Integer tutorNo);
 
+    @Query("select v " +
+            "from VidomistEntity v " +
+            "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo=gr.subject.subjectNo " +
+            "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=v.vidomistNo " +
+            "inner join StudentEntity s on s.studentCode=vm.vidomistMarkId.studentCode " +
+            "where " +
+            "   s.studentRecordBook=:studentRecordBook " +
+            "and " +
+            "   sub.subjectName=:subjectName ")
+    VidomistEntity findVidomistNoByStudentRecordBookAndSubjectName(
+            @Param("studentRecordBook") String studentRecordBook,
+            @Param("subjectName") String subjectName
+    );
+
 }
