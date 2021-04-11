@@ -16,11 +16,11 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
 
     StudentEntity findByStudentRecordBook(String recordBook);
 
-    @Query("select s.studentSurname, s.studentName, s.studentPatronymic from StudentEntity s" )
+    @Query("select s.studentSurname, s.studentName, s.studentPatronymic from StudentEntity s")
     List<List<String>> findAllStudentNames();
 
-    @Query("select s.studentSurname, s.studentName, s.studentPatronymic from StudentEntity s where s.studentSurname like:name or s.studentName like:name or s.studentPatronymic like:name" )
-    List<List<String>> findAllStudentNames(@Param("name" ) String name);
+    @Query("select s.studentSurname, s.studentName, s.studentPatronymic from StudentEntity s where s.studentSurname like:name or s.studentName like:name or s.studentPatronymic like:name")
+    List<List<String>> findAllStudentNames(@Param("name") String name);
 
     @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, avg(vm.completeMark) as completeMark, gr.course as course " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
@@ -40,15 +40,15 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "   gr.trim in (:semesters) " +
             "and " +
             "   gr.course in (:courses) " +
-            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, gr.course " )
-    List<List<String>> findStudentsWithRating(
-            @Param("eduYears" ) List<String> eduYears,
+            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, gr.course ")
+    Page<List<String>> findStudentsWithRating(
+            @Param("eduYears") List<String> eduYears,
             @Param("subjectName") List<String> subjectName,
-            @Param("tutorNo" ) List<Integer> tutorNo,
-            @Param("groupName" ) List<String> groupName,
-            @Param("semesters" ) List<String> semesters,
-            @Param("courses" ) List<Integer> courses,
-            Sort sort
+            @Param("tutorNo") List<Integer> tutorNo,
+            @Param("groupName") List<String> groupName,
+            @Param("semesters") List<String> semesters,
+            @Param("courses") List<Integer> courses,
+            Pageable pageable
     );
 
     @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course as course, gr.trim , avg(vm.complete_mark) " +
@@ -68,7 +68,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and gr.trim = max(gr0.trim) " +
             ") " +
             "group by s.student_code, Y, gr.course, gr.trim ", nativeQuery = true)
-    List<List<Object>>findStudentsWithRatingDefault();
+    Page<List<Object>> findStudentsWithRatingDefault(Pageable pageable);
 
     @Query("select s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, gr.course as course, avg(vm.completeMark) as completeMark " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
@@ -81,13 +81,13 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "   gr.course in (:courses) " +
             "and " +
             "   gr.eduYear in (:eduYears) " +
-            "group by s.studentCode,s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, gr.course " )
-    List<List<String>> findAverageStudentMarksTrimCourse(
-            @Param("studentCode" ) Integer studentCode,
-            @Param("semesters" ) List<String> semesters,
-            @Param("courses" ) List<Integer> courses,
-            @Param("eduYears" ) List<String> eduYears,
-            Sort sort
+            "group by s.studentCode,s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, gr.course ")
+    Page<List<String>> findAverageStudentMarksTrimCourse(
+            @Param("studentCode") Integer studentCode,
+            @Param("semesters") List<String> semesters,
+            @Param("courses") List<Integer> courses,
+            @Param("eduYears") List<String> eduYears,
+            Pageable pageable
     );
 
     @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course as course, gr.trim, avg(bme.complete_mark) as completeMark " +
@@ -132,13 +132,14 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             ") " +
             ")group by s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course, gr.trim "
             , nativeQuery = true)
-    List<List<Object>> findDebtorsRatingDefault(
-            @Param("eduYear" ) List<String> eduYear,
-            @Param("subjectName" ) List<String> subjectName,
-            @Param("tutorNo" ) List<Integer> tutorNo,
-            @Param("groupName" ) List<String> groupName,
-            @Param("trim" ) List<String> trim,
-            @Param("course" ) List<Integer> course
+    Page<List<Object>> findDebtorsRatingDefault(
+            @Param("eduYear") List<String> eduYear,
+            @Param("subjectName") List<String> subjectName,
+            @Param("tutorNo") List<Integer> tutorNo,
+            @Param("groupName") List<String> groupName,
+            @Param("trim") List<String> trim,
+            @Param("course") List<Integer> course,
+            Pageable pageable
     );
 
     @Query("select s.studentSurname, s.studentName, s.studentPatronymic, s2.subjectName, bm.completeMark as completeMark " +
@@ -154,12 +155,12 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "   g.course in (:course) " +
             "and " +
-            "   g.eduYear in (:eduYear) " )
-    List<List<String>> findAllWhoHasRetakeSubjectTrimEduYear(@Param("subjectName" ) List<String> subjectName,
-                                                             @Param("trim" ) List<String> trim,
-                                                             @Param("course" ) List<Integer> course,
-                                                             @Param("eduYear" ) List<String> eduYear,
-                                                             Sort sort);
+            "   g.eduYear in (:eduYear) ")
+    Page<List<String>> findAllWhoHasRetakeSubjectTrimEduYear(@Param("subjectName") List<String> subjectName,
+                                                             @Param("trim") List<String> trim,
+                                                             @Param("course") List<Integer> course,
+                                                             @Param("eduYear") List<String> eduYear,
+                                                             Pageable pageable);
 
     @Query("select s.studentSurname, s.studentName, s.studentPatronymic, s2.subjectName, bm.completeMark as completeMark " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
@@ -172,17 +173,15 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "   g.trim in (:trim) " +
             "and " +
-            "   g.eduYear in (:eduYear) " )
-    List<List<String>> findAllRetakenSubjectForStudentTrimEduYear(@Param("studentCode" ) Integer studentCode,
-                                                                  @Param("trim" ) List<String> trim,
-                                                                  @Param("eduYear" ) List<String> eduYear,
-                                                                  Sort sort);
-
-    List<StudentEntity> findAll();
+            "   g.eduYear in (:eduYear) ")
+    Page<List<String>> findAllRetakenSubjectForStudentTrimEduYear(@Param("studentCode") Integer studentCode,
+                                                                  @Param("trim") List<String> trim,
+                                                                  @Param("eduYear") List<String> eduYear,
+                                                                  Pageable pageable);
 
     Page<StudentEntity> findAll(Pageable pageable);
 
-    List<StudentEntity> findAllByStudentSurnameAndStudentNameAndStudentPatronymic(String surname, String name, String patronymic);
+    Page<StudentEntity> findAllByStudentSurnameAndStudentNameAndStudentPatronymic(String surname, String name, String patronymic, Pageable pageable);
 
     @Query("select avg(vm.completeMark) " +
             "from VidomistMarkEntity vm " +
@@ -193,10 +192,10 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "  g.course in (:course) " +
             "and " +
-            "   g.trim in (:trim) " )
-    double findStudentAverageMarksForCourseTrim(@Param("studentCode" ) Integer studentCode,
-                                                @Param("course" ) List<Integer> course,
-                                                @Param("trim" ) List<String> trim);
+            "   g.trim in (:trim) ")
+    double findStudentAverageMarksForCourseTrim(@Param("studentCode") Integer studentCode,
+                                                @Param("course") List<Integer> course,
+                                                @Param("trim") List<String> trim);
 
     @Query("select sub.subjectName, sub.eduLevel,sub.faculty, vm.completeMark as completeMark " +
             "from VidomistMarkEntity vm " +
@@ -208,11 +207,11 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "  g.course in (:course) " +
             "and " +
-            "   g.trim in (:trim) " )
-    List<List<String>> findAllStudentMarks(@Param("studentCode" ) Integer studentCode,
-                                           @Param("course" ) List<Integer> course,
-                                           @Param("trim" ) List<String> trim,
-                                           Sort sort);
+            "   g.trim in (:trim) ")
+    Page<List<String>> findAllStudentMarks(@Param("studentCode") Integer studentCode,
+                                           @Param("course") List<Integer> course,
+                                           @Param("trim") List<String> trim,
+                                           Pageable pageable);
 
     void deleteByStudentCode(int studentCode);
 
@@ -234,15 +233,15 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "   sub.subjectName in (:subjectName)" +
             "and " +
-            "   t.tutorNo in (:tutorNo) " )
-    List<List<String>> findAllStudentByYearSubjectGroupTeacherTrimCourse(
-            @Param("eduYear" ) List<String> eduYear,
-            @Param("groupName" ) List<String> groupName,
-            @Param("trim" ) List<String> trim,
-            @Param("course" ) List<Integer> course,
-            @Param("subjectName" ) List<String> subjectName,
-            @Param("tutorNo" ) List<Integer> tutorNo,
-            Sort sort);
+            "   t.tutorNo in (:tutorNo) ")
+    Page<List<String>> findAllStudentByYearSubjectGroupTeacherTrimCourse(
+            @Param("eduYear") List<String> eduYear,
+            @Param("groupName") List<String> groupName,
+            @Param("trim") List<String> trim,
+            @Param("course") List<Integer> course,
+            @Param("subjectName") List<String> subjectName,
+            @Param("tutorNo") List<Integer> tutorNo,
+            Pageable pageable);
 
     @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, s.studentRecordBook, avg(vm.completeMark) as completeMark " +
             "from StudentEntity s " +
@@ -263,15 +262,15 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "   sub.subjectName in (:subjectName) " +
             "and " +
             "   t.tutorNo in (:tutorNo) " +
-            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, s.studentRecordBook " )
-    List<List<String>> findAllStudents(
-            @Param("eduYear" ) List<String> eduYear,
-            @Param("groupName" ) List<String> groupName,
-            @Param("trim" ) List<String> trim,
-            @Param("course" ) List<Integer> course,
-            @Param("subjectName" ) List<String> subjectName,
-            @Param("tutorNo" ) List<Integer> tutorNo,
-            Sort sort);
+            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, s.studentRecordBook ")
+    Page<List<String>> findAllStudents(
+            @Param("eduYear") List<String> eduYear,
+            @Param("groupName") List<String> groupName,
+            @Param("trim") List<String> trim,
+            @Param("course") List<Integer> course,
+            @Param("subjectName") List<String> subjectName,
+            @Param("tutorNo") List<Integer> tutorNo,
+            Pageable pageable);
 
     @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, s.studentRecordBook, avg(bme.completeMark) as completeMark  " +
             "from StudentEntity s " +
@@ -306,15 +305,15 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "       and " +
             "           v1.tutor.tutorNo in (:tutorNo) " +
             "   )" +
-            ") group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, s.studentRecordBook " )
-    List<List<String>> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
-            @Param("eduYear" ) List<String> eduYear,
-            @Param("groupName" ) List<String> groupName,
-            @Param("trim" ) List<String> trim,
-            @Param("course" ) List<Integer> course,
-            @Param("subjectName" ) List<String> subjectName,
-            @Param("tutorNo" ) List<Integer> tutorNo,
-            Sort sort);
+            ") group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, s.studentRecordBook ")
+    Page<List<String>> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+            @Param("eduYear") List<String> eduYear,
+            @Param("groupName") List<String> groupName,
+            @Param("trim") List<String> trim,
+            @Param("course") List<Integer> course,
+            @Param("subjectName") List<String> subjectName,
+            @Param("tutorNo") List<Integer> tutorNo,
+            Pageable pageable);
 
     @Query("select distinct(g.course) " +
             "from GroupEntity g " +
@@ -322,8 +321,8 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=v.vidomistNo " +
             "inner join StudentEntity s on s.studentCode=vm.vidomistMarkId.studentCode " +
             "where s.studentCode=:studentCode " +
-            "order by g.course desc " )
-    List<Integer> findMaxStudentCourse(@Param("studentCode" ) Integer studentCode);
+            "order by g.course desc ")
+    List<Integer> findMaxStudentCourse(@Param("studentCode") Integer studentCode);
 
     @Query("select distinct(g.trim) " +
             "from GroupEntity g " +
@@ -331,8 +330,8 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=v.vidomistNo " +
             "inner join StudentEntity s on s.studentCode=vm.vidomistMarkId.studentCode " +
             "where s.studentCode=:studentCode " +
-            "order by g.trim desc " )
-    List<String> findMaxStudentTrim(@Param("studentCode" ) Integer studentCode);
+            "order by g.trim desc ")
+    List<String> findMaxStudentTrim(@Param("studentCode") Integer studentCode);
 
     @Query("select sub.subjectNo, sub.subjectName, s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, vm.completeMark " +
             "from StudentEntity s " +
@@ -348,7 +347,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "   g.trim=:trim " +
             "group by sub.subjectNo, sub.subjectName, s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, vm.completeMark ")
-    List<List<String>> findStudentMarks (
+    List<List<String>> findStudentMarks(
             @Param("studentCode") Integer studentCode,
             @Param("course") Integer course,
             @Param("trim") String trim
