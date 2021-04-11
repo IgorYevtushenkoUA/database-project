@@ -94,7 +94,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<Object[]> findStudentsWithRating(
+    public Page<StudentShortInfo> findStudentsWithRating(
             String eduYear, String subjectName, Integer tutorNo, String groupName, Integer semestr, Integer course,
             String sortBy, boolean sortDesc, int page, int numberPerPage
     ) {
@@ -108,9 +108,9 @@ public class StudentServiceH {
         Sort sort = setSort(sortBy, sortDesc);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
 
-        return studentRepository.findStudentsWithRating(
+        Page<Object[]> pageList = studentRepository.findStudentsWithRating(
                 eduYearList, subjectList, tutorList, groupList, semesterList, courseList, pageable);
-
+        return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 
     public Page<StudentShortInfo> findStudentsWithRatingDefault(
@@ -160,7 +160,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<Object[]> findDebtorsRatingDefault(
+    public Page<StudentShortInfo> findDebtorsRatingDefault(
             String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
             String sortBy, boolean sortDesc, int page, int numberPerPage
     ) {
@@ -174,8 +174,9 @@ public class StudentServiceH {
         Sort sort = setSort(sortBy, sortDesc);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
 
-        return studentRepository.findDebtorsRatingDefault(
+        Page<Object[]> pageList = studentRepository.findDebtorsRatingDefault(
                 eduYearList, subjectList, tutorList, groupList, trimList, courseList, pageable);
+        return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 
     public List<String[]> findStudentMarks(Integer studentCode, Integer course, String trim) {

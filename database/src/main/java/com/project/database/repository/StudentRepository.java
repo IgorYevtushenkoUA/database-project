@@ -91,7 +91,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             Pageable pageable
     );
 
-    @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course as course, gr.trim, avg(bme.complete_mark) as completeMark " +
+    @Query(value = "select s.student_code, s.student_surname, s.student_name, s.student_patronymic, s.student_record_book, avg(bme.complete_mark) as completeMark, gr.course as course, gr.trim " +
             "from \"group\" gr " +
             "inner join vidomist v on gr.group_code = v.group_code " +
             "inner join vidomist_mark vm on v.vidomist_no = vm.vidomist_no " +
@@ -131,9 +131,50 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "having gr.course = max(gr0.course) " +
             "and gr.trim = max(gr0.trim) " +
             ") " +
-            ")group by s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course, gr.trim "
+            ")group by s.student_code, s.student_surname,s.student_name, s.student_patronymic, s.student_record_book, gr.course as course, gr.trim "
             , nativeQuery = true)
     Page<Object[]> findDebtorsRatingDefault(
+            @Param("eduYear") List<String> eduYear,
+            @Param("subjectName") List<String> subjectName,
+            @Param("tutorNo") List<Integer> tutorNo,
+            @Param("groupName") List<String> groupName,
+            @Param("trim") List<String> trim,
+            @Param("course") List<Integer> course,
+            Pageable pageable
+    );
+
+    @Query(value = "select s.student_code, s.student_surname,s.student_name, s.student_patronymic, s.student_record_book, avg(bme.complete_mark) as completeMark, gr.course as course, gr.trim  " +
+            "from \"group\" gr " +
+            "inner join vidomist v on gr.group_code = v.group_code " +
+            "inner join vidomist_mark vm on v.vidomist_no = vm.vidomist_no " +
+            "inner join student s on s.student_code = vm.student_code " +
+            "inner join bigunets_mark bme on bme.student_code=s.student_code " +
+            "where exists ( " +
+            "   select vm " +
+            "   from vidomist_mark vm " +
+            "   where vm.student_code=s.student_code " +
+            "       and vm.ects_mark='F' " +
+            "       and lower(vm.nat_mark) not like '%недоп%' " +
+            "       and not exists (" +
+            "           select bm " +
+            "           from bigunets_mark bm " +
+            "           where bm.vidomist_no=vm.vidomist_no and bm.student_code=s.student_code" +
+            "   )" +
+            "   and vm.vidomist_no in (" +
+            "   select v1.vidomist_no " +
+            "   from vidomist v1 " +
+            "   inner join \"group\" g on g.group_code=v1.group_code " +
+            "   inner join subject sub on g.subject_no = sub.subject_no " +
+            "   where g.edu_year in (:eduYear) " +
+            "   and g.group_name in (:groupName) " +
+            "   and g.trim in (:trim) " +
+            "   and g.course in (:course) " +
+            "   and sub.subject_name in (:subjectName) " +
+            "   and v1.tutor_no in (:tutorNo) " +
+            "   ) " +
+            ")group by s.student_code, s.student_surname,s.student_name, s.student_patronymic, s.student_record_book, gr.course as course, gr.trim "
+            , nativeQuery = true)
+    Page<Object[]> findDebtorsRating(
             @Param("eduYear") List<String> eduYear,
             @Param("subjectName") List<String> subjectName,
             @Param("tutorNo") List<Integer> tutorNo,
