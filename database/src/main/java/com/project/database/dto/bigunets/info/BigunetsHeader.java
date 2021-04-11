@@ -1,4 +1,4 @@
-package com.project.database.dto.statement.info;
+package com.project.database.dto.bigunets.info;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,15 +11,17 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatementHeader {
-    private Integer statementNo; // Example: '222222',
+public class BigunetsHeader {
+    private Integer bigunNo; // Example: '222222',
     private String eduLevel; // Example: 'Бакалавр',
     private String faculty; // Example: 'Факультет інформатики',
     private Integer course; // Example: 3,
-    private String group; // Example: 1,
+    private String group; // Example: бігунець,
     private String subjectName; // Example: 'Технології сучасних дата - центрів',
     private String semester; // Example: '6д',
     private String creditNumber; // Example: '?',
+    private LocalDate dueTo; // Example: '2021-05-24'
+    private String postponeReason; // Example: 'академічна заборгованість'
     private String controlType; // Example: 'екзамен',
     private LocalDate examDate; // Example: '2021-05-24',
     private String tutorFullName; // Example: 'Черкасов Дмитро Іванович',
