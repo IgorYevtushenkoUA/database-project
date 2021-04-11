@@ -1,10 +1,11 @@
 package com.project.database.serviceHibernate;
 
 import com.project.database.entities.VidomistEntity;
-import com.project.database.repository.VidomistMarkRepository;
 import com.project.database.repository.VidomistRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +17,9 @@ import java.util.List;
 public class VidomistRepositoryH {
     private final VidomistRepository vidomistRepository;
 
-    public List<List<String>> findAllStudentVidomosties(int studentCode) {
-        return vidomistRepository.findAllStudentVidomosties(studentCode);
+    public Page<List<String>> findAllStudentVidomosties(int studentCode, int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        return vidomistRepository.findAllStudentVidomosties(studentCode, pageable);
     }
 
     public void insertVidomist(VidomistEntity vidomist) {
@@ -30,16 +32,19 @@ public class VidomistRepositoryH {
         vidomistRepository.deleteById(vidomistNo);
     }
 
-    public List<VidomistEntity> findAllByTutorNo(Integer tutorNo) {
-        return vidomistRepository.findAllByTutorNo(tutorNo);
+    public Page<VidomistEntity> findAllByTutorNo(Integer tutorNo, int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        return vidomistRepository.findAllByTutorNo(tutorNo, pageable);
     }
 
-    public List<VidomistEntity> findAllBySubjectNo(Integer subjectNo) {
-        return vidomistRepository.findAllBySubjectNo(subjectNo);
+    public Page<VidomistEntity> findAllBySubjectNo(Integer subjectNo, int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        return vidomistRepository.findAllBySubjectNo(subjectNo, pageable);
     }
 
-    public List<VidomistEntity> findAllByGroupName(String groupName) {
-        return vidomistRepository.findAllByGroupName(groupName);
+    public Page<VidomistEntity> findAllByGroupName(String groupName, int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        return vidomistRepository.findAllByGroupName(groupName, pageable);
     }
 
     public int nonAdmissionByGroupCode(Integer groupCode) {

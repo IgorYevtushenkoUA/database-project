@@ -3,7 +3,6 @@ package com.project.database.serviceHibernate;
 import com.project.database.entities.BigunetsEntity;
 import com.project.database.repository.BigunetsRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +18,7 @@ public class BigunetsServiceH {
 
     private final BigunetsRepository bigunetsRepository;
 
-    public Page<List<String>> findAllStudentBigunets(int studentCode, String sortBy, boolean sortDesc, int page, int numberPerPage) {
+    public Page<List<String>> findAllStudentBigunets(int studentCode, int page, int numberPerPage) {
         Pageable pageable = PageRequest.of(page-1, numberPerPage);
         return bigunetsRepository.findAllStudentBigunets(studentCode, pageable);
     }

@@ -1,6 +1,8 @@
 package com.project.database.repository;
 
 import com.project.database.entities.VidomistEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +19,7 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "inner join SubjectEntity sub on sub.subjectNo = g.subject.subjectNo " +
             "where " +
             "   s.studentCode=:studentCode ")
-    List<List<String>> findAllStudentVidomosties(@Param("studentCode") int studentCode);
+    Page<List<String>> findAllStudentVidomosties(@Param("studentCode") int studentCode, Pageable pageable);
 
     VidomistEntity findByVidomistNo(Integer vidomistNo);
 
@@ -25,21 +27,21 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "from VidomistEntity v " +
             "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
             "where t.tutorNo=:tutorNo ")
-    List<VidomistEntity> findAllByTutorNo(@Param("tutorNo") Integer tutorNo);
+    Page<VidomistEntity> findAllByTutorNo(@Param("tutorNo") Integer tutorNo,, Pageable pageable);
 
     @Query("select v " +
             "from VidomistEntity v " +
             "inner join GroupEntity g on v.group.groupCode = g.groupCode " +
             "inner join SubjectEntity s on s.subjectNo=g.subject.subjectNo " +
             "where s.subjectNo=:subjectNo")
-    List<VidomistEntity> findAllBySubjectNo(@Param("subjectNo") Integer subjectNo);
+    Page<VidomistEntity> findAllBySubjectNo(@Param("subjectNo") Integer subjectNo, Pageable pageable);
 
     @Query("select v " +
             "from VidomistEntity v " +
             "inner join GroupEntity g on v.group.groupCode=g.groupCode " +
             "where g.groupName=:groupName "
     )
-    List<VidomistEntity> findAllByGroupName(@Param("groupName") String groupName);
+    Page<VidomistEntity> findAllByGroupName(@Param("groupName") String groupName, Pageable pageable);
 
     // недопуски
     @Query("select sum(v.rejectedCount)" +

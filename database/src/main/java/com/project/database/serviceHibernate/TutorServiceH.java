@@ -4,6 +4,9 @@ import com.project.database.entities.TutorEntity;
 import com.project.database.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +30,9 @@ public class TutorServiceH {
     /**
      * @return [TutorEntity(tutorNo = 1, tutorName = Наталія, tutorSurname = Гулаєва, tutorPatronymic = Михаліївна, scienceDegree = доцент, academStatus = null, position = null), ...]
      */
-    public List<TutorEntity> findAll() {
-        return tutorRepository.findAll();
+    public Page<TutorEntity> findAll(int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        return tutorRepository.findAll(pageable);
     }
 
     /**
@@ -53,7 +57,7 @@ public class TutorServiceH {
     }
 
     // delete
-    public void deleteTutorById(int tutorNo){
+    public void deleteTutorById(int tutorNo) {
         tutorRepository.deleteByTutorNo(tutorNo);
     }
 

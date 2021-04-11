@@ -1,6 +1,8 @@
 package com.project.database.repository;
 
 import com.project.database.entities.TutorEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +13,7 @@ public interface TutorRepository extends JpaRepository<TutorEntity, Integer> {
 
     void deleteByTutorNo(int tutorNo);
 
-    List<TutorEntity> findAll();
+    Page<TutorEntity> findAll(Pageable pageable);
 
     @Query("select t.tutorSurname, t.tutorName, t.tutorPatronymic from TutorEntity t order by t.tutorSurname")
     List<List<String>> findAllTutorNames();
