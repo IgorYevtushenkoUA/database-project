@@ -1,9 +1,11 @@
 package com.project.database;
 
-import com.project.database.service.*;
+import com.project.database.service.StudentService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @SpringBootApplication
 public class DatabaseApplication {
@@ -34,7 +36,7 @@ public class DatabaseApplication {
                 1, 20
         ));
 
-
+        PageRequest.of(2, 20, Sort.by("surname"));
     }
 
 }
