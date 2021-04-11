@@ -1,6 +1,7 @@
 package com.project.database.serviceHibernate;
 
 import com.project.database.dto.student.StudentShortInfo;
+import com.project.database.dto.subject.StudentSubjectShortInfo;
 import com.project.database.entities.GroupEntity;
 import com.project.database.entities.StudentEntity;
 import com.project.database.entities.SubjectEntity;
@@ -179,8 +180,31 @@ public class StudentServiceH {
         return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 
-    public List<String[]> findStudentMarks(Integer studentCode, Integer course, String trim) {
-        return studentRepository.findStudentMarks(studentCode, course, trim);
+    public Page<StudentSubjectShortInfo> findStudentMarks(Integer studentCode, Integer course, String trim, int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        Page<Object[]> pageList = studentRepository.findStudentMarks(studentCode, course, trim, pageable);
+        return buildStudentSubjectShortInfo(pageList, pageable, (int) pageList.getTotalElements());
+    }
+
+    private Page<StudentSubjectShortInfo> buildStudentSubjectShortInfo(Page<Object[]> subjectP, Pageable pageable, int total) {
+        List<StudentSubjectShortInfo> studentSubjectShortInfos = new ArrayList<>();
+        List<Object[]> list = subjectP.getContent();
+        for (int i = 0; i < studentSubjectShortInfos.size(); i++) {
+            StudentSubjectShortInfo sssi = new StudentSubjectShortInfo();
+            Object[] obj = list.get(i);
+            int index = 1;
+            sssi.setSubjectID((Integer) obj[index++]);
+            sssi.setSubjectName((String) obj[index++]);
+            sssi.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
+            sssi.setGroup((String) obj[index++]);
+            sssi.setControlType((String) obj[index++]);
+            sssi.setExamDate((String) obj[index++]);
+            sssi.setGrade((Integer) obj[index++]);
+            sssi.setStudentCode((Integer) obj[index++]);
+
+            studentSubjectShortInfos.add(sssi);
+        }
+        return new PageImpl<>(studentSubjectShortInfos, pageable, total);
     }
 
     /**

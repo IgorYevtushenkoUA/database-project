@@ -17,4 +17,5 @@ public class StudentSubjectShortInfo {
     private String controlType; // Example: "екзамен",
     private String examDate; // Example: "2021-05-25",
     private Integer grade; // Example: 90
+    private Integer studentCode;
 }

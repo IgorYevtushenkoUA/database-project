@@ -51,7 +51,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             Pageable pageable
     );
 
-//    @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course as course, gr.trim , avg(vm.complete_mark) " +
+    //    @Query(value = "select s.student_code, s.student_record_book, s.student_surname,s.student_name, s.student_patronymic, gr.edu_year , gr.course as course, gr.trim , avg(vm.complete_mark) " +
     @Query(value = "select s.student_code , s.student_surname as studentSurname,s.student_name, s.student_patronymic, s.student_record_book, avg(vm.complete_mark) as completeMark,  gr.course as course, gr.trim " +
             "from \"group\" gr " +
             "inner join vidomist v on gr.group_code = v.group_code " +
@@ -199,10 +199,10 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "   g.eduYear in (:eduYear) ")
     Page<Object[]> findAllWhoHasRetakeSubjectTrimEduYear(@Param("subjectName") List<String> subjectName,
-                                                             @Param("trim") List<String> trim,
-                                                             @Param("course") List<Integer> course,
-                                                             @Param("eduYear") List<String> eduYear,
-                                                             Pageable pageable);
+                                                         @Param("trim") List<String> trim,
+                                                         @Param("course") List<Integer> course,
+                                                         @Param("eduYear") List<String> eduYear,
+                                                         Pageable pageable);
 
     @Query("select s.studentSurname, s.studentName, s.studentPatronymic, s2.subjectName, bm.completeMark as completeMark " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
@@ -217,9 +217,9 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "   g.eduYear in (:eduYear) ")
     Page<Object[]> findAllRetakenSubjectForStudentTrimEduYear(@Param("studentCode") Integer studentCode,
-                                                                  @Param("trim") List<String> trim,
-                                                                  @Param("eduYear") List<String> eduYear,
-                                                                  Pageable pageable);
+                                                              @Param("trim") List<String> trim,
+                                                              @Param("eduYear") List<String> eduYear,
+                                                              Pageable pageable);
 
     Page<StudentEntity> findAll(Pageable pageable);
 
@@ -251,9 +251,9 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "and " +
             "   g.trim in (:trim) ")
     Page<Object[]> findAllStudentMarks(@Param("studentCode") Integer studentCode,
-                                           @Param("course") List<Integer> course,
-                                           @Param("trim") List<String> trim,
-                                           Pageable pageable);
+                                       @Param("course") List<Integer> course,
+                                       @Param("trim") List<String> trim,
+                                       Pageable pageable);
 
     void deleteByStudentCode(int studentCode);
 
@@ -375,7 +375,9 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "order by g.trim desc ")
     List<String> findMaxStudentTrim(@Param("studentCode") Integer studentCode);
 
-    @Query("select sub.subjectNo, sub.subjectName, s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, vm.completeMark " +
+
+    // return StudentSubjectShortInfo
+    @Query("select sub.subjectNo, sub.subjectName, t.tutorSurname, t.tutorName, t.tutorPatronymic,g.groupName, v.controlType, v.examDate, s.studentCode, vm.completeMark " +
             "from StudentEntity s " +
             "inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on vm.vidomistMarkId.studentCode=v.vidomistNo " +
@@ -388,11 +390,12 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "   g.course=:course " +
             "and " +
             "   g.trim=:trim " +
-            "group by sub.subjectNo, sub.subjectName, s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, vm.completeMark ")
-    List<String[]> findStudentMarks(
+            "group by sub.subjectNo, sub.subjectName, t.tutorSurname, t.tutorName, t.tutorPatronymic,g.groupName, v.controlType, v.examDate, s.studentCode, vm.completeMark ")
+    Page<Object[]> findStudentMarks(
             @Param("studentCode") Integer studentCode,
             @Param("course") Integer course,
-            @Param("trim") String trim
+            @Param("trim") String trim,
+            Pageable pageable
     );
 
 }

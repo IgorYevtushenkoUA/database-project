@@ -31,15 +31,17 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-//        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
+        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
+        studentServiceH.findStudentMarks(1, 3, "2",1,2);
 //        SubjectServiceH subjectServiceH = applicationContext.getBean(SubjectServiceH.class);
 //        subjectServiceH.findSubjectAverageMark(1, 2);
 
-        ParserServiceH parserServiceH = applicationContext.getBean(ParserServiceH.class);
-        StatementParser parser = new StatementParser();
-        StatementsReport statementsReport = parser.getStatementsReportByRoot("/pdfs/ios_good_2DONE.pdf");
-        System.out.println(statementsReport);
-        parserServiceH.insertVidomist(statementsReport.getStatementInfo());
+
+//        ParserServiceH parserServiceH = applicationContext.getBean(ParserServiceH.class);
+//        StatementParser parser = new StatementParser();
+//        StatementsReport statementsReport = parser.getStatementsReportByRoot("/pdfs/ios_good_2DONE.pdf");
+//        System.out.println(statementsReport);
+//        parserServiceH.insertVidomist(statementsReport.getStatementInfo());
 
     }
 }
