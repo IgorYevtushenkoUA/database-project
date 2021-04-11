@@ -1,5 +1,6 @@
 package com.project.database.serviceHibernate;
 
+import com.project.database.dto.student.StudentShortInfo;
 import com.project.database.entities.GroupEntity;
 import com.project.database.entities.StudentEntity;
 import com.project.database.entities.SubjectEntity;
@@ -9,14 +10,13 @@ import com.project.database.repository.StudentRepository;
 import com.project.database.repository.SubjectRepository;
 import com.project.database.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,14 +87,14 @@ public class StudentServiceH {
      * Знайти Середню оцінку (РЕЙТИНГ) студентів за певний проміжок часу
      * МЕТОД ДЛЯ РЕЙТИНГУ (коли є хоча б 1 параметр)
      *
+     * @param eduYear
      * @param semestr
      * @param course
-     * @param eduYear
      * @param sortBy
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findStudentsWithRating(
+    public Page<Object[]> findStudentsWithRating(
             String eduYear, String subjectName, Integer tutorNo, String groupName, Integer semestr, Integer course,
             String sortBy, boolean sortDesc, int page, int numberPerPage
     ) {
@@ -110,14 +110,17 @@ public class StudentServiceH {
 
         return studentRepository.findStudentsWithRating(
                 eduYearList, subjectList, tutorList, groupList, semesterList, courseList, pageable);
+
     }
 
-    public Page<List<Object>> findStudentsWithRatingDefault(
+    public Page<StudentShortInfo> findStudentsWithRatingDefault(
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         Sort sort = setSort(sortBy, sortDesc);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
-        return studentRepository.findStudentsWithRatingDefault(pageable);
+        Page<Object[]> pageList = studentRepository.findStudentsWithRatingDefault(pageable);
+        return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
+
 
     /**
      * Знайти середню оцінку(РЕЙТИНГ) студента
@@ -131,7 +134,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAverageStudentMarksTrimCourse(
+    public Page<Object[]> findAverageStudentMarksTrimCourse(
             Integer studentCode, Integer semestr, Integer course, String eduYear,
             String sortBy, boolean sortDesc, int page, int numberPerPage
     ) {
@@ -157,7 +160,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<Object>> findDebtorsRatingDefault(
+    public Page<Object[]> findDebtorsRatingDefault(
             String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
             String sortBy, boolean sortDesc, int page, int numberPerPage
     ) {
@@ -175,7 +178,7 @@ public class StudentServiceH {
                 eduYearList, subjectList, tutorList, groupList, trimList, courseList, pageable);
     }
 
-    public List<List<String>> findStudentMarks(Integer studentCode, Integer course, String trim) {
+    public List<String[]> findStudentMarks(Integer studentCode, Integer course, String trim) {
         return studentRepository.findStudentMarks(studentCode, course, trim);
     }
 
@@ -191,7 +194,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllWhoHasRetakeSubjectTrimEduYear(
+    public Page<Object[]> findAllWhoHasRetakeSubjectTrimEduYear(
             String subjectName, Integer semestr, Integer course, String eduYear,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
 
@@ -214,7 +217,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllRetakenSubjectForStudentTrimEduYear(
+    public Page<Object[]> findAllRetakenSubjectForStudentTrimEduYear(
             Integer studentCode, Integer trim, String eduYear,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
 
@@ -272,7 +275,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllStudentMarks(
+    public Page<Object[]> findAllStudentMarks(
             Integer studentCode, Integer course, Integer trim,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         List<Integer> courseList = getCourseList(course);
@@ -300,7 +303,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllStudentByYearSubjectGroupTeacherTrimCourse(
+    public Page<Object[]> findAllStudentByYearSubjectGroupTeacherTrimCourse(
             String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         List<String> eduYearList = getEduYearsList(eduYear);
@@ -316,7 +319,7 @@ public class StudentServiceH {
                 eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, pageable);
     }
 
-    public Page<List<String>> findAllStudents(
+    public Page<Object[]> findAllStudents(
             String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         List<String> eduYearList = getEduYearsList(eduYear);
@@ -345,7 +348,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+    public Page<Object[]> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
             String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         List<String> eduYearList = getEduYearsList(eduYear);
@@ -494,6 +497,26 @@ public class StudentServiceH {
             default:
                 return "studentSurname";
         }
+    }
+
+    private Page<StudentShortInfo> buildStudentShortInfo(Page<Object[]> studentsP, Pageable pageable, int total) {
+        List<StudentShortInfo> students = new ArrayList<>();
+        List<Object[]> list = studentsP.getContent();
+        for (int i = 0; i < studentsP.getNumberOfElements(); i++) {
+            StudentShortInfo studentInfo = new StudentShortInfo();
+            Object[] obj = list.get(0);
+            int index = 0;
+            studentInfo.setStudentId((Integer) obj[index++]);
+            studentInfo.setStudentSurname((String) obj[index++]);
+            studentInfo.setStudentName((String) obj[index++]);
+            studentInfo.setStudentPatronymic((String) obj[index++]);
+            studentInfo.setStudentRecordBook((String) obj[index++]);
+            studentInfo.setStudentRating((BigDecimal) obj[index++]);
+            studentInfo.setStudentCourse((Integer) obj[index++]);
+            studentInfo.setStudentTrim((String) obj[index++]);
+            students.add(studentInfo);
+        }
+        return new PageImpl<>(students, pageable, total);
     }
 
 }
