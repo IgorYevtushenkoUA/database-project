@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Integer> {
 
-    @Query("select b.bigunetsNo, b.examDate, b.validUntil, b.postpReason, b.controlType, b.tutor.tutorSurname, b.tutor.tutorName, b.tutor.tutorPatronymic, sub.subjectName " +
+    @Query("select b.bigunetsNo, b.tutor.tutorSurname, b.tutor.tutorName, b.tutor.tutorPatronymic, sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil " +
             "from BigunetsEntity b " +
             "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.bigunetsNo=b.bigunetsNo " +
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=bm.bigunetsMarkId.vidomistNo " +
@@ -19,38 +19,50 @@ public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Intege
             "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
             "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
             "inner join StudentEntity s on s.studentCode=bm.bigunetsMarkId.studentCode " +
+            "inner join TutorEntity t on t.tutorNo= v.tutor.tutorNo " +
             "where s.studentCode =:studentCode")
-    Page<List<String>> findAllStudentBigunets(
+    Page<Object[]> findAllStudentBigunets(
             @Param("studentCode") Integer studentCode,
             Pageable pageable
     );
 
     BigunetsEntity findByBigunetsNo(Integer bigunetsNo);
 
-    @Query("select b " +
+    @Query("select b.bigunetsNo, b.tutor.tutorSurname, b.tutor.tutorName, b.tutor.tutorPatronymic, sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil " +
             "from BigunetsEntity b " +
-            "inner join TutorEntity t on b.tutor.tutorNo=t.tutorNo " +
+            "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.bigunetsNo=b.bigunetsNo " +
+            "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=bm.bigunetsMarkId.vidomistNo " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
+            "inner join StudentEntity s on s.studentCode=bm.bigunetsMarkId.studentCode " +
+            "inner join TutorEntity t on t.tutorNo= v.tutor.tutorNo " +
             "where t.tutorNo=:tutorNo ")
-    Page<BigunetsEntity> findAllByTutorNo(@Param("tutorNo") Integer tutorNo, Pageable pageable);
+    Page<Object[]> findAllByTutorNo(@Param("tutorNo") Integer tutorNo, Pageable pageable);
 
-    @Query("select b " +
+    @Query("select b.bigunetsNo, b.tutor.tutorSurname, b.tutor.tutorName, b.tutor.tutorPatronymic, sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil " +
             "from BigunetsEntity b " +
             "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.bigunetsNo=b.bigunetsNo " +
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=bm.bigunetsMarkId.vidomistNo " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
+            "inner join StudentEntity s on s.studentCode=bm.bigunetsMarkId.studentCode " +
+            "inner join TutorEntity t on t.tutorNo= v.tutor.tutorNo " +
             "where g.groupName=:groupName")
-    Page<BigunetsEntity> findAllByGroupName(@Param("groupName") String groupName, Pageable pageable);
+    Page<Object[]> findAllByGroupName(@Param("groupName") String groupName, Pageable pageable);
 
-    @Query("select b " +
+    @Query("select b.bigunetsNo, b.tutor.tutorSurname, b.tutor.tutorName, b.tutor.tutorPatronymic, sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil " +
             "from BigunetsEntity b " +
             "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.bigunetsNo=b.bigunetsNo " +
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=bm.bigunetsMarkId.vidomistNo " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
-            "inner join SubjectEntity s on s.subjectNo=g.subject.subjectNo " +
-            "where s.subjectNo=:subjectNo")
-    Page<BigunetsEntity> findAllBySubjectNo(@Param("subjectNo") Integer subjectNo, Pageable pageable);
+            "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
+            "inner join StudentEntity s on s.studentCode=bm.bigunetsMarkId.studentCode " +
+            "inner join TutorEntity t on t.tutorNo= v.tutor.tutorNo " +
+            "where sub.subjectNo=:subjectNo")
+    Page<Object[]> findAllBySubjectNo(@Param("subjectNo") Integer subjectNo, Pageable pageable);
 
 
 }
