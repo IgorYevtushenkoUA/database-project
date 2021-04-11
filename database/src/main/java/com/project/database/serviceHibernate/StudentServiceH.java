@@ -271,7 +271,7 @@ public class StudentServiceH {
 
     public Page<StudentEntity> findAll(String sortBy, boolean sortDesc, int page, int numberPerPage) {
 
-        Pageable pageable = PageRequest.of(1, 20, setSort(sortBy, sortDesc));
+        Pageable pageable = PageRequest.of(page-1, numberPerPage, setSort(sortBy, sortDesc));
 
         return studentRepository.findAll(pageable);
     }

@@ -16,8 +16,6 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, Integer>
 
     Page<SubjectEntity> findAll(Pageable pageable);
 
-    List<SubjectEntity> findAll();
-
     @Query("select s.subjectName from SubjectEntity s order by s.subjectName")
     List<String> findAllSubjectNames();
 
@@ -46,5 +44,5 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, Integer>
             "              where sub.subject_no = sub1.subject_no\n" +
             "          )\n" +
             "group by sub.subject_no, subject_name;", nativeQuery = true)
-    List<List<String>> findSubjectAverageMark();
+    Page<List<String>> findSubjectAverageMark(Pageable pageable);
 }

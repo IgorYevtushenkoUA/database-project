@@ -5,6 +5,7 @@ import com.project.database.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,18 +27,11 @@ public class SubjectServiceH {
     }
 
     /**
-     * @param pageable
      * @return [SubjectEntity(subjectNo = 1, subjectName = БД, eduLevel = бакалавр, faculty = ФІ), ...]
      */
-    public Page<SubjectEntity> findAll(Pageable pageable) {
+    public Page<SubjectEntity> findAll(int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
         return subjectRepository.findAll(pageable);
-    }
-
-    /**
-     * @return [SubjectEntity(subjectNo = 1, subjectName = БД, eduLevel = бакалавр, faculty = ФІ), ...]
-     */
-    public List<SubjectEntity> findAll() {
-        return subjectRepository.findAll();
     }
 
     /**
@@ -52,7 +46,7 @@ public class SubjectServiceH {
      * @return [Веб-програмування, Логічне програмування, Моделювання інформаційних процесів]
      */
     public List<String> findAllSubjectNames(String name) {
-        return subjectRepository.findAllSubjectNames("%" + name + "%" );
+        return subjectRepository.findAllSubjectNames("%" + name + "%");
     }
 
     // insert
@@ -68,8 +62,9 @@ public class SubjectServiceH {
     }
 
 
-    public List<List<String>> findAverageSubjectMarks() {
-        return subjectRepository.findSubjectAverageMark();
+    public Page<List<String>> findSubjectAverageMark(int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        return subjectRepository.findSubjectAverageMark(pageable);
     }
 
 }

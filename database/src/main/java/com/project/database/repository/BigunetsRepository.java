@@ -31,7 +31,7 @@ public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Intege
             "from BigunetsEntity b " +
             "inner join TutorEntity t on b.tutor.tutorNo=t.tutorNo " +
             "where t.tutorNo=:tutorNo ")
-    List<BigunetsEntity> findAllByTutorNo(@Param("tutorNo") Integer tutorNo);
+    Page<BigunetsEntity> findAllByTutorNo(@Param("tutorNo") Integer tutorNo, Pageable pageable);
 
     @Query("select b " +
             "from BigunetsEntity b " +
@@ -40,7 +40,7 @@ public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Intege
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
             "where g.groupName=:groupName")
-    List<BigunetsEntity> findAllByGroupName(@Param("groupName") String groupName);
+    Page<BigunetsEntity> findAllByGroupName(@Param("groupName") String groupName, Pageable pageable);
 
     @Query("select b " +
             "from BigunetsEntity b " +
@@ -50,7 +50,7 @@ public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Intege
             "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
             "inner join SubjectEntity s on s.subjectNo=g.subject.subjectNo " +
             "where s.subjectNo=:subjectNo")
-    List<BigunetsEntity> findAllBySubjectNo(@Param("subjectNo") Integer subjectNo);
+    Page<BigunetsEntity> findAllBySubjectNo(@Param("subjectNo") Integer subjectNo, Pageable pageable);
 
 
 }

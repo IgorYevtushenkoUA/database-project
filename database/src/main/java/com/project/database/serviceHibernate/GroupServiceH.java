@@ -5,6 +5,7 @@ import com.project.database.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,15 +23,17 @@ public class GroupServiceH {
     /**
      * @return [GroupEntity(groupCode = 1, groupName = Група1, eduYear = 2020 - 2021, trim = 2, course = 3, subject = SubjectEntity ( subjectNo = 1, subjectName = БД, eduLevel = бакалавр, faculty = ФІ)),...]
      */
-    public List<GroupEntity> findAll() {
-        return groupRepository.findAll();
+    public Page<GroupEntity> findAll(int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        return groupRepository.findAll(pageable);
     }
 
     public void deleteByGroupCode(int groupId) {
         groupRepository.deleteByGroupCode(groupId);
     }
 
-    public Page<GroupEntity> findAllByGroupName(Pageable pageable) {
+    public Page<GroupEntity> findAllByGroupName(int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
         return groupRepository.findAllByGroupName(pageable);
     }
 
@@ -53,12 +56,12 @@ public class GroupServiceH {
     }
 
     // insert
-    public void insertGroup(GroupEntity group){
+    public void insertGroup(GroupEntity group) {
         groupRepository.save(group);
     }
 
     // delete
-    public void deleteGroupById(int groupCode){
+    public void deleteGroupById(int groupCode) {
         groupRepository.deleteByGroupCode(groupCode);
     }
 
