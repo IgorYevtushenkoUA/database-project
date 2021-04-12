@@ -38,24 +38,16 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "inner join SubjectEntity sub on sub.subjectNo = g.subject.subjectNo " +
             "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
             "where " +
-            "   g.eduYear in (:eduYears) " +
-            "and " +
             "   sub.subjectName in (:subjectName) " +
             "and " +
             "   t.tutorNo in (:tutorNo) " +
             "and " +
-            "   g.groupName in (:groupName)" +
-            "and " +
-            "   g.trim in (:semesters) " +
-            "and " +
-            "   g.course in (:courses) ")
+            "   g.groupName in (:groupName)"
+           )
     Page<Object[]> findAllStatements(
-            @Param("eduYears") List<String> eduYears,
             @Param("subjectName") List<String> subjectName,
             @Param("tutorNo") List<Integer> tutorNo,
             @Param("groupName") List<String> groupName,
-            @Param("semesters") List<String> semesters,
-            @Param("courses") List<Integer> courses,
             Pageable pageable);
 
     @Query("select v " +

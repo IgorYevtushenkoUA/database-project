@@ -2,6 +2,7 @@ package com.project.database;
 
 
 import com.project.database.serviceHibernate.BigunetsServiceH;
+import com.project.database.serviceHibernate.VidomistServiceH;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -22,8 +23,8 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        BigunetsServiceH bigunetsServiceH = applicationContext.getBean(BigunetsServiceH.class);
-        System.out.println(bigunetsServiceH.findAllBiguntsiBySubjectNameTutorNoGroupName(null, null, null, 1, 20));
+        VidomistServiceH vidomistServiceH = applicationContext.getBean(VidomistServiceH.class);
+        System.out.println(vidomistServiceH.findAllStatements("БД", null, null, "", true, 1, 20).getContent());
         //        StatementServiceH statementServiceH = applicationContext.getBean(StatementServiceH.class);
 //        System.out.println(statementServiceH.getStatementInfo(1));
 

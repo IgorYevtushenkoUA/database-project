@@ -71,20 +71,14 @@ public class VidomistServiceH {
     }
 
     public Page<StatementShortInfo> findAllStatements(
-            String eduYear, String subjectName, String tutorName, String groupName, Integer semestr, Integer course,
+            String subjectName, String tutorName, String groupName,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
-        List<String> eduYearList = getEduYearsList(eduYear);
         List<String> subjectList = getSubjectList(subjectName);
         List<Integer> tutorList = getTutorList(tutorName);
         List<String> groupList = getGroupList(groupName);
-        List<String> semesterList = getSemestrList(semestr, semestrParser(course, semestr));
-        List<Integer> courseList = getCourseList(course);
 //        Sort sort = setSort(sortBy, sortDesc);
-        System.out.println(subjectList);
-        System.out.println(tutorList);
-        System.out.println(groupList);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
-        Page<Object[]> pageList = vidomistRepository.findAllStatements(eduYearList, subjectList, tutorList, groupList, semesterList, courseList, pageable);
+        Page<Object[]> pageList = vidomistRepository.findAllStatements(subjectList, tutorList, groupList, pageable);
         return buildStatementShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 

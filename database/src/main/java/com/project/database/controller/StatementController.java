@@ -35,8 +35,8 @@ public class StatementController {
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
         return vidomistServiceH.findAllStatements(
-                null, subjectName, tutorName, groupName,
-                null, null, null, false,
+                subjectName, tutorName, groupName,
+                 null, false,
                 page, numberPerPage);
 //        return null;
     }
