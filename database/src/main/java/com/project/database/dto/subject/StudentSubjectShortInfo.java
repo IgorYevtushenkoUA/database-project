@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,7 +17,7 @@ public class StudentSubjectShortInfo {
     private String tutorFullName; // Example: "Черкасов Дмитро Іванович",
     private String group; // Example: "1",
     private String controlType; // Example: "екзамен",
-    private String examDate; // Example: "2021-05-25",
+    private LocalDate examDate; // Example: "2021-05-25",
     private Integer grade; // Example: 90
     private Integer studentCode;
 }

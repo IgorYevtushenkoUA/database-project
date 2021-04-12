@@ -2,9 +2,12 @@ package com.project.database.controller;
 
 import com.project.database.dto.statement.StatementReport;
 import com.project.database.dto.statement.info.StatementInfo;
+import com.project.database.dto.statement.shortInfo.StatementShortInfo;
 import com.project.database.serviceHibernate.ParserServiceH;
 import com.project.database.serviceHibernate.StatementServiceH;
+import com.project.database.serviceHibernate.VidomistServiceH;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +22,22 @@ import java.nio.file.FileAlreadyExistsException;
 public class StatementController {
 
     private final StatementServiceH statementService;
+    private final VidomistServiceH vidomistServiceH;
     private final ParserServiceH parserServiceH;
+
+
+    @GetMapping("/statements")
+    public Page<StatementShortInfo> getAll(
+            @RequestParam(name = "subject") String course,
+            @RequestParam(name = "tutor") String tutor,
+            @RequestParam(name = "group ") String group,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
+    ) {
+//        vidomistServiceH.
+//        statementService.find
+        return null;
+    }
 
 
     @GetMapping("/statement/{id}")
@@ -27,8 +45,6 @@ public class StatementController {
         return ResponseEntity.of(statementService.getStatementInfo(id));
     }
 
-//    @GetMapping("/statements")
-//    public
 
     @PostMapping("/statement/process")
     public ResponseEntity<StatementReport> processStatementFile(

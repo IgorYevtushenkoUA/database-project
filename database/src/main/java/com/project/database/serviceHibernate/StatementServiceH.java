@@ -5,6 +5,8 @@ import com.project.database.dto.statement.info.StatementFooter;
 import com.project.database.dto.statement.info.StatementHeader;
 import com.project.database.dto.statement.info.StatementInfo;
 import com.project.database.dto.statement.info.StatementStudent;
+import com.project.database.dto.statement.shortInfo.StatementShortInfo;
+import com.project.database.dto.statement.shortInfo.StudentsCount;
 import com.project.database.dto.student.StudentShortInfo;
 import com.project.database.entities.*;
 import com.project.database.parser.parserStatement.StatementParser;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,21 +28,22 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class StatementServiceH {
+
     private final VidomistRepository vidomistRepository;
     private final GroupRepository groupRepository;
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
 
+
     public Optional<StatementInfo> getStatementInfo(int statementId) {
         return Optional.of(buildStatementInfo(statementId));
     }
+
 
     private StatementInfo buildStatementInfo(int statementId) {
 
@@ -115,18 +117,15 @@ public class StatementServiceH {
     }
 
 
-    public Integer saveStatement(StatementReport statementFileName) {
-        return 12345;
-    }
-
     VidomistEntity findByStatementNo(int statementNo) {
         return vidomistRepository.findByVidomistNo(statementNo);
     }
 
 
-    public Page<Object[]> findAllStudentVidomosties(int studentCode, int page, int numberPerPage) {
+    public Page<StatementShortInfo> findAllStudentVidomosties(int studentCode, int page, int numberPerPage) {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
-        return vidomistRepository.findAllStudentVidomosties(studentCode, pageable);
+        Page<Object[]> allStudentVidomosties = vidomistRepository.findAllStudentVidomosties(studentCode, pageable);
+        return buildStatementShortInfo(allStudentVidomosties, pageable, allStudentVidomosties.getTotalPages());
     }
 
 
@@ -179,12 +178,42 @@ public class StatementServiceH {
         final Path statementFolder = Paths.get("statement").toAbsolutePath().normalize();
         Files.createDirectories(statementFolder);
         Path targetLocation = statementFolder.resolve(Objects.requireNonNull(file.getOriginalFilename()));
-//        Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        //        Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
         file.transferTo(targetLocation);
 
         final StatementParser parser = new StatementParser();
         return parser.getStatementsReportByRoot(targetLocation);
     }
+
+
+    private Page<StatementShortInfo> buildStatementShortInfo(Page<Object[]> statementsP, Pageable pageable, int total) {
+        List<StatementShortInfo> statementShortInfos = new ArrayList<>();
+        List<Object[]> list = statementsP.getContent();
+        for (int i = 0; i < statementsP.getNumberOfElements(); i++) {
+            StatementShortInfo shortInfo = new StatementShortInfo();
+            Object[] obj = list.get(i);
+            int index = 0;
+            shortInfo.setStatementNo((Integer) obj[index++]);
+            shortInfo.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
+            shortInfo.setSubjectName((String) obj[index++]);
+            shortInfo.setGroup((String) obj[index++]);
+            shortInfo.setControlType((String) obj[index++]);
+
+            StudentsCount studentsCount = StudentsCount.builder()
+                    .presentCount((Integer) obj[index++])
+                    .absentCount((Integer) obj[index++])
+                    .rejectedCount((Integer) obj[index++])
+                    .build();
+
+            shortInfo.setStudentsCount(studentsCount);
+            shortInfo.setExamDate((LocalDate) obj[index++]);
+
+            statementShortInfos.add(shortInfo);
+        }
+        return new PageImpl<>(statementShortInfos, pageable, total);
+
+    }
+
 
     private List<String> getSubjectList(String subjectName) {
         return subjectName == null
@@ -194,6 +223,7 @@ public class StatementServiceH {
                 .stream().map(SubjectEntity::getSubjectName).distinct().collect(Collectors.toList());
     }
 
+
     private List<String> getSemestrList(Integer semestr, List<String> semestrList) {
         return semestr == null
                 ? groupRepository.findAll()
@@ -202,6 +232,7 @@ public class StatementServiceH {
                 .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList());
 
     }
+
 
     private List<Integer> getCourseList(Integer course) {
         return course == null
@@ -213,6 +244,7 @@ public class StatementServiceH {
 
     }
 
+
     private List<String> getEduYearsList(String eduYear) {
         return eduYear == null
                 ? groupRepository.findAll()
@@ -220,6 +252,7 @@ public class StatementServiceH {
                 : groupRepository.findDistinctAllByEduYearIn(Collections.singletonList(eduYear))
                 .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList());
     }
+
 
     private List<String> getGroupList(String groupName) {
         return groupName == null
@@ -229,6 +262,7 @@ public class StatementServiceH {
                 .stream().map(GroupEntity::getGroupName).distinct().collect(Collectors.toList());
     }
 
+
     private List<Integer> getTutorList(Integer tutorNo) {
         return tutorNo == null
                 ? tutorRepository.findAll()
@@ -236,6 +270,7 @@ public class StatementServiceH {
                 : tutorRepository.findDistinctByTutorNoIn(Collections.singletonList(tutorNo))
                 .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList());
     }
+
 
     private List<String> semestrParser(Integer course, Integer semestr) {
         if (course != null) {
@@ -261,12 +296,14 @@ public class StatementServiceH {
         }
     }
 
+
     private Sort setSort(String sortBy, boolean sortDesc) {
         sortBy = setSortBy(sortBy);
         return sortDesc
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
     }
+
 
     private String setSortBy(String sortBy) {
 
@@ -281,6 +318,7 @@ public class StatementServiceH {
                 return "studentSurname";
         }
     }
+
 
     private Page<StudentShortInfo> buildStudentShortInfo(Page<Object[]> studentsP, Pageable pageable, int total) {
         List<StudentShortInfo> students = new ArrayList<>();

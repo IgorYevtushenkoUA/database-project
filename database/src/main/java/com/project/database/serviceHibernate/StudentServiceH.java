@@ -15,6 +15,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -210,7 +211,7 @@ public class StudentServiceH {
             sssi.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
             sssi.setGroup((String) obj[index++]);
             sssi.setControlType((String) obj[index++]);
-            sssi.setExamDate((String) obj[index++]);
+            sssi.setExamDate((LocalDate) obj[index++]);
             sssi.setGrade((Integer) obj[index++]);
             sssi.setStudentCode((Integer) obj[index++]);
 

@@ -14,7 +14,8 @@ import java.util.List;
 
 public interface VidomistRepository extends JpaRepository<VidomistEntity, Integer> {
 
-    @Query("select v.vidomistNo,t.tutorSurname,t.tutorName,t.tutorPatronymic, sub.subjectName,g.groupCode, v.controlType, v.presentCount,v.absentCount,v.rejectedCount, v.examDate " +
+    @Query("select v.vidomistNo,t.tutorSurname,t.tutorName,t.tutorPatronymic, sub.subjectName,g.groupName, v.controlType, v" +
+            ".presentCount,v.absentCount,v.rejectedCount, v.examDate " +
             "from StudentEntity s " +
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.studentCode=s.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +

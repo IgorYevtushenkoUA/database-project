@@ -1,16 +1,9 @@
 package com.project.database;
 
 
-import com.project.database.repository.VidomistRepository;
-import com.project.database.serviceHibernate.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 
 @SpringBootApplication
@@ -28,8 +21,8 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        StatementServiceH statementServiceH = applicationContext.getBean(StatementServiceH.class);
-        System.out.println(statementServiceH.getStatementInfo(1));
+//        StatementServiceH statementServiceH = applicationContext.getBean(StatementServiceH.class);
+//        System.out.println(statementServiceH.getStatementInfo(1));
 
 //        VidomistRepository v = applicationContext.getBean(VidomistRepository.class);
 //        System.out.println(v.getStatementFooter(1));

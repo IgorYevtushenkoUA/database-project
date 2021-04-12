@@ -46,7 +46,7 @@ public class VidomistServiceH {
             ssi.setStatementNo((Integer) obj[index++]);
             ssi.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
             ssi.setSubjectName((String) obj[index++]);
-            ssi.setGroup((Integer) obj[index++]);
+            ssi.setGroup((String) obj[index++]);
             ssi.setControlType((String) obj[index++]);
             StudentsCount studentsCount = new StudentsCount();
             studentsCount.setPresentCount((Integer) obj[index++]);

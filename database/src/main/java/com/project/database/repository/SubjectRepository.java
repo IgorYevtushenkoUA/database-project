@@ -1,7 +1,6 @@
 package com.project.database.repository;
 
 import com.project.database.entities.SubjectEntity;
-import com.project.database.entity.Subject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +24,8 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, Integer>
     List<SubjectEntity> findDistinctBySubjectNameIn(@Param("subjectName") List<String> subjectName);
 
     SubjectEntity findBySubjectName(String subjectName);
+
+    Page<Object[]> findAllBySubjectNameLike(String subjectName, Pageable pageable);
 
     @Query(value = "select sub.subject_no, subject_name, t.tutor_surname, t.tutor_name, t.tutor_patronymic, avg(vm.complete_mark)\n" +
             "from student s\n" +

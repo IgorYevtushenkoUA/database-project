@@ -1,101 +1,84 @@
 package com.project.database.controller;
 
-import com.project.database.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
+import com.project.database.dto.bigunets.shortInfo.BigunetsShortInfo;
+import com.project.database.dto.statement.shortInfo.StatementShortInfo;
+import com.project.database.dto.subject.StudentSubjectShortInfo;
+import com.project.database.entities.StudentEntity;
+import com.project.database.serviceHibernate.BigunetsServiceH;
+import com.project.database.serviceHibernate.StudentServiceH;
+import com.project.database.serviceHibernate.VidomistServiceH;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/")
+@RequiredArgsConstructor
 public class StudentController {
-    private final StudentService studentService;
+
+    private final StudentServiceH studentService;
+    private final VidomistServiceH statementService;
+    private final BigunetsServiceH bigunetsService;
 
 
-    @Autowired
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
+//    @GetMapping("/student")
+//    public Object getStudentPIB(
+//            @RequestParam(name = "name") String name,
+//            @RequestParam(name = "surname") String surname,
+//            @RequestParam(name = "patronymic") String patronymic,
+//            @RequestParam(name = "page", defaultValue = "1") int page,
+//            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
+//            Model model
+//    ) {
+//
+//        model.addAttribute("name", name);
+//        model.addAttribute("surname", surname);
+//        model.addAttribute("patronymic", patronymic);
+//        model.addAttribute("page", page);
+//        model.addAttribute("numberPerPage", numberPerPage);
+//        return studentService.findByPIB(name, surname, patronymic, page, numberPerPage);
+//    }
+
+    @GetMapping("/student/{studentId}")
+    public StudentEntity getStudentInfo(@PathVariable(name = "studentId") Integer studentId) {
+        return studentService.findByStudentCode(studentId);
     }
 
-
-    @GetMapping("/student")
-    public Object getStudentPIB(
-            @RequestParam(name = "name") String name,
-            @RequestParam(name = "surname") String surname,
-            @RequestParam(name = "patronymic") String patronymic,
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
-            Model model
-    ) {
-
-        model.addAttribute("name", name);
-        model.addAttribute("surname", surname);
-        model.addAttribute("patronymic", patronymic);
-        model.addAttribute("page", page);
-        model.addAttribute("numberPerPage", numberPerPage);
-        return studentService.findByPIB(name, surname, patronymic, page, numberPerPage);
+    @GetMapping("/student/{studentId}/averageGrade")
+    public Page<BigunetsShortInfo> getStudentBiguntsi(
+            @PathVariable(name = "studentId") Integer studentId,
+            @RequestParam(name = "course") Integer course,
+            @RequestParam(name = "semester") String semester) {
+        return null;//bigunetsService.findAllStudentBigunets(studentId, page, numberPerPage);
     }
 
-    @PostMapping("/student")
-    public Object postStudentPIB(
-            @RequestParam(name = "name") String name,
-            @RequestParam(name = "surname") String surname,
-            @RequestParam(name = "patronymic") String patronymic,
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
-            Model model
-    ) {
-        model.addAttribute("name", name);
-        model.addAttribute("surname", surname);
-        model.addAttribute("patronymic", patronymic);
-        model.addAttribute("page", page);
-        model.addAttribute("numberPerPage", numberPerPage);
-        return studentService.findByPIB(name, surname, patronymic, page, numberPerPage);
-    }
-
-    @GetMapping("/student/{studentRecordBook}")
-    public Object getStudentInfo(
-            @PathVariable(name = "studentRecordBook") String studentRecordBook,
-            @RequestParam(name = "finalMark", required = false) boolean finalMark, // хз що це (запиту немає на це)
-            @RequestParam(name = "bigunets", required = false) boolean bigunets,
-            @RequestParam(name = "averageMark", required = false) boolean averageMark,
-            @RequestParam(name = "allMarks", required = false) boolean allMarks,
+    @GetMapping("/student/{studentId}/subjects")
+    public Page<StudentSubjectShortInfo> getStudentSubjects(
+            @PathVariable(name = "studentId") Integer studentId,
+            @RequestParam(name = "course") Integer course,
+            @RequestParam(name = "semester") String semester,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
-
-        return studentService.findByStudentRecordBook(studentRecordBook);
+        return studentService.findStudentMarks(studentId, course, semester, page, numberPerPage);
     }
 
-    @PostMapping("/student/{id}")
-    public Object postStudentInfo(
-            @PathVariable("id") int id,
-            @RequestParam(name = "finalMark") boolean finalMark, // хз що це (запиту немає на це)
-            @RequestParam(name = "bigunets") boolean bigunets,
-            @RequestParam(name = "averageMark") boolean averageMark,
-            @RequestParam(name = "allMarks") boolean allMarks,
+    @GetMapping("/student/{studentId}/statements")
+    public Page<StatementShortInfo> getStudentStatements(
+            @PathVariable(name = "studentId") Integer studentId,
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
-            Model model
+            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
+        return statementService.findAllStudentVidomosties(studentId, page, numberPerPage);
+    }
 
-        model.addAttribute("id", id);
-        model.addAttribute("finalMark", finalMark);
-        model.addAttribute("bigunets", bigunets);
-        model.addAttribute("averageMark", averageMark);
-        model.addAttribute("allMarks", allMarks);
-        model.addAttribute("page", page);
-        model.addAttribute("numberPerPage", numberPerPage);
-
-        if (finalMark) {
-            // code
-        } else if (bigunets) {
-            return studentService.findAllBigunetsByStudentId(id, page, numberPerPage);
-        } else if (averageMark) {
-            return studentService.findAverageMarkById(id);
-        } else if (allMarks) {
-            return studentService.findAllMarksById(id, page, numberPerPage);
-        }
-        return 1;
+    @GetMapping("/student/{studentId}/biguntsi")
+    public Page<BigunetsShortInfo> getStudentBiguntsi(
+            @PathVariable(name = "studentId") Integer studentId,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
+    ) {
+        return bigunetsService.findAllStudentBigunets(studentId, page, numberPerPage);
     }
 
 }
