@@ -21,5 +21,5 @@ public class StatementStudentErrorsMap {
      *     <li>value: {@link StatementStudentError}</li>
      * </ul>
      */
-    private HashMap<String, StatementStudentError> statementStudentsErrorsMap;
+    private HashMap<Integer, StatementStudentError> statementStudentsErrorsMap;
 }

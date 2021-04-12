@@ -54,6 +54,12 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
 
     @Query("select v " +
             "from VidomistEntity v " +
+            "inner join TutorEntity t on v.tutor.tutorNo = t.tutorNo " +
+            "where t.tutorNo=:tutorNo")
+    Page<VidomistEntity> findAllByTutorNo(@Param("tutorNo") Integer tutorNo, Pageable pageable);
+
+    @Query("select v " +
+            "from VidomistEntity v " +
             "inner join GroupEntity g on v.group.groupCode = g.groupCode " +
             "inner join SubjectEntity s on s.subjectNo=g.subject.subjectNo " +
             "where s.subjectNo=:subjectNo")

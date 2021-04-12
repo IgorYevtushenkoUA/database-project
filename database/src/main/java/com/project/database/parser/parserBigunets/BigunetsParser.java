@@ -6,7 +6,6 @@ import com.project.database.dto.bigunets.info.BigunetsHeader;
 import com.project.database.dto.bigunets.info.BigunetsInfo;
 import com.project.database.dto.bigunets.info.BigunetsStudent;
 import com.project.database.parser.parserBigunets.util.validators.BigunValidator;
-import com.project.database.parser.parserStatement.StatementParser;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
@@ -16,7 +15,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +28,9 @@ import static com.project.database.parser.parserBigunets.util.Util.*;
 
 public class BigunetsParser {
 
-    public static String convertPDFtoStr(String root) throws IOException, URISyntaxException {
-        URL url = StatementParser.class.getResource(root);
-        File f = new File(url.toURI());
+    public static String convertPDFtoStr(Path root) throws IOException, URISyntaxException {
+        File f = root.toFile();
+        System.out.println(f.getAbsolutePath());
         String parsedText;
         PDFParser parser = new PDFParser(new RandomAccessFile(f, "r"));
         parser.parse();
@@ -53,9 +52,9 @@ public class BigunetsParser {
 
 
     public static void main(String[] args) throws IOException {
-        BigunetsParser parser = new BigunetsParser();
-        BigunetsReport bigunetsReport = parser.getBigunReportByRoot("/pdfs/unix_bigunetsDONE.pdf");
-        System.out.println(bigunetsReport);
+//        BigunetsParser parser = new BigunetsParser();
+//        BigunetsReport bigunetsReport = parser.getBigunReportByRoot("/pdfs/unix_bigunetsDONE.pdf");
+//        System.out.println(bigunetsReport);
     }
 
 
@@ -149,27 +148,26 @@ public class BigunetsParser {
     }
 
 
-    // get StatementsReport by its location
-    public BigunetsReport getBigunReportByRoot(String root) {
+    // get StatementReport by its location
+    public BigunetsReport getBigunReportByRoot(Path root) {
 
         String allFileString = null;
         try {
             allFileString = convertPDFtoStr(root);
-
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
         return getBigunReport(allFileString);
     }
 
-    //get StatementsReport by its String representation
+    //get StatementReport by its String representation
     public BigunetsReport getBigunReport(String allFileString) {
         Map<Enums.BigunElement, String> map = parse(allFileString);
         List<BigunetsStudent> students = getStudents(allFileString);
         return getBigunReport(map, students);
     }
 
-    //get StatementsReport by its map and student list representation
+    //get StatementReport by its map and student list representation
     public BigunetsReport getBigunReport(Map<Enums.BigunElement, String> map, List<BigunetsStudent> students) {
 
 
@@ -210,7 +208,7 @@ public class BigunetsParser {
                 .studentErrorsMap(bigunValidator.getStudentErrors(students))
                 .build();
 
-        //StatementsReport building
+        //StatementReport building
         BigunetsReport bigunetsReport = BigunetsReport
                 .builder()
                 .bigunetsInfo(bigunetsInfo)

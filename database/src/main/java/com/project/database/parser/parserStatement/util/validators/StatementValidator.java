@@ -170,7 +170,7 @@ public class StatementValidator {
 //                //if (student.getTotalGrade() > 60 && student.getNationalGrade())
 //            }
 
-            statementStudentErrorsMap.getStatementStudentsErrorsMap().put(student.getStudentRecordBook(), statementStudentError);
+            statementStudentErrorsMap.getStatementStudentsErrorsMap().put(student.getStudentId(), statementStudentError);
         }
         return statementStudentErrorsMap;
     }

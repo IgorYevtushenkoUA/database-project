@@ -21,5 +21,5 @@ public class BigunetsStudentErrorsMap {
      *     <li>value: {@link BigunetsStudentError}</li>
      * </ul>
      */
-    private HashMap<String, BigunetsStudentError> bigunStudentErrorsMap;
+    private HashMap<Integer, BigunetsStudentError> bigunStudentErrorsMap;
 }

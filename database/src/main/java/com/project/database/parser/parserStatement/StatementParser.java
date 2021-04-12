@@ -1,6 +1,6 @@
 package com.project.database.parser.parserStatement;
 
-import com.project.database.dto.statement.StatementsReport;
+import com.project.database.dto.statement.StatementReport;
 import com.project.database.dto.statement.errors.StatementErrors;
 import com.project.database.dto.statement.info.StatementFooter;
 import com.project.database.dto.statement.info.StatementHeader;
@@ -16,7 +16,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +29,9 @@ import static com.project.database.parser.parserStatement.util.Util.*;
 
 public class StatementParser {
 
-    public static String convertPDFtoStr(String root) throws IOException, URISyntaxException {
-        URL url = StatementParser.class.getResource(root);
-        File f = new File(url.toURI());
+    public static String convertPDFtoStr(Path root) throws IOException, URISyntaxException {
+        File f = root.toFile();
+        System.out.println(f.getAbsolutePath());
         String parsedText;
         PDFParser parser = new PDFParser(new RandomAccessFile(f, "r"));
         parser.parse();
@@ -53,10 +53,13 @@ public class StatementParser {
 
 
     public static void main(String[] args) throws IOException {
-        StatementParser parser = new StatementParser();
 
-        StatementsReport statementsReport = parser.getStatementsReportByRoot("/pdfs/ios_wrong_sumDONE.pdf");
-        System.out.println(statementsReport);
+//        StatementParser parser = new StatementParser();
+//        System.out.println((Paths.get("pdf").toAbsolutePath()));
+//
+//        StatementReport statementReport =
+//                parser.getStatementsReportByRoot(Paths.get("src/main/resources/pdfs/Bigunets.pdf"));
+//        System.out.println(statementReport);
     }
 
 
@@ -150,9 +153,8 @@ public class StatementParser {
     }
 
 
-    // get StatementsReport by its location
-    public StatementsReport getStatementsReportByRoot(String root) {
-
+    // get StatementReport by its location
+    public StatementReport getStatementsReportByRoot(Path root) {
         String allFileString = null;
         try {
             allFileString = convertPDFtoStr(root);
@@ -163,18 +165,18 @@ public class StatementParser {
         return getStatementsReport(allFileString);
     }
 
-    //get StatementsReport by its String representation
-    public StatementsReport getStatementsReport(String allFileString) {
+    //get StatementReport by its String representation
+    public StatementReport getStatementsReport(String allFileString) {
         Map<Enums.Element, String> map = parse(allFileString);
         List<StatementStudent> students = getStudents(allFileString);
         return getStatementsReport(map, students);
     }
 
-    //get StatementsReport by its map and student list representation
-    public StatementsReport getStatementsReport(Map<Enums.Element, String> map, List<StatementStudent> students) {
+    //get StatementReport by its map and student list representation
+    public StatementReport getStatementsReport(Map<Enums.Element, String> map, List<StatementStudent> students) {
 
 
-        StatementsReport.StatementsReportBuilder statementsReportBuilder = StatementsReport.builder();
+        StatementReport.StatementReportBuilder statementsReportBuilder = StatementReport.builder();
         //Footer building
         StatementFooter statementFooter = StatementFooter
                 .builder()
@@ -218,13 +220,13 @@ public class StatementParser {
                 .studentErrorsMap(statementValidator.getStudentErrors(students))
                 .build();
 
-        //StatementsReport building
-        StatementsReport statementsReport = StatementsReport
+        //StatementReport building
+        StatementReport statementReport = StatementReport
                 .builder()
                 .statementInfo(statementInfo)
                 .statementErrors(statementErrors)
                 .build();
 
-        return statementsReport;
+        return statementReport;
     }
 }
