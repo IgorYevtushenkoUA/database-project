@@ -5,10 +5,7 @@ import com.project.database.dto.statement.StatementsReport;
 import com.project.database.parser.parserBigunets.BigunetsParser;
 import com.project.database.parser.parserStatement.StatementParser;
 import com.project.database.service.StudentService;
-import com.project.database.serviceHibernate.BigunetsServiceH;
-import com.project.database.serviceHibernate.ParserServiceH;
-import com.project.database.serviceHibernate.StudentServiceH;
-import com.project.database.serviceHibernate.SubjectServiceH;
+import com.project.database.serviceHibernate.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -32,8 +29,8 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        BigunetsServiceH bigunetsServiceH = applicationContext.getBean(BigunetsServiceH.class);
-        bigunetsServiceH.findAllBySubjectNo(1,1,20);
+        VidomistServiceH vidomistServiceH = applicationContext.getBean(VidomistServiceH.class);
+        vidomistServiceH.findAllStatements(null, null, null, null, null, null, "", true, 1, 20);
 //        SubjectServiceH subjectServiceH = applicationContext.getBean(SubjectServiceH.class);
 //        subjectServiceH.findSubjectAverageMark(1, 2);
 

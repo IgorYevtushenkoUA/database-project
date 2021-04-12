@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -189,10 +188,10 @@ public class StudentServiceH {
     private Page<StudentSubjectShortInfo> buildStudentSubjectShortInfo(Page<Object[]> subjectP, Pageable pageable, int total) {
         List<StudentSubjectShortInfo> studentSubjectShortInfos = new ArrayList<>();
         List<Object[]> list = subjectP.getContent();
-        for (int i = 0; i < studentSubjectShortInfos.size(); i++) {
+        for (int i = 0; i < subjectP.getNumberOfElements(); i++) {
             StudentSubjectShortInfo sssi = new StudentSubjectShortInfo();
             Object[] obj = list.get(i);
-            int index = 1;
+            int index = 0;
             sssi.setSubjectID((Integer) obj[index++]);
             sssi.setSubjectName((String) obj[index++]);
             sssi.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);

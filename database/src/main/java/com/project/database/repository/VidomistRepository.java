@@ -11,23 +11,46 @@ import java.util.List;
 
 public interface VidomistRepository extends JpaRepository<VidomistEntity, Integer> {
 
-    @Query("select v.vidomistNo,v.tutor.tutorSurname,v.tutor.tutorName,v.tutor.tutorPatronymic,v.group.groupCode, v.controlType, v.presentCount,v.absentCount,v.rejectedCount,v.examDate, sub.subjectName " +
+    @Query("select v.vidomistNo,t.tutorSurname,t.tutorName,t.tutorPatronymic, sub.subjectName,g.groupCode, v.controlType, v.presentCount,v.absentCount,v.rejectedCount, v.examDate " +
             "from StudentEntity s " +
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.studentCode=s.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
             "inner join SubjectEntity sub on sub.subjectNo = g.subject.subjectNo " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
             "where " +
             "   s.studentCode=:studentCode ")
-    Page<List<String>> findAllStudentVidomosties(@Param("studentCode") int studentCode, Pageable pageable);
+    Page<Object[]> findAllStudentVidomosties(@Param("studentCode") int studentCode, Pageable pageable);
 
     VidomistEntity findByVidomistNo(Integer vidomistNo);
 
-    @Query("select v " +
-            "from VidomistEntity v " +
+    @Query("select v.vidomistNo,t.tutorSurname,t.tutorName,t.tutorPatronymic, sub.subjectName,g.groupCode, v.controlType, v.presentCount,v.absentCount,v.rejectedCount, v.examDate " +
+            "from StudentEntity s " +
+            "inner join VidomistMarkEntity vm on vm.vidomistMarkId.studentCode=s.studentCode " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo = g.subject.subjectNo " +
             "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
-            "where t.tutorNo=:tutorNo ")
-    Page<VidomistEntity> findAllByTutorNo(@Param("tutorNo") Integer tutorNo, Pageable pageable);
+            "where " +
+            "   g.eduYear in (:eduYears) " +
+            "and " +
+            "   sub.subjectName in (:subjectName) " +
+            "and " +
+            "   t.tutorNo in (:tutorNo) " +
+            "and " +
+            "   g.groupName in (:groupName)" +
+            "and " +
+            "   g.trim in (:semesters) " +
+            "and " +
+            "   g.course in (:courses) " )
+    Page<Object[]> findAllStatements(
+            @Param("eduYears") List<String> eduYears,
+            @Param("subjectName") List<String> subjectName,
+            @Param("tutorNo") List<Integer> tutorNo,
+            @Param("groupName") List<String> groupName,
+            @Param("semesters") List<String> semesters,
+            @Param("courses") List<Integer> courses,
+            Pageable pageable);
 
     @Query("select v " +
             "from VidomistEntity v " +

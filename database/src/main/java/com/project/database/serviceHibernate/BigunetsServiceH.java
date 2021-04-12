@@ -31,10 +31,10 @@ public class BigunetsServiceH {
     private Page<BigunetsShortInfo> buildBigunetsShortInfo(Page<Object[]> bigunetsP, Pageable pageable, int total) {
         List<BigunetsShortInfo> bigunetsShortInfos = new ArrayList<>();
         List<Object[]> list = bigunetsP.getContent();
-        for (int i = 0; i < bigunetsShortInfos.size(); i++) {
+        for (int i = 0; i < bigunetsP.getNumberOfElements(); i++) {
             BigunetsShortInfo bsi = new BigunetsShortInfo();
             Object[] obj = list.get(i);
-            int index = 1;
+            int index = 0;
             bsi.setStatementNo((Integer) obj[index++]);
             bsi.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
             bsi.setSubjectName((String) obj[index++]);
