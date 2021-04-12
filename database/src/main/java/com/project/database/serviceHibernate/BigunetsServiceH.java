@@ -49,10 +49,12 @@ public class BigunetsServiceH {
     public Page<BigunetsShortInfo> findAllBiguntsiBySubjectNameTutorNoGroupName(
             String subjectName, String tutorPIB, String groupName,
             int page, int numberPerPage) {
-        String[] pib = tutorPIB.split(" ");
-        TutorEntity tutor = tutorRepository.findByTutorSurnameAndTutorNameAndTutorPatronymic(pib[0], pib[1], pib[2]);
-        Integer tutorNo = tutor == null ? null : tutor.getTutorNo();
-
+        Integer tutorNo = null;
+        if (tutorPIB != null) {
+            String[] pib = tutorPIB.split(" ");
+            TutorEntity tutor = tutorRepository.findByTutorSurnameAndTutorNameAndTutorPatronymic(pib[0], pib[1], pib[2]);
+            tutorNo = tutor == null ? null : tutor.getTutorNo();
+        }
         List<String> subjectList = getSubjectList(subjectName);
         List<Integer> tutorList = getTutorList(tutorNo);
         List<String> groupList = getGroupList(groupName);
