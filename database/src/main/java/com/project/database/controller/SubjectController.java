@@ -29,6 +29,6 @@ public class SubjectController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "10") int numberPerPage
     ){
-        return null;//subjectService.findAllSubjectNames(subjectName);
+        return subjectService.findSubjectAverageMarkBySubjectName(subjectName, page, numberPerPage);
     }
 }

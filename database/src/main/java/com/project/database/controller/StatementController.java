@@ -28,15 +28,17 @@ public class StatementController {
 
     @GetMapping("/statements")
     public Page<StatementShortInfo> getAll(
-            @RequestParam(name = "subject") String course,
-            @RequestParam(name = "tutor") String tutor,
-            @RequestParam(name = "group ") String group,
+            @RequestParam(name = "subject", required = false) String subjectName,
+            @RequestParam(name = "tutor", required = false) String tutorName,
+            @RequestParam(name = "group ", required = false) String groupName,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
-//        vidomistServiceH.
-//        statementService.find
-        return null;
+        return vidomistServiceH.findAllStatements(
+                null, subjectName, tutorName, groupName,
+                null, null, null, false,
+                page, numberPerPage);
+//        return null;
     }
 
 

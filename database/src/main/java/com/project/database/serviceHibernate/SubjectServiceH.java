@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,7 +72,8 @@ public class SubjectServiceH {
 
     public Page<SubjectShortInfo> findSubjectAverageMarkBySubjectName(String subjectName, int page, int numberPerPage) {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
-        Page<Object[]> pageList = subjectRepository.findSubjectAverageMarkBySubjectName(subjectName, pageable);
+        Page<Object[]> pageList = subjectRepository.findSubjectAverageMarkBySubjectName(subjectName,
+                pageable);
         return buildSubjectShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 

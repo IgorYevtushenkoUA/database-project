@@ -71,15 +71,18 @@ public class VidomistServiceH {
     }
 
     public Page<StatementShortInfo> findAllStatements(
-            String eduYear, String subjectName, Integer tutorNo, String groupName, Integer semestr, Integer course,
+            String eduYear, String subjectName, String tutorName, String groupName, Integer semestr, Integer course,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         List<String> eduYearList = getEduYearsList(eduYear);
         List<String> subjectList = getSubjectList(subjectName);
-        List<Integer> tutorList = getTutorList(tutorNo);
+        List<Integer> tutorList = getTutorList(tutorName);
         List<String> groupList = getGroupList(groupName);
         List<String> semesterList = getSemestrList(semestr, semestrParser(course, semestr));
         List<Integer> courseList = getCourseList(course);
 //        Sort sort = setSort(sortBy, sortDesc);
+        System.out.println(subjectList);
+        System.out.println(tutorList);
+        System.out.println(groupList);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
         Page<Object[]> pageList = vidomistRepository.findAllStatements(eduYearList, subjectList, tutorList, groupList, semesterList, courseList, pageable);
         return buildStatementShortInfo(pageList, pageable, (int) pageList.getTotalElements());
@@ -162,6 +165,13 @@ public class VidomistServiceH {
                 .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList())
                 : tutorRepository.findDistinctByTutorNoIn(Collections.singletonList(tutorNo))
                 .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList());
+    }
+
+    private List<Integer> getTutorList(String tutorName) {
+        return tutorName == null
+                ? tutorRepository.findAll()
+                .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList())
+                : tutorRepository.findAllTutorsByFullName(tutorName);
     }
 
     private List<String> semestrParser(Integer course, Integer semestr) {
