@@ -1,6 +1,6 @@
 package com.project.database.controller;
 
-import com.project.database.serviceHibernate.TutorServiceH;
+import com.project.database.serviceHibernate.SubjectServiceH;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,14 +11,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class TutorController {
+public class SubjectController {
 
-    private final TutorServiceH tutorServiceH;
+    private final SubjectServiceH subjectService;
 
-
-    @GetMapping("/tutorNames")
-    public List<String> getAllTutorNames(){
-        return tutorServiceH.findAllTutorNames();
+    @GetMapping("/subjectNames")
+    public List<String> getSubjectNames(){
+        return subjectService.findAllSubjectNames();
     }
-
 }

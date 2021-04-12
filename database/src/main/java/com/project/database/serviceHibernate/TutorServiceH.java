@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -38,8 +39,11 @@ public class TutorServiceH {
     /**
      * @return [Гулаєва, Наталія, Михаліївна], [Ющенко, Юрій, Олексійович],
      */
-    public List<List<String>> findAllTutorNames() {
-        return tutorRepository.findAllTutorNames();
+    public List<String> findAllTutorNames() {
+        return tutorRepository.findAllTutorNames().stream().flatMap(fullname ->
+                Stream.of(
+                        String.join(" ", fullname.get(0), fullname.get(1), fullname.get(2))
+                )).distinct().collect(Collectors.toList());
     }
 
     /**

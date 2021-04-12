@@ -21,6 +21,12 @@ public interface TutorRepository extends JpaRepository<TutorEntity, Integer> {
     @Query("select t.tutorSurname, t.tutorName, t.tutorPatronymic from TutorEntity t where t.tutorSurname like: name or t.tutorName like:name or t.tutorPatronymic like:name order by t.tutorSurname")
     List<List<String>> findAllTutorNamesByPartOFName(@Param("name") String name);
 
+    @Query("select t.tutorNo " +
+            "from TutorEntity t " +
+            "where concat(t.tutorSurname, ' ', t.tutorName, ' ', t.tutorPatronymic) like:fullName " +
+            "order by t.tutorSurname")
+    List<Integer> findAllTutorsByFullName(@Param("fullName") String fullName);
+
     // List<GroupEntity> findDistinctAllByGroupNameIn(@Param("groupName") List<String> groupName);
     List<TutorEntity> findDistinctByTutorNoIn(@Param("tutorNo") List<Integer> tutorNo);
 

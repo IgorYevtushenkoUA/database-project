@@ -2,8 +2,6 @@ package com.project.database.dto.student;
 
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -17,7 +15,7 @@ public class StudentShortInfo {
     private String studentName; // Example: "Данило",
     private String studentPatronymic; // Example: "Романович",
     private String studentRecordBook; // Example: "37453",
-    private BigDecimal studentRating; // Example: 76.3,
+    private Double studentRating; // Example: 76.3,
     private Integer studentCourse; // Example: 2,
     private String studentTrim; // Example: 2,
 //    private String faculty; // Example: "Факультет інформатики"

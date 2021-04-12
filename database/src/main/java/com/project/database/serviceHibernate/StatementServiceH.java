@@ -30,6 +30,8 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -39,7 +41,6 @@ public class StatementServiceH {
     private final GroupRepository groupRepository;
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
-
     public Optional<StatementInfo> getStatementInfo(int statementId) {
         System.out.println("tyt");
         return Optional.of(buildStatementInfo(statementId));
@@ -116,6 +117,7 @@ public class StatementServiceH {
     VidomistEntity findByStatementNo(int statementNo) {
         return vidomistRepository.findByVidomistNo(statementNo);
     }
+
 
     public Page<Object[]> findAllStudentVidomosties(int studentCode, int page, int numberPerPage) {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
@@ -287,7 +289,7 @@ public class StatementServiceH {
             studentInfo.setStudentName((String) obj[index++]);
             studentInfo.setStudentPatronymic((String) obj[index++]);
             studentInfo.setStudentRecordBook((String) obj[index++]);
-            studentInfo.setStudentRating((BigDecimal) obj[index++]);
+            studentInfo.setStudentRating((Double) obj[index++]);
             studentInfo.setStudentCourse((Integer) obj[index++]);
             studentInfo.setStudentTrim((String) obj[index++]);
             students.add(studentInfo);

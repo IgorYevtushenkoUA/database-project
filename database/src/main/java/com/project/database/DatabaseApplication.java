@@ -21,29 +21,19 @@ public class DatabaseApplication {
 //        String hashedAdmin = passwordEncoder.encode("admin");
 //        System.out.println(hashedAdmin);
 
-
+//        System.out.println((String.join(" ","123", "234", "345").toString()));
         ApplicationContext applicationContext = SpringApplication.run(DatabaseApplication.class, args);
         test(applicationContext);
     }
 
     private static void test(ApplicationContext applicationContext) {
 
-        System.out.println(132);
         StatementServiceH statementServiceH = applicationContext.getBean(StatementServiceH.class);
 //        System.out.println(statementServiceH.getStatementInfo(1));
-        VidomistRepository vidomistRepository = applicationContext.getBean(VidomistRepository.class);
-        List l  = vidomistRepository.getStatementHeader(1);
-        System.out.println(l);
+//        VidomistRepository vidomistRepository = applicationContext.getBean(VidomistRepository.class);
+//        List l  = vidomistRepository.getStatementHeader(1);
+//        System.out.println(l);
 
-//          SubjectServiceH subjectServiceH = applicationContext.getBean(SubjectServiceH.class);
-//        subjectServiceH.findSubjectAverageMark(1, 2);
-
-
-//        ParserServiceH parserServiceH = applicationContext.getBean(ParserServiceH.class);
-//        StatementParser parser = new StatementParser();
-//        StatementsReport statementsReport = parser.getStatementsReportByRoot("/pdfs/ios_good_2DONE.pdf");
-//        System.out.println(statementsReport);
-//        parserServiceH.insertVidomist(statementsReport.getStatementInfo());
 
     }
 }
