@@ -10,11 +10,9 @@ import com.project.database.entities.VidomistEntity;
 import com.project.database.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -223,7 +221,7 @@ public class VidomistServiceH {
             studentInfo.setStudentName((String) obj[index++]);
             studentInfo.setStudentPatronymic((String) obj[index++]);
             studentInfo.setStudentRecordBook((String) obj[index++]);
-            studentInfo.setStudentRating((BigDecimal) obj[index++]);
+            studentInfo.setStudentRating((Double) obj[index++]);
             studentInfo.setStudentCourse((Integer) obj[index++]);
             studentInfo.setStudentTrim((String) obj[index++]);
             students.add(studentInfo);

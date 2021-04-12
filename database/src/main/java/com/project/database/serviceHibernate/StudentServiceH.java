@@ -15,12 +15,10 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -516,11 +514,7 @@ public class StudentServiceH {
         return tutorName == null
                 ? tutorRepository.findAll()
                 .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList())
-                : tutorRepository.findAllTutorNamesByPartOFName(tutorName)
-                .stream().flatMap(fullname ->
-                        Stream.of(tutorRepository.findByTutorSurnameAndTutorNameAndTutorPatronymic(
-                                fullname.get(0), fullname.get(1), fullname.get(2))))
-                .map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList());
+                : tutorRepository.findAllTutorsByFullName(tutorName);
     }
 
 
@@ -584,7 +578,7 @@ public class StudentServiceH {
             studentInfo.setStudentName((String) obj[index++]);
             studentInfo.setStudentPatronymic((String) obj[index++]);
             studentInfo.setStudentRecordBook((String) obj[index++]);
-            studentInfo.setStudentRating((BigDecimal) obj[index++]);
+            studentInfo.setStudentRating((Double) obj[index++]);
             studentInfo.setStudentCourse((Integer) obj[index++]);
             studentInfo.setStudentTrim((String) obj[index++]);
             students.add(studentInfo);
