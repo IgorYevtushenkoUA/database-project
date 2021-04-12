@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BigunetsStudent {
+public class  BigunetsStudent {
     private Integer studentId; // Example: 23,
     private String studentPI; // Example: "Бойчук Олег",
     private String studentPatronymic; // Example: "Романович",

@@ -66,9 +66,8 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, Integer>
             "                       inner join subject sub1 on sub1.subject_no = g1.subject_no\n" +
             "              where sub.subject_no = sub1.subject_no\n" +
             "          )\n" +
-            "where sub.subjectName=:subjectName " +
-            "group by sub.subject_no, subject_name, t.tutor_surname, t.tutor_name, t.tutor_patronymic " +
-            "", nativeQuery = true)
+            "and sub.subject_name=:subjectName " +
+            "group by sub.subject_no, subject_name, t.tutor_surname, t.tutor_name, t.tutor_patronymic ", nativeQuery = true)
     Page<Object[]> findSubjectAverageMarkBySubjectName(@Param("subjectName") String subjectName, Pageable pageable);
 
 
