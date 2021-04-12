@@ -29,7 +29,6 @@ import java.util.Objects;
 public class BigunetsServiceH {
 
     private final BigunetsRepository bigunetsRepository;
-    private final ParserServiceH parserServiceH;
 
     public Page<BigunetsShortInfo> findAllStudentBigunets(int studentCode, int page, int numberPerPage) {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
@@ -95,8 +94,4 @@ public class BigunetsServiceH {
     }
 
 
-    public Integer saveBigunets(BigunetsReport bigunetsReport) {
-        parserServiceH.insertBigunets(bigunetsReport.getBigunetsInfo());
-        return bigunetsReport.getBigunetsInfo().getBigunetsHeader().getBigunNo();
-    }
 }

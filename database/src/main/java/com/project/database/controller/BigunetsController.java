@@ -2,6 +2,7 @@ package com.project.database.controller;
 
 import com.project.database.dto.bigunets.BigunetsReport;
 import com.project.database.serviceHibernate.BigunetsServiceH;
+import com.project.database.serviceHibernate.ParserServiceH;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.nio.file.FileAlreadyExistsException;
 public class BigunetsController {
 
     private final BigunetsServiceH bigunetsService;
+    private final ParserServiceH parserService;
 
     @PostMapping("/bigunets/process")
     public ResponseEntity<BigunetsReport> processStatementFile(
@@ -37,13 +39,14 @@ public class BigunetsController {
         return ResponseEntity.ok(bigunetsReport);
     }
 
-    @PostMapping("/statement/save")
-    public ResponseEntity<Integer> saveStatement(
+    @PostMapping("/bigunets/save")
+    public ResponseEntity<Integer> saveBigunets(
             @RequestBody BigunetsReport bigunetsReport
     ) {
         Integer bigunetsId;
         try {
-            bigunetsId = bigunetsService.saveBigunets(bigunetsReport);
+            parserService.insertBigunets(bigunetsReport.getBigunetsInfo());
+            bigunetsId = bigunetsReport.getBigunetsInfo().getBigunetsHeader().getBigunNo();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

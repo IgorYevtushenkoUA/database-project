@@ -1,31 +1,27 @@
 package com.project.database.controller;
 
+import com.project.database.dto.student.StudentShortInfo;
 import com.project.database.entity.Student;
-import com.project.database.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.project.database.serviceHibernate.StudentServiceH;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/")
+@RequiredArgsConstructor
 public class StudentsController {
 
-    private final StudentService studentService;
-
-
-    @Autowired
-    public StudentsController(StudentService studentService) {
-        this.studentService = studentService;
-    }
+    private final StudentServiceH studentServiceH;
 
 
     @GetMapping("/students")
-    public HashMap<String, Object> getAllStudents(
+    public Page<StudentShortInfo> getAllStudents(
             @RequestParam(name = "year", defaultValue = "2020-2021") String year,
             @RequestParam(name = "subject", required = false) String subject,
             @RequestParam(name = "tutor", required = false) String tutor,
@@ -37,18 +33,13 @@ public class StudentsController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
-        List<Student> students;
-        students = studentService.findAllByYearSubjectGroupTeacherTrimCourse(
-                year, subject, group, tutor,
-                semester == null ? null : String.valueOf(semester), course == null ? null : String.valueOf(course),
+        Page<StudentShortInfo> students;
+        students = studentServiceH.findStudentsWithRating(
+                year, subject,  tutor, group,
+                semester, course,
                 sortBy, sortDesc, page, numberPerPage
         );
-//        students = studentService.findAll(page, numberPerPage);
-        HashMap<String, Object> response = new HashMap<>();
-        response.put("data", students);
-        response.put("totalElements", studentService.findAll(1, Integer.MAX_VALUE).size()); // загальна кількість записів
-        // потрібна
-        return response;
+        return students;
     }
 
 
@@ -65,12 +56,12 @@ public class StudentsController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
-        List<Student> debtors;
-        debtors = studentService.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
-                year, subject, group, tutor,
-                String.valueOf(semester), String.valueOf(course),
-                sortBy, sortDesc, page, numberPerPage
-        );
+        List<Student> debtors = null;
+//        debtors = studentServiceH.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+//                year, subject, group, tutor,
+//                String.valueOf(semester), String.valueOf(course),
+//                sortBy, sortDesc, page, numberPerPage
+//        );
         return debtors;
     }
 

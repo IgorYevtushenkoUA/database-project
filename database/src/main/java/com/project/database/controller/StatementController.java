@@ -2,6 +2,7 @@ package com.project.database.controller;
 
 import com.project.database.dto.statement.StatementReport;
 import com.project.database.dto.statement.info.StatementInfo;
+import com.project.database.serviceHibernate.ParserServiceH;
 import com.project.database.serviceHibernate.StatementServiceH;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.nio.file.FileAlreadyExistsException;
 public class StatementController {
 
     private final StatementServiceH statementService;
+    private final ParserServiceH parserServiceH;
 
 
     @GetMapping("/statement/{id}")
@@ -53,7 +55,8 @@ public class StatementController {
     ) {
         Integer statementId;
         try {
-            statementId = statementService.saveStatement(statementReport);
+            parserServiceH.insertVidomist(statementReport.getStatementInfo());
+            statementId = statementReport.getStatementInfo().getStatementHeader().getStatementNo();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
