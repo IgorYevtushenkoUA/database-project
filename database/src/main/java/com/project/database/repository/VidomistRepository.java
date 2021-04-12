@@ -117,7 +117,7 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
             "where " +
             "   v.vidomistNo=:vidomistNo ")
-    List<Object> getStatementHeader(@Param("vidomistNo") Integer statementId);
+    Object[] getStatementHeader(@Param("vidomistNo") Integer statementId);
 
     @Query("select v.presentCount, v.absentCount, v.rejectedCount " +
             "from VidomistEntity v " +
