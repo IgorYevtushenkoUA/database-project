@@ -28,9 +28,9 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
 
     VidomistEntity findByVidomistNo(Integer vidomistNo);
 
-    @Query("select distinct v.vidomistNo,t.tutorSurname,t.tutorName,t.tutorPatronymic, sub.subjectName,g.groupName, v" +
-            ".controlType, v" +
-            ".presentCount,v.absentCount,v.rejectedCount, v.examDate " +
+    @Query("select v.vidomistNo,t.tutorSurname,t.tutorName,t.tutorPatronymic, sub.subjectName,g.groupName, " +
+            "v.controlType, " +
+            "v.presentCount,v.absentCount,v.rejectedCount, v.examDate " +
             "from StudentEntity s " +
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.studentCode=s.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
@@ -42,7 +42,7 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "and " +
             "   t.tutorNo in (:tutorNo) " +
             "and " +
-            "   g.groupName in (:groupName)"
+            "   g.groupName in (:groupName) "
            )
     Page<Object[]> findAllStatements(
             @Param("subjectName") List<String> subjectName,
