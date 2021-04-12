@@ -1,6 +1,8 @@
 package com.project.database.repository;
 
-import com.project.database.dto.statement.info.StatementInfo;
+import com.project.database.entities.StatementFooterEntity;
+import com.project.database.entities.StatementHeaderEntity;
+import com.project.database.entities.StatementStudentEntity;
 import com.project.database.entities.VidomistEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -108,7 +110,7 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             @Param("subjectName") String subjectName
     );
 
-    @Query("select v.vidomistNo, sub.eduLevel, sub.faculty, g.course, g.groupName, g.trim, v.controlType, v.examDate, t.tutorSurname,t.tutorName,t.tutorPatronymic,t.position, t.academStatus " +
+    @Query("select new com.project.database.entities.StatementHeaderEntity(v.vidomistNo, sub.eduLevel, sub.faculty, g.course, g.groupName, sub.subjectName, g.trim, v.controlType, v.examDate, t.tutorSurname,t.tutorName,t.tutorPatronymic,t.position, t.academStatus) " +
             "from StudentEntity s " +
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.studentCode=s.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
@@ -117,15 +119,16 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
             "where " +
             "   v.vidomistNo=:vidomistNo ")
-    Object[] getStatementHeader(@Param("vidomistNo") Integer statementId);
+    List<StatementHeaderEntity> getStatementHeader(@Param("vidomistNo") Integer vidomistNo);
 
-    @Query("select v.presentCount, v.absentCount, v.rejectedCount " +
+
+    @Query("select new com.project.database.entities.StatementFooterEntity(v.presentCount, v.absentCount, v.rejectedCount) " +
             "from VidomistEntity v " +
             "where " +
             "   v.vidomistNo=:vidomistNo ")
-    Object[] getStatementFooter(@Param("vidomistNo") Integer statementId);
+    List<StatementFooterEntity> getStatementFooter(@Param("vidomistNo") Integer statementId);
 
-    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, s.studentRecordBook, vm.trimMark,  vm.markCheck, vm.completeMark, vm.natMark, vm.ectsMark " +
+    @Query("select new com.project.database.entities.StatementStudentEntity(s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, s.studentRecordBook, vm.trimMark,  vm.markCheck, vm.completeMark, vm.natMark, vm.ectsMark) " +
             "from StudentEntity s " +
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.studentCode=s.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
@@ -134,6 +137,6 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
             "where " +
             "   v.vidomistNo=:vidomistNo ")
-    List<Object[]> getStatementStudent(@Param("vidomistNo") Integer statementId);
+    List<StatementStudentEntity> getStatementStudent(@Param("vidomistNo") Integer statementId);
 
 }

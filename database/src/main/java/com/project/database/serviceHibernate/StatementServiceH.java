@@ -6,10 +6,7 @@ import com.project.database.dto.statement.info.StatementHeader;
 import com.project.database.dto.statement.info.StatementInfo;
 import com.project.database.dto.statement.info.StatementStudent;
 import com.project.database.dto.student.StudentShortInfo;
-import com.project.database.entities.GroupEntity;
-import com.project.database.entities.SubjectEntity;
-import com.project.database.entities.TutorEntity;
-import com.project.database.entities.VidomistEntity;
+import com.project.database.entities.*;
 import com.project.database.parser.parserStatement.StatementParser;
 import com.project.database.repository.GroupRepository;
 import com.project.database.repository.SubjectRepository;
@@ -41,68 +38,76 @@ public class StatementServiceH {
     private final GroupRepository groupRepository;
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
+
     public Optional<StatementInfo> getStatementInfo(int statementId) {
-        System.out.println("tyt");
         return Optional.of(buildStatementInfo(statementId));
     }
 
     private StatementInfo buildStatementInfo(int statementId) {
-//        Object[] header = vidomistRepository.getStatementHeader(statementId);
-        Object[] footer = vidomistRepository.getStatementFooter(statementId);
-        List<Object[]> students = vidomistRepository.getStatementStudent(statementId);
+
+        StatementHeaderEntity s1 = vidomistRepository.getStatementHeader(statementId)
+                .stream().distinct().collect(Collectors.toList()).get(0);
+
+        StatementFooterEntity s2 = vidomistRepository.getStatementFooter(statementId)
+                .stream().distinct().collect(Collectors.toList()).get(0);
+
+        List<StatementStudentEntity> s3 = vidomistRepository.getStatementStudent(statementId)
+                .stream().distinct().collect(Collectors.toList());
+
+
+        StatementHeader header = buildStatementHeader(s1);
+        StatementFooter footer = buildStatementFooter(s2);
+        List<StatementStudent> students = buildListStatementStudent(s3);
 
         StatementInfo statementInfo = new StatementInfo();
-//        statementInfo.setStatementHeader(buildStatementHeader(header));
-//        statementInfo.setStatementFooter(buildStatementFooter(footer));
-//        statementInfo.setStatementStudents(buildListStatementStudent(students));
+        statementInfo.setStatementHeader(header);
+        statementInfo.setStatementFooter(footer);
+        statementInfo.setStatementStudents(students);
 
         return statementInfo;
     }
 
-    private StatementHeader buildStatementHeader(Object[] header) {
+    private StatementHeader buildStatementHeader(StatementHeaderEntity statementHeaderEntity) {
         StatementHeader statementHeader = new StatementHeader();
-        int index = 0;
-        statementHeader.setStatementNo((Integer) header[index++]);
-        statementHeader.setEduLevel((String) header[index++]);
-        statementHeader.setFaculty((String) header[index++]);
-        statementHeader.setCourse((Integer) header[index++]);
-        statementHeader.setGroup((String) header[index++]);
-        statementHeader.setSubjectName((String) header[index++]);
-        statementHeader.setSemester((String) header[index++]);
+        statementHeader.setStatementNo(statementHeaderEntity.getStatementNo());
+        statementHeader.setEduLevel(statementHeaderEntity.getEduLevel());
+        statementHeader.setFaculty(statementHeaderEntity.getFaculty());
+        statementHeader.setCourse(statementHeaderEntity.getCourse());
+        statementHeader.setGroup(statementHeaderEntity.getGroupName());
+        statementHeader.setSubjectName(statementHeaderEntity.getSubjectName());
+        statementHeader.setSemester(statementHeaderEntity.getTrim());
         statementHeader.setCreditNumber("3");
-        statementHeader.setControlType((String) header[index++]);
-        statementHeader.setExamDate((LocalDate) header[index++]);
-        statementHeader.setTutorFullName((String) header[index++] + " " + header[index++] + " " + header[index++]);
-        statementHeader.setTutorPosition((String) header[index++]);
-        statementHeader.setTutorAcademicStatus((String) header[index++]);
+        statementHeader.setControlType(statementHeaderEntity.getControlType());
+        statementHeader.setExamDate(statementHeaderEntity.getExamDate());
+        statementHeader.setTutorFullName(statementHeaderEntity.getTutorSurname() + " " + statementHeaderEntity.getTutorName() + " " + statementHeaderEntity.getTutorPatronymic());
+        statementHeader.setTutorPosition(statementHeaderEntity.getTutorPosition());
+        statementHeader.setTutorAcademicStatus(statementHeaderEntity.getTutorAcademicStatus());
 
         return statementHeader;
     }
 
-    private StatementFooter buildStatementFooter(Object[] footer) {
+    private StatementFooter buildStatementFooter(StatementFooterEntity sfe) {
         StatementFooter statementFooter = new StatementFooter();
-        int index = 0;
-        statementFooter.setPresentCount((Integer) footer[index++]);
-        statementFooter.setAbsentCount((Integer) footer[index++]);
-        statementFooter.setRejectedCount((Integer) footer[index++]);
+        statementFooter.setPresentCount(sfe.getPresentCount());
+        statementFooter.setAbsentCount(sfe.getAbsentCount());
+        statementFooter.setRejectedCount(sfe.getRejectedCount());
         return statementFooter;
     }
 
-    private List<StatementStudent> buildListStatementStudent(List<Object[]> students) {
+    private List<StatementStudent> buildListStatementStudent(List<StatementStudentEntity> s3) {
         List<StatementStudent> statementStudentList = new ArrayList<>();
-        for (int i = 0; i < students.size(); i++) {
+        for (int i = 0; i < s3.size(); i++) {
             StatementStudent statementStudent = new StatementStudent();
-            Object[] obj = students.get(i);
-            int index = 0;
-            statementStudent.setStudentId((Integer) obj[index++]);
-            statementStudent.setStudentPI((String) obj[index++] + " " + obj[index++]);
-            statementStudent.setStudentPatronymic((String) obj[index++]);
-            statementStudent.setStudentRecordBook((String) obj[index++]);
-            statementStudent.setSemesterGrade((Integer) obj[index++]);
-            statementStudent.setControlGrade((Integer) obj[index++]);
-            statementStudent.setTotalGrade((Integer) obj[index++]);
-            statementStudent.setNationalGrade((String) obj[index++]);
-            statementStudent.setEctsGrade((String) obj[index++]);
+            StatementStudentEntity s = s3.get(i);
+            statementStudent.setStudentId(s.getStudentId());
+            statementStudent.setStudentPI(s.getStudentSurname()+" "+s.getStudentName());
+            statementStudent.setStudentPatronymic(s.getStudentPatronymic());
+            statementStudent.setStudentRecordBook(s.getStudentRecordBook());
+            statementStudent.setSemesterGrade(s.getSemesterGrade());
+            statementStudent.setControlGrade(s.getControlGrade());
+            statementStudent.setTotalGrade(s.getTotalGrade());
+            statementStudent.setNationalGrade(s.getNationalGrade());
+            statementStudent.setEctsGrade(s.getEctsGrade());
 
             statementStudentList.add(statementStudent);
         }

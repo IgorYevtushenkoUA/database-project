@@ -29,10 +29,10 @@ public class DatabaseApplication {
     private static void test(ApplicationContext applicationContext) {
 
         StatementServiceH statementServiceH = applicationContext.getBean(StatementServiceH.class);
-//        System.out.println(statementServiceH.getStatementInfo(1));
-//        VidomistRepository vidomistRepository = applicationContext.getBean(VidomistRepository.class);
-//        List l  = vidomistRepository.getStatementHeader(1);
-//        System.out.println(l);
+        System.out.println(statementServiceH.getStatementInfo(1));
+
+//        VidomistRepository v = applicationContext.getBean(VidomistRepository.class);
+//        System.out.println(v.getStatementFooter(1));
 
 
     }
