@@ -18,7 +18,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -27,14 +26,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StatementServiceH {
     private final VidomistRepository vidomistRepository;
+    private final ParserServiceH parserServiceH;
 
 
     public Optional<StatementInfo> getStatementInfo(int statementId) {
         return Optional.empty();
     }
 
-    public Integer saveStatement(StatementReport statementFileName){
-        return 12345;
+    public Integer saveStatement(StatementReport statementReport){
+        parserServiceH.insertVidomist(statementReport.getStatementInfo());
+        return statementReport.getStatementInfo().getStatementHeader().getStatementNo();
     }
 
 

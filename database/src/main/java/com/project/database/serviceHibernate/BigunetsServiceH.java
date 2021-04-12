@@ -1,7 +1,7 @@
 package com.project.database.serviceHibernate;
 
-import com.project.database.dto.bigunets.shortInfo.BigunetsShortInfo;
 import com.project.database.dto.bigunets.BigunetsReport;
+import com.project.database.dto.bigunets.shortInfo.BigunetsShortInfo;
 import com.project.database.entities.BigunetsEntity;
 import com.project.database.parser.parserBigunets.BigunetsParser;
 import com.project.database.repository.BigunetsRepository;
@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +29,7 @@ import java.util.Objects;
 public class BigunetsServiceH {
 
     private final BigunetsRepository bigunetsRepository;
+    private final ParserServiceH parserServiceH;
 
     public Page<BigunetsShortInfo> findAllStudentBigunets(int studentCode, int page, int numberPerPage) {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
@@ -95,6 +96,7 @@ public class BigunetsServiceH {
 
 
     public Integer saveBigunets(BigunetsReport bigunetsReport) {
-        return null;
+        parserServiceH.insertBigunets(bigunetsReport.getBigunetsInfo());
+        return bigunetsReport.getBigunetsInfo().getBigunetsHeader().getBigunNo();
     }
 }
