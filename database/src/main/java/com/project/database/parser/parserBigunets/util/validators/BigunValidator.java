@@ -37,7 +37,7 @@ public class BigunValidator {
         }else if (bigunetsHeader.getDueTo().compareTo(LocalDate.now()) < 0){
             bigunetsHeaderErrors.getDueToErrorText().add("Термін придатності (дійсний до) бігунця менший поточної дати");
         }
-        if (bigunetsHeader.getPostponeReason().equals("") || bigunetsHeader.getPostponeReason()==null){
+        if (bigunetsHeader.getPostponeReason() == null || bigunetsHeader.getPostponeReason().equals("")){
             bigunetsHeaderErrors.getPostponeReasonErrorText().add("Не вказано причину перенесення");
         }
         if (!bigunetsHeader.getEduLevel().equals("Магістр") && !bigunetsHeader.getEduLevel().equals("Бакалавр"))
@@ -153,7 +153,7 @@ public class BigunValidator {
 //                //if (student.getTotalGrade() > 60 && student.getNationalGrade())
 //            }
 
-            bigunetsStudentErrorsMap.getBigunStudentErrorsMap().put(student.getStudentRecordBook(), bigunetsStudentError);
+            bigunetsStudentErrorsMap.getBigunStudentErrorsMap().put(student.getStudentId(), bigunetsStudentError);
         }
         return bigunetsStudentErrorsMap;
     }

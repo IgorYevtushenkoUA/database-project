@@ -1,13 +1,9 @@
 package com.project.database;
 
-import com.project.database.service.StudentService;
 import com.project.database.serviceHibernate.StudentServiceH;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 
 @SpringBootApplication
@@ -20,7 +16,7 @@ public class DatabaseApplication {
 
 
         ApplicationContext applicationContext = SpringApplication.run(DatabaseApplication.class, args);
-        test(applicationContext);
+//        test(applicationContext);
     }
 
     private static void test(ApplicationContext applicationContext) {

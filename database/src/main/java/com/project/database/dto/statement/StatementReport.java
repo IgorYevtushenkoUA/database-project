@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatementsReport {
+public class StatementReport {
     private StatementInfo statementInfo;
     private StatementErrors statementErrors;
 }
