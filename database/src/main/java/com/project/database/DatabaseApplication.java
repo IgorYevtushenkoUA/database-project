@@ -24,7 +24,7 @@ public class DatabaseApplication {
     private static void test(ApplicationContext applicationContext) {
 
         VidomistServiceH vidomistServiceH = applicationContext.getBean(VidomistServiceH.class);
-        System.out.println(vidomistServiceH.findAllStatements("Логічне програмування", null, null, "", true, 1, 20)
+        System.out.println(vidomistServiceH.findAllStatements(null, null, null, "", true, 1, 20)
                 .getContent());
 
 
