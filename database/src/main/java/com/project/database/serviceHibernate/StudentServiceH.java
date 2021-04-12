@@ -300,7 +300,7 @@ public class StudentServiceH {
      * @param trim
      * @return
      */
-    public double findStudentAverageMarksForCourseTrim(Integer studentCode, Integer course, Integer trim) {
+    public Double findStudentAverageMarksForCourseTrim(Integer studentCode, Integer course, Integer trim) {
 
         List<Integer> courseList = getCourseList(course);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));

@@ -154,7 +154,7 @@ public class StatementValidator {
                         || (student.getTotalGrade() >= 71 && student.getTotalGrade() <= 80 && (!student.getNationalGrade().equals("Добре") && !student.getNationalGrade().equals("Зараховано")))
                         || (student.getTotalGrade() >= 66 && student.getTotalGrade() <= 70 && (!student.getNationalGrade().equals("Задовільно") && !student.getNationalGrade().equals("Зараховано")))
                         || (student.getTotalGrade() >= 60 && student.getTotalGrade() <= 65 && (!student.getNationalGrade().equals("Задовільно") && !student.getNationalGrade().equals("Зараховано")))
-                        || (student.getTotalGrade() < 60 && (!student.getNationalGrade().equals("Незараховано") && !student.getNationalGrade().equals("Не допущений")))) {
+                        || (student.getTotalGrade() < 60 && (!student.getNationalGrade().equals("Незараховано") && !student.getNationalGrade().equals("Не допущено") && !student.getNationalGrade().equals("Незадовільно") ))) {
                     statementStudentError.getNationalGradeErrorText().add("Оцінка за національною шкалою не відповідає загальній оцінці");
                 }
             }

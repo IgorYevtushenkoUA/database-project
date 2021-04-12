@@ -21,35 +21,20 @@ public class StudentController {
     private final BigunetsServiceH bigunetsService;
 
 
-//    @GetMapping("/student")
-//    public Object getStudentPIB(
-//            @RequestParam(name = "name") String name,
-//            @RequestParam(name = "surname") String surname,
-//            @RequestParam(name = "patronymic") String patronymic,
-//            @RequestParam(name = "page", defaultValue = "1") int page,
-//            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage,
-//            Model model
-//    ) {
-//
-//        model.addAttribute("name", name);
-//        model.addAttribute("surname", surname);
-//        model.addAttribute("patronymic", patronymic);
-//        model.addAttribute("page", page);
-//        model.addAttribute("numberPerPage", numberPerPage);
-//        return studentService.findByPIB(name, surname, patronymic, page, numberPerPage);
-//    }
-
     @GetMapping("/student/{studentId}")
     public StudentEntity getStudentInfo(@PathVariable(name = "studentId") Integer studentId) {
         return studentService.findByStudentCode(studentId);
     }
 
     @GetMapping("/student/{studentId}/averageGrade")
-    public Page<BigunetsShortInfo> getStudentBiguntsi(
+    public Double getStudentAverage(
             @PathVariable(name = "studentId") Integer studentId,
             @RequestParam(name = "course") Integer course,
-            @RequestParam(name = "semester") String semester) {
-        return null;//bigunetsService.findAllStudentBigunets(studentId, page, numberPerPage);
+            @RequestParam(name = "semester") Integer semester) {
+        Double studentAverageMarksForCourseTrim = studentService.findStudentAverageMarksForCourseTrim(studentId, course,
+                semester);
+        System.out.println(studentAverageMarksForCourseTrim);
+        return studentAverageMarksForCourseTrim;
     }
 
     @GetMapping("/student/{studentId}/subjects")

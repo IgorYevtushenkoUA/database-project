@@ -28,9 +28,9 @@ public class StatementController {
 
     @GetMapping("/statements")
     public Page<StatementShortInfo> getAll(
-            @RequestParam(name = "subject", required = false) String subjectName,
-            @RequestParam(name = "tutor", required = false) String tutorName,
-            @RequestParam(name = "group ", required = false) String groupName,
+            @RequestParam(name = "subjectName", required = false) String subjectName,
+            @RequestParam(name = "tutorName", required = false) String tutorName,
+            @RequestParam(name = "group", required = false) String groupName,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {

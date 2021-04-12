@@ -6,9 +6,9 @@ create table tutor
     tutor_name       varchar(32) not null,
     tutor_surname    varchar(32) not null,
     tutor_patronymic varchar(32),
-    science_degree   varchar(20),
-    academ_status    varchar(20),
-    position         varchar(20)
+    science_degree   varchar(60),
+    academ_status    varchar(60),
+    position         varchar(60)
 );
 
 create table subject

@@ -1,6 +1,5 @@
 package com.project.database.repository;
 
-import com.project.database.dto.student.StudentShortInfo;
 import com.project.database.entities.StudentEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -235,7 +234,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "  g.course in (:course) " +
             "and " +
             "   g.trim in (:trim) ")
-    double findStudentAverageMarksForCourseTrim(@Param("studentCode") Integer studentCode,
+    Double findStudentAverageMarksForCourseTrim(@Param("studentCode") Integer studentCode,
                                                 @Param("course") List<Integer> course,
                                                 @Param("trim") List<String> trim);
 
