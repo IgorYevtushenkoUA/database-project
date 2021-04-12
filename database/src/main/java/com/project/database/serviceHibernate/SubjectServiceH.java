@@ -72,6 +72,12 @@ public class SubjectServiceH {
         return buildSubjectShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 
+    public Page<SubjectShortInfo> findSubjectAverageMarkBySubjectName(String subjectName, int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        Page<Object[]> pageList = subjectRepository.findSubjectAverageMarkBySubjectName(subjectName, pageable);
+        return buildSubjectShortInfo(pageList, pageable, (int) pageList.getTotalElements());
+    }
+
     private Page<SubjectShortInfo> buildSubjectShortInfo(Page<Object[]> subjectP, Pageable pageable, int total) {
         List<SubjectShortInfo> subjects = new ArrayList<>();
         List<Object[]> list = subjectP.getContent();
@@ -89,7 +95,7 @@ public class SubjectServiceH {
 
     }
 
-    public SubjectEntity findBySubjectName(String subjectName){
+    public SubjectEntity findBySubjectName(String subjectName) {
         return subjectRepository.findBySubjectName(subjectName);
     }
 
