@@ -1,5 +1,6 @@
 package com.project.database.repository;
 
+import com.project.database.dto.statement.info.StatementInfo;
 import com.project.database.entities.VidomistEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,7 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "and " +
             "   g.trim in (:semesters) " +
             "and " +
-            "   g.course in (:courses) " )
+            "   g.course in (:courses) ")
     Page<Object[]> findAllStatements(
             @Param("eduYears") List<String> eduYears,
             @Param("subjectName") List<String> subjectName,
@@ -106,5 +107,33 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             @Param("studentRecordBook") String studentRecordBook,
             @Param("subjectName") String subjectName
     );
+
+    @Query("select v.vidomistNo, sub.eduLevel, sub.faculty, g.course, g.groupName, g.trim, v.controlType, v.examDate, t.tutorSurname,t.tutorName,t.tutorPatronymic,t.position, t.academStatus " +
+            "from StudentEntity s " +
+            "inner join VidomistMarkEntity vm on vm.vidomistMarkId.studentCode=s.studentCode " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo = g.subject.subjectNo " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "where " +
+            "   v.vidomistNo=:vidomistNo ")
+    List<Object> getStatementHeader(@Param("vidomistNo") Integer statementId);
+
+    @Query("select v.presentCount, v.absentCount, v.rejectedCount " +
+            "from VidomistEntity v " +
+            "where " +
+            "   v.vidomistNo=:vidomistNo ")
+    Object[] getStatementFooter(@Param("vidomistNo") Integer statementId);
+
+    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic, s.studentRecordBook, vm.trimMark,  vm.markCheck, vm.completeMark, vm.natMark, vm.ectsMark " +
+            "from StudentEntity s " +
+            "inner join VidomistMarkEntity vm on vm.vidomistMarkId.studentCode=s.studentCode " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo = g.subject.subjectNo " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "where " +
+            "   v.vidomistNo=:vidomistNo ")
+    List<Object[]> getStatementStudent(@Param("vidomistNo") Integer statementId);
 
 }
