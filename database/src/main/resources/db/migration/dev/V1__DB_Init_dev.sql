@@ -1,6 +1,6 @@
-create table tutor
+create table "tutor"
 (
-    tutor_no         serial      not null
+    tutor_no         integer     not null auto_increment
         constraint tutor_pk
             primary key,
     tutor_name       varchar(32) not null,
@@ -13,17 +13,17 @@ create table tutor
 
 create table "subject"
 (
-    subject_no  serial       not null
+    subject_no   integer      not null auto_increment
         constraint subject_pk
             primary key,
     subject_name varchar(128) not null,
-    edu_level   char(8)      not null,
-    faculty     varchar(64)  not null
+    edu_level    char(8)      not null,
+    faculty      varchar(64)  not null
 );
 
-create table student
+create table "student"
 (
-    student_code        serial      not null
+    student_code        integer     not null auto_increment
         constraint student_pk
             primary key,
     student_surname     varchar(32) not null,
@@ -36,7 +36,7 @@ create table student
 
 create table "group"
 (
-    group_code serial      not null
+    group_code integer     not null auto_increment
         constraint group_pk
             primary key,
     group_name varchar(16) not null,
@@ -49,9 +49,9 @@ create table "group"
             on update cascade
 );
 
-create table bigunets
+create table "bigunets"
 (
-    bigunets_no  serial      not null
+    bigunets_no  integer     not null auto_increment
         constraint bigunets_pk
             primary key,
     exam_date    date        not null,
@@ -59,19 +59,19 @@ create table bigunets
     postp_reason varchar(40) not null,
     control_type char(10)    not null,
     tutor_code   integer     not null
-        constraint fk_tutor
-            references tutor
+        constraint fk_tutor_bigunets
+            references "tutor"
             on update cascade
 );
 
-create table vidomist
+create table "vidomist"
 (
-    vidomist_no    serial   not null
+    vidomist_no    integer  not null auto_increment
         constraint vidomost_pk
             primary key,
-    tutor_no       serial   not null
-        constraint fk_tutor
-            references tutor
+    tutor_no       integer  not null
+        constraint fk_tutor_vidomist
+            references "tutor"
             on update cascade,
     present_count  smallint not null,
     absent_count   smallint not null,
@@ -84,23 +84,23 @@ create table vidomist
             on update cascade
 );
 
-create table bigunets_mark
+create table "bigunets_mark"
 (
     bigunets_no   integer     not null
         constraint fk_bigunets
-            references bigunets
+            references "bigunets"
             on update cascade on delete cascade,
     student_code  integer     not null
-        constraint fk_student
-            references student
+        constraint fk_student_bigunets_mark
+            references "student"
             on update cascade on delete cascade,
     vidomist_no   integer     not null
         constraint fk_bigunets_mark_vidomist
-            references vidomist
+            references "vidomist"
             on update cascade on delete cascade,
     tutor_no      integer     not null
-        constraint fk_tutor
-            references tutor
+        constraint fk_tutor_bigunets_mark
+            references "tutor"
             on update cascade on delete cascade,
     trim_mark     smallint    not null,
     mark_check    smallint    not null,
@@ -112,15 +112,15 @@ create table bigunets_mark
 );
 
 
-create table vidomist_mark
+create table "vidomist_mark"
 (
     vidomist_no   integer     not null
         constraint fk_vidomist_mark_idomist
-            references vidomist
+            references "vidomist"
             on update cascade on delete cascade,
     student_code  integer     not null
-        constraint fk_student
-            references student
+        constraint fk_student_vidomist_mark
+            references "student"
             on update cascade on delete cascade,
     trim_mark     smallint    not null,
     nat_mark      varchar(32) not null,

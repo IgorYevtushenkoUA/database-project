@@ -1,7 +1,7 @@
 package com.project.database.dao.inter;
 
+import com.project.database.entity.Bigunets;
 import com.project.database.entity.Student;
-import com.project.database.entity.Subject;
 import com.project.database.entity.Vidomist;
 
 import java.util.List;
@@ -9,216 +9,188 @@ import java.util.TreeMap;
 
 public interface StudentDao {
 
-    /*
-    - отримати всіх боржників за роком навчання / спеціальністю / предметом / групою / викладачем
-    - отримати всіх студентів за роком навчання / спеціальністю  / предметом / групою / викладачем
-    - отримати n% перших студентів за рейтингом (на спеціальності за семестр)
-    - генерувати список студентів за рейтингом для спеціальності\курсу
-    - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ
-    * */
+    Student findById(int studentId);
+
+    Student findByStudentRecordBook(String studentRecordBook);
+
+    List<String> findNames();
+
+    List<String> findNames(String name);
+
+
+    List<List<Object>> findAverageStudentsMarksTrimCourse(String trim,
+                                                          String course,
+                                                          String eduYear,
+                                                          String sortType,
+                                                          String sortGrow,
+                                                          int page,
+                                                          int numberPerPage);
+
+    List<Object> findAverageStudentMarksTrimCourse(int studentId,
+                                                   String trim,
+                                                   String course,
+                                                   String eduYear,
+                                                   String sortType,
+                                                   String sortGrow,
+                                                   int page,
+                                                   int numberPerPage);
+
+    List<Object> findStudentMarksByTrimCourse(int studentId,
+                                              String trim,
+                                              String course,
+                                              int page,
+                                              int numberPerPage);
+
+    List<Object> findAllWhoHasRetakeSubjectTrimEduYear(String subjectName,
+                                                       String trim,
+                                                       String eduYear,
+                                                       String sortType,
+                                                       String sortGrow,
+                                                       int page,
+                                                       int numberPerPage);
+
+    List<Object> findAllRetakenSubjectForStudentTrimEduYear(int studentId,
+                                                            String trim,
+                                                            String eduYear,
+                                                            String sortType,
+                                                            String sortGrow,
+                                                            int page,
+                                                            int numberPerPage);
 
     /**
      * Знайти всіх Студентів
      */
-    public List<Student> findAllStudents(int page, int numberPerPage);
+    List<Student> findAll(int page,
+                          int numberPerPage);
 
     /**
      * Знайти студентів за (ім'я + прізвище + по-батькові)
      */
-    List<Student> findStudentsByPIB(String name,
+    List<Student> findByPIB(String name,
+                            String surname,
+                            String patronymic,
+                            int page,
+                            int numberPerPage);
+
+    /**
+     * Знайти студентів за (ім'я + прізвище + по-батькові)
+     */
+    List<Student> findByNameSurname(String name,
                                     String surname,
-                                    String patronymic,
                                     int page,
                                     int numberPerPage);
 
     /**
-     * Знайти студентів за (ім'я + прізвище + по-батькові)
+     * - отримати відомості студента за ПІБ
      */
-    List<Student> findStudentsByNameSurname(String name,
-                                            String surname,
+    List<Vidomist> findAllVidomostyByStudentId(int studentId,
+                                               int page,
+                                               int numberPerPage);
+
+    /**
+     * - отримати бігунці студента за ПІБ
+     */
+    List<Bigunets> findAllBigunetsByStudentId(int studentId,
+                                              int page,
+                                              int numberPerPage);
+
+    /**
+     * - отримати бігунці студента за ПІБ
+     */
+    List<Vidomist> findAllVidomostyByStudentPIB(String name,
+                                                String surname,
+                                                String patronymic,
+                                                int page,
+                                                int numberPerPage);
+
+    /**
+     * - отримати середній бал студента за ПІБ
+     */
+    double findAverageMarkById(int studentCode);
+
+    /**
+     * - отримати середній бал студента за ПІБ
+     */
+    double findAverageMarkByPIB(String name,
+                                String surname,
+                                String patronymic);
+
+    /**
+     * - отримати всі оцінки студента за ПІБ
+     */
+    TreeMap<Integer, List> findAllMarksByPIB(String name,
+                                             String surname,
+                                             String patronymic,
+                                             int page,
+                                             int numberPerPage);
+
+    /**
+     * - отримати всі оцінки студента за ПІБ
+     */
+    TreeMap<Integer, List> findAllMarksById(int studentCode,
                                             int page,
                                             int numberPerPage);
 
+    /** - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ*/
+
+
     /**
-     * - отримати всіх боржників за роком навчання / предметом / групою / викладачем
+     * - delete student by ID
      */
-    List<Student> findAllDebtorsByYearSubjectGroupTeacher(
+    void deleteById(int studentId);
+
+
+    /**
+     * @param {String} eduYear      -> [2020-2021]
+     * @param {String} subjectName
+     * @param {String} groupName
+     * @param {String} tutorName    -> []
+     * @param {int}    trim
+     * @param {int}    course
+     * @param {String} sortType     -> [default: student_surname; else: or complete_mark or student_surname]
+     * @param {String} sortGrow     -> [default: ASC, else DESC ]
+     * @param {int}    page
+     * @param {int}    numberPerPage
+     * @return List<Student></>
+     */
+
+    List<Student> findAllByYearSubjectGroupTeacherTrimCourse(
             String eduYear,
             String subjectName,
             String groupName,
             String tutorName,
+            String trim,
+            String course,
+            String sortType,
+            String sortGrow,
             int page,
             int numberPerPage);
 
     /**
      * - отримати всіх боржників за роком навчання / предметом / групою / викладачем
+     *
+     * @param {String} eduYear      -> [2020-2021]
+     * @param {String} subjectName
+     * @param {String} groupName
+     * @param {String} tutorName    -> []
+     * @param {int}    trim
+     * @param {int}    course
+     * @param {String} sortType     -> [default: student_surname; else: or complete_mark or student_surname]
+     * @param {String} sortGrow     -> [default: ASC, else DESC ]
+     * @param {int}    page
+     * @param {int}    numberPerPage
+     * @return List<Student></>
      */
-    List<Student> findAllDebtorsByYearSubjectGroupTeacher(
+    List<Student> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
             String eduYear,
-            int subjectNo,
-            int groupCode,
-            int tutorNo,
-            int page,
-            int numberPerPage);
-
-    /**
-     * - отримати всіх студентів за роком навчання/ предметом / групою / викладачем
-     */
-    List<Student> findAllStudentsByYearSubjectGroupTeacher(
-            String eduYear,
-            String subject,
+            String subjectName,
             String groupName,
             String tutorName,
+            String trim,
+            String course,
+            String sortType,
+            String sortGrow,
             int page,
             int numberPerPage);
-
-    /**
-     * - отримати всіх студентів за роком навчання/ предметом / групою / викладачем
-     */
-    List<Student> findAllStudentsByYearSubjectGroupTeacher(
-            String eduYear,
-            int subjectNo,
-            int groupCode,
-            int tutorNo,
-            int page,
-            int numberPerPage);
-
-
-    /**
-     * -  отримати n% перших студентів за рейтингом (на спеціальності за семестр)    НАЙКРАЩИХ
-     */
-    List<Student> findBestPercentOfStudentByGroupCourse(
-            int percent,
-            int groupCode,
-            int course,
-            int page,
-            int numberPerPage);
-
-    /**
-     * -  отримати n% перших студентів за рейтингом (на спеціальності за семестр)   НАЙКРАЩИХ
-     */
-    List<Student> findBestPercentOfStudentByGroupCourse(
-            int percent,
-            String groupName,
-            int course,
-            int page,
-            int numberPerPage);
-
-    /**
-     * -  отримати n% перших студентів за рейтингом (на спеціальності за семестр)     ГІРШИХ
-     */
-    List<Student> findWorstPercentOfStudentByGroupCourse(
-            int percent,
-            int groupCode,
-            int course,
-            int page,
-            int numberPerPage);
-
-    /**
-     * -  отримати n% перших студентів за рейтингом (на спеціальності за семестр)     ГІРШИХ
-     */
-
-    List<Student> findWorstPercentOfStudentByGroupCourse(
-            int percent,
-            String groupName,
-            int course,
-            int page,
-            int numberPerPage);
-
-    /**
-     * - генерувати список студентів за рейтингом для group\курсу
-     */
-
-    List<Student> sortAllStudentInGroupCourseByFromHighToLowRating(
-            int percent,
-            String groupName,
-            int course,
-            int page,
-            int numberPerPage);
-
-
-    /**
-     * - генерувати список студентів за рейтингом для group\курсу
-     */
-
-    List<Student> sortAllStudentInGroupCourseByFromHighToLowRating(
-            int percent,
-            int groupCode,
-            int course,
-            int page,
-            int numberPerPage);
-
-    /**
-     * - генерувати список студентів за рейтингом для group\курсу
-     */
-
-    List<Student> sortAllStudentInGroupCourseByFromLowToHighRating(
-            int percent,
-            String groupName,
-            int course,
-            int page,
-            int numberPerPage);
-
-
-    /**
-     * - генерувати список студентів за рейтингом для group\курсу
-     */
-
-    List<Student> sortAllStudentInGroupCourseByFromLowToHighRating(
-            int percent,
-            int groupCode,
-            int course,
-            int page,
-            int numberPerPage);
-
-/**
- - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ
- * */
-
-    /**
-     * - отримати бігунці студента за ПІБ
-     */
-    public List<Vidomist> findAllVidomostyByStudentId(int studentId,
-                                                      int page,
-                                                      int numberPerPage);
-
-    /**
-     * - отримати бігунці студента за ПІБ
-     */
-    public List<Vidomist> findAllVidomostyByStudentPIB(String name,
-                                                       String surname,
-                                                       String patronymic,
-                                                       int page,
-                                                       int numberPerPage);
-
-    /**
-     * - отримати середній бал студента за ПІБ
-     */
-    public double findAverageMarkForStudentById(int studentCode);
-
-    /**
-     * - отримати середній бал студента за ПІБ
-     */
-    public double findAverageMarkForStudentByPIB(String name,
-                                                 String surname,
-                                                 String patronymic);
-
-    /**
-     * - отримати всі оцінки студента за ПІБ
-     */
-    public TreeMap<Integer, List> findAllMarksForStudentByPIB(String name,
-                                                                 String surname,
-                                                                 String patronymic,
-                                                                 int page,
-                                                                 int numberPerPage);
-
-    /**
-     * - отримати всі оцінки студента за ПІБ
-     */
-    public TreeMap<Integer, List> findAllMarksForStudentById(int studentCode,
-                                                                int page,
-                                                                int numberPerPage);
-
-    /** - отримати остаточну оцінку/ бігунці / середній бал/ всі оцінки студента за ПІБ*/
 
 }
