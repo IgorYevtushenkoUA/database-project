@@ -44,6 +44,28 @@ public class StatementServiceH {
         return Optional.of(buildStatementInfo(statementId));
     }
 
+    public StatementShortInfo findStatementById(int id) {
+        Pageable pageable = PageRequest.of(0, 1);
+        StatementShortInfo ssi = new StatementShortInfo();
+        List<Object[]> list = vidomistRepository.findstatementById(id, pageable).getContent();
+        int index = 0;
+        ssi.setStatementNo((Integer) list.get(0)[index++]);
+        ssi.setTutorFullName((String) list.get(0)[index++]);
+        ssi.setSubjectName((String) list.get(0)[index++]);
+        ssi.setGroup((String) list.get(0)[index++]);
+        ssi.setControlType((String) list.get(0)[index++]);
+
+        StudentsCount sc = new StudentsCount();
+        sc.setPresentCount((Integer) list.get(0)[index++]);
+        sc.setAbsentCount((Integer) list.get(0)[index++]);
+        sc.setRejectedCount((Integer) list.get(0)[index++]);
+
+        ssi.setStudentsCount(sc);
+        ssi.setExamDate((LocalDate) list.get(0)[index++]);
+
+        return ssi;
+    }
+
 
     private StatementInfo buildStatementInfo(int statementId) {
 
@@ -102,7 +124,7 @@ public class StatementServiceH {
             StatementStudent statementStudent = new StatementStudent();
             StatementStudentEntity s = s3.get(i);
             statementStudent.setStudentId(s.getStudentId());
-            statementStudent.setStudentPI(s.getStudentSurname()+" "+s.getStudentName());
+            statementStudent.setStudentPI(s.getStudentSurname() + " " + s.getStudentName());
             statementStudent.setStudentPatronymic(s.getStudentPatronymic());
             statementStudent.setStudentRecordBook(s.getStudentRecordBook());
             statementStudent.setSemesterGrade(s.getSemesterGrade());

@@ -22,11 +22,8 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-        System.out.println(studentServiceH.findStudentAverageMarksForCourseTrim(1));
-
-//        SubjectServiceH subjectServiceH = applicationContext.getBean(SubjectServiceH.class);
-//        System.out.println(subjectServiceH.findAllSubjectsByName("бд",1,20));
+        StatementServiceH statementServiceH = applicationContext.getBean(StatementServiceH.class);
+        System.out.println(statementServiceH.findStatementById(1));
     }
 }
 

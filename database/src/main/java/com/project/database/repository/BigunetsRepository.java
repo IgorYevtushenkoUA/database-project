@@ -12,6 +12,19 @@ import java.util.List;
 
 public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Integer> {
 
+    @Query("select b.bigunetsNo, concat(b.tutor.tutorSurname,' ', b.tutor.tutorName,' ', b.tutor.tutorPatronymic), sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil " +
+            "from BigunetsEntity b " +
+            "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.bigunetsNo=b.bigunetsNo " +
+            "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=bm.bigunetsMarkId.vidomistNo " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
+            "inner join StudentEntity s on s.studentCode=bm.bigunetsMarkId.studentCode " +
+            "inner join TutorEntity t on t.tutorNo= v.tutor.tutorNo " +
+            "where b.bigunetsNo=:bigunetsNo " +
+            "group by b.bigunetsNo, concat(b.tutor.tutorSurname,' ', b.tutor.tutorName,' ', b.tutor.tutorPatronymic), sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil")
+    Page<Object[]> findABigunetsById(@Param("bigunetsNo") Integer bigunetsNo, Pageable pageable);
+
     @Query("select b.bigunetsNo, b.tutor.tutorSurname, b.tutor.tutorName, b.tutor.tutorPatronymic, sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil " +
             "from BigunetsEntity b " +
             "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.bigunetsNo=b.bigunetsNo " +

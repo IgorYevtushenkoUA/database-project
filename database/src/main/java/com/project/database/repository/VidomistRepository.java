@@ -13,6 +13,19 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface VidomistRepository extends JpaRepository<VidomistEntity, Integer> {
+    @Query("select v.vidomistNo,concat(t.tutorSurname,' ',t.tutorName,' ',t.tutorPatronymic), sub.subjectName,g.groupName, v.controlType, v " +
+            ".presentCount,v.absentCount,v.rejectedCount, v.examDate " +
+            "from StudentEntity s " +
+            "inner join VidomistMarkEntity vm on vm.vidomistMarkId.studentCode=s.studentCode " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo = g.subject.subjectNo " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "where " +
+            "   v.vidomistNo=:vidomistNo " +
+            "group by v.vidomistNo,concat(t.tutorSurname,' ',t.tutorName,' ',t.tutorPatronymic), sub.subjectName,g.groupName, v.controlType, v")
+    Page<Object[]> findstatementById(@Param("vidomistNo") Integer vidomistNo, Pageable pageable);
+
 
     @Query("select v.vidomistNo,t.tutorSurname,t.tutorName,t.tutorPatronymic, sub.subjectName,g.groupName, v.controlType, v" +
             ".presentCount,v.absentCount,v.rejectedCount, v.examDate " +
