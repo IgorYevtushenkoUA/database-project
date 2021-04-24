@@ -40,6 +40,15 @@ public class BigunetsServiceH {
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
 
+    public Page<BigunetsShortInfo> findAllBiguntsy(String tutorName, String subjectName, String groupName, int page, int numberPerPage) {
+        List<String> subjectList = getSubjectList(subjectName);
+        List<Integer> tutorList = getTutorList(tutorName);
+        List<String> groupList = getGroupList(groupName);
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        Page<Object[]> pageList = bigunetsRepository.findAllBiguntsy(tutorList, subjectList, groupList, pageable);
+        return buildBigunetsShortInfo(pageList, pageable, (int) pageList.getTotalElements());
+    }
+
     public Page<BigunetsShortInfo> findAllStudentBigunets(int studentCode, int page, int numberPerPage) {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
         Page<Object[]> pageList = bigunetsRepository.findAllStudentBigunets(studentCode, pageable);
@@ -70,21 +79,36 @@ public class BigunetsServiceH {
         List<BigunetsShortInfo> bigunetsShortInfos = new ArrayList<>();
         List<Object[]> list = bigunetsP.getContent();
         for (int i = 0; i < bigunetsP.getNumberOfElements(); i++) {
-            BigunetsShortInfo bsi = new BigunetsShortInfo();
-            Object[] obj = list.get(i);
-            int index = 0;
-            bsi.setStatementNo((Integer) obj[index++]);
-            bsi.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
-            bsi.setSubjectName((String) obj[index++]);
-            bsi.setControlType((String) obj[index++]);
-            bsi.setPostponeReason((String) obj[index++]);
-            bsi.setExamDate((LocalDate) obj[index++]);
-            bsi.setValidUntil((LocalDate) obj[index++]);
+//            BigunetsShortInfo bsi = new BigunetsShortInfo();
+//            Object[] obj = list.get(i);
+//            int index = 0;
+//            bsi.setStatementNo((Integer) obj[index++]);
+//            bsi.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
+//            bsi.setSubjectName((String) obj[index++]);
+//            bsi.setControlType((String) obj[index++]);
+//            bsi.setPostponeReason((String) obj[index++]);
+//            bsi.setExamDate((LocalDate) obj[index++]);
+//            bsi.setValidUntil((LocalDate) obj[index++]);
+//            bigunetsShortInfos.add(bsi);
 
-            bigunetsShortInfos.add(bsi);
+            bigunetsShortInfos.add(setBigunetsShortInfo(list.get(i)));
         }
         return new PageImpl<>(bigunetsShortInfos, pageable, total);
+    }
 
+    private BigunetsShortInfo setBigunetsShortInfo(Object[] obj) {
+        BigunetsShortInfo bsi = new BigunetsShortInfo();
+        System.out.println(obj);
+
+        int index = 0;
+        bsi.setStatementNo((Integer) obj[index++]);
+        bsi.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
+        bsi.setSubjectName((String) obj[index++]);
+        bsi.setControlType((String) obj[index++]);
+        bsi.setPostponeReason((String) obj[index++]);
+        bsi.setExamDate((LocalDate) obj[index++]);
+        bsi.setValidUntil((LocalDate) obj[index++]);
+        return bsi;
     }
 
     public void insertBigunets(BigunetsEntity bigunets) {
@@ -148,5 +172,11 @@ public class BigunetsServiceH {
                 .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList());
     }
 
+    private List<Integer> getTutorList(String tutorName) {
+        return tutorName == null
+                ? tutorRepository.findAll()
+                .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList())
+                : tutorRepository.findAllTutorsByFullName(tutorName);
+    }
 
 }

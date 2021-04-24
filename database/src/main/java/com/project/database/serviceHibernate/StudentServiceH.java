@@ -74,6 +74,12 @@ public class StudentServiceH {
         return studentRepository.findAllStudentNames('%' + name.toLowerCase() + '%');
     }
 
+    public Page<StudentShortInfo> findAllStudentsByPIB(String pib, int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        Page<Object[]> pageList = studentRepository.findAllStudentsByPIB('%' + pib + '%', pageable);
+        return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
+    }
+
 
     /**
      * Знайти всі трими
@@ -307,6 +313,10 @@ public class StudentServiceH {
         return studentRepository.findStudentAverageMarksForCourseTrim(studentCode, courseList, trimList);
     }
 
+    public Double findStudentAverageMarksForCourseTrim(Integer studentCode) {
+        return studentRepository.findStudentAverageMarksForCourseTrim(studentCode);
+    }
+
 
     /**
      * найти всі ПРЕДМЕТ-ОЦІНКА студента за певний курс та триместр
@@ -318,17 +328,18 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<Object[]> findAllStudentMarks(
+    public Page<StudentShortInfo> findAllStudentMarks(
             Integer studentCode, Integer course, Integer trim,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
+
         List<Integer> courseList = getCourseList(course);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
         Sort sort = setSort(sortBy, sortDesc);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
 
-        return studentRepository.findAllStudentMarks(studentCode, courseList, trimList, pageable);
+        Page<Object[]> pageList = studentRepository.findAllStudentMarks(studentCode, courseList, trimList, pageable);
+        return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
-
 
     public void deleteByStudentCode(int studentCode) {
         studentRepository.deleteByStudentCode(studentCode);
@@ -580,6 +591,7 @@ public class StudentServiceH {
             studentInfo.setStudentPatronymic((String) obj[index++]);
             studentInfo.setStudentRecordBook((String) obj[index++]);
             studentInfo.setStudentRating(100.0);
+//            index++;
             studentInfo.setStudentCourse((Integer) obj[index++]);
             studentInfo.setStudentTrim((String) obj[index++]);
             students.add(studentInfo);
