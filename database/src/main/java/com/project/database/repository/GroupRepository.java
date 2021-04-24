@@ -23,6 +23,9 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
     Page<String> findAllByEduYear(Pageable pageable);
 
     @Query("select distinct(g.eduYear) from GroupEntity g")
+    List<String> findAllYears();
+
+    @Query("select distinct(g.eduYear) from GroupEntity g")
     List<String> findAllGroupEduYears();
 
     //
@@ -66,5 +69,19 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
             "inner join SubjectEntity sub on gr.subject.subjectNo=sub.subjectNo " +
             "where sub.subjectName=:subjectName ")
     List<GroupEntity> findAllBySubjectName(@Param("subjectName") String subjectName);
+
+
+    @Query("select gr.groupName " +
+            "from GroupEntity gr " +
+            "inner join SubjectEntity sub on gr.subject.subjectNo=sub.subjectNo " +
+            "inner join VidomistEntity v on v.group.groupCode=gr.groupCode " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "where " +
+            "   t.tutorNo in (:tutorNo) " +
+            "and " +
+            "   sub.subjectName in (:subjectName) ")
+    List<String> findAllGroupsByTeacherPIBAndSubjectName(
+            @Param("tutorNo") List<Integer> tutorNo,
+            @Param("subjectName") List<String> subjectName);
 
 }
