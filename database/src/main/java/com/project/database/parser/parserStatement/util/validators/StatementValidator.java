@@ -113,7 +113,7 @@ public class StatementValidator {
                     .build();
 
             //todo clauses
-            if (student.getTotalGrade() == null) {
+            if (student.getTotalGrade() == null && (!student.getNationalGrade().equals("Недопущений") && !student.getNationalGrade().equals("Недопущена") && !student.getNationalGrade().equals("Недопущено") && !student.getNationalGrade().equals("Невідвідував") && !student.getNationalGrade().equals("Невідвідувала"))) {
                 statementStudentError.getTotalGradeErrorText().add("Не було введено значення загальної оцінки");
             } else if(student.getSemesterGrade()!=null && student.getControlGrade()!=null) {if(student.getTotalGrade() != student.getSemesterGrade() + student.getControlGrade()) {
                 statementStudentError.getTotalGradeErrorText().add("Загальна оцінка неправильно порахована");
@@ -127,26 +127,24 @@ public class StatementValidator {
             if (student.getStudentRecordBook() == null || student.getStudentRecordBook().equals("")) {
                 statementStudentError.getStudentRecordBookErrorText().add("Не вказано заліковку");
             }
-            if (student.getSemesterGrade() == null) {
+            if (student.getSemesterGrade() == null && (!student.getNationalGrade().equals("Недопущений") && !student.getNationalGrade().equals("Недопущена") && !student.getNationalGrade().equals("Недопущено") && !student.getNationalGrade().equals("Невідвідував") && !student.getNationalGrade().equals("Невідвідувала"))) {
                 statementStudentError.getSemesterGradeErrorText().add("Не вказано оцінку за семестр");
             }
-            if (student.getControlGrade() == null) {
+            if (student.getControlGrade() == null && (!student.getNationalGrade().equals("Недопущений") && !student.getNationalGrade().equals("Недопущена") && !student.getNationalGrade().equals("Недопущено") && !student.getNationalGrade().equals("Невідвідував") && !student.getNationalGrade().equals("Невідвідувала"))) {
                 statementStudentError.getControlGradeErrorText().add("Не вказано оцінку за екзамен/залік");
             }
-            if (student.getTotalGrade() == null) {
+            if (student.getTotalGrade() == null && (!student.getNationalGrade().equals("Недопущений") && !student.getNationalGrade().equals("Недопущена") && !student.getNationalGrade().equals("Недопущено") && !student.getNationalGrade().equals("Невідвідував") && !student.getNationalGrade().equals("Невідвідувала"))) {
                 statementStudentError.getTotalGradeErrorText().add("Не вказано загальну оцінку");
-            } else if ((student.getTotalGrade() >= 91 && !student.getEctsGrade().equals("A"))
+            } else if (student.getTotalGrade() != null &&((student.getTotalGrade() >= 91 && !student.getEctsGrade().equals("A"))
                     || (student.getTotalGrade() >= 81 && !student.getEctsGrade().equals("B") && student.getTotalGrade() <= 90)
                     || (student.getTotalGrade() >= 71 && !student.getEctsGrade().equals("C") && student.getTotalGrade() <= 80)
                     || (student.getTotalGrade() >= 66 && !student.getEctsGrade().equals("D") && student.getTotalGrade() <= 70)
                     || (student.getTotalGrade() >= 60 && !student.getEctsGrade().equals("E") && student.getTotalGrade() <= 65)
-                    || (student.getTotalGrade() < 60 && !student.getEctsGrade().equals("F")))
+                    || (student.getTotalGrade() < 60 && !student.getEctsGrade().equals("F"))))
             {
                 statementStudentError.getTotalGradeErrorText().add("Оцінка за ЄКТС не відповідає загальній оцінці");
             }
-            if (student.getNationalGrade() == null) {
-                statementStudentError.getNationalGradeErrorText().add("Не вказано оцінку за нац. шкалою");
-            } else if (!student.getNationalGrade().equals("Добре") && !student.getNationalGrade().equals("Задовільно") && !student.getNationalGrade().equals("Відмінно") && !student.getNationalGrade().equals("Зараховано") && !student.getNationalGrade().equals("Незараховано") && !student.getNationalGrade().equals("Недопущений") && !student.getNationalGrade().equals("Недопущена") && !student.getNationalGrade().equals("Недопущено")) {
+            if (!student.getNationalGrade().equals("Добре") && !student.getNationalGrade().equals("Задовільно") && !student.getNationalGrade().equals("Відмінно") && !student.getNationalGrade().equals("Зараховано") && !student.getNationalGrade().equals("Незараховано") && !student.getNationalGrade().equals("Недопущений") && !student.getNationalGrade().equals("Недопущена") && !student.getNationalGrade().equals("Недопущено") && !student.getNationalGrade().equals("Незараховано") && !student.getNationalGrade().equals("Незарахована") && !student.getNationalGrade().equals("Незарахований") && !student.getNationalGrade().equals("Невідвідував") && !student.getNationalGrade().equals("Невідвідувала")){
                 statementStudentError.getNationalGradeErrorText().add("Неправильно вказано формат оцінки за нац. шкалою");
             } else if (student.getTotalGrade() != null) {
                 if ((student.getTotalGrade() >= 91 && (!student.getNationalGrade().equals("Відмінно") && !student.getNationalGrade().equals("Зараховано")))
@@ -154,7 +152,7 @@ public class StatementValidator {
                         || (student.getTotalGrade() >= 71 && student.getTotalGrade() <= 80 && (!student.getNationalGrade().equals("Добре") && !student.getNationalGrade().equals("Зараховано")))
                         || (student.getTotalGrade() >= 66 && student.getTotalGrade() <= 70 && (!student.getNationalGrade().equals("Задовільно") && !student.getNationalGrade().equals("Зараховано")))
                         || (student.getTotalGrade() >= 60 && student.getTotalGrade() <= 65 && (!student.getNationalGrade().equals("Задовільно") && !student.getNationalGrade().equals("Зараховано")))
-                        || (student.getTotalGrade() < 60 && (!student.getNationalGrade().equals("Незараховано") && !student.getNationalGrade().equals("Не допущено") && !student.getNationalGrade().equals("Незадовільно") ))) {
+                        || (student.getTotalGrade() < 60 && (!student.getNationalGrade().equals("Незараховано") && !student.getNationalGrade().equals("Недопущений") && !student.getNationalGrade().equals("Недопущена") && !student.getNationalGrade().equals("Недопущено") && !student.getNationalGrade().equals("Незараховано") && !student.getNationalGrade().equals("Незарахована") && !student.getNationalGrade().equals("Незарахований") && !student.getNationalGrade().equals("Невідвідував") && !student.getNationalGrade().equals("Невідвідувала")))) {
                     statementStudentError.getNationalGradeErrorText().add("Оцінка за національною шкалою не відповідає загальній оцінці");
                 }
             }
