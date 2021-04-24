@@ -3,7 +3,7 @@ package com.project.database.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "subject")
@@ -28,7 +28,10 @@ public class SubjectEntity {
     @Column(name = "faculty")
     private String faculty;
 
+    @Column(name = "credits")
+    private Float credits;
+
     @OneToMany
-    private Set<GroupEntity> group;
+    private List<GroupEntity> group;
 
 }
