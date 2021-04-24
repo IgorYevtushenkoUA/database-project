@@ -1,14 +1,14 @@
 package com.project.database.dto.student;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@Getter
+@Setter
 public class StudentShortInfo {
     private Integer studentId; // Example: 4,
     private String studentSurname; // Example: "Бойко",
@@ -17,5 +17,6 @@ public class StudentShortInfo {
     private String studentRecordBook; // Example: "37453",
     private Double studentRating; // Example: 76.3,
     private Integer studentCourse; // Example: 2,
-    private String faculty; // Example: "Факультет інформатики"
+    private String studentTrim; // Example: 2,
+//    private String faculty; // Example: "Факультет інформатики"
 }

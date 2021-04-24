@@ -3,6 +3,7 @@ package com.project.database.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -15,7 +16,6 @@ import java.util.Date;
 public class VidomistEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vidomist_no")
     private Integer vidomistNo;
 
@@ -36,7 +36,7 @@ public class VidomistEntity {
     private String controlType;
 
     @Column(name = "exam_date")
-    private Date examDate;
+    private LocalDate examDate;
 
     @ManyToOne
     @JoinColumn(name = "group_code")

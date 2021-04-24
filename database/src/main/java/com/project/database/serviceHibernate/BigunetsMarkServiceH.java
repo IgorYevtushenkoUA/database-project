@@ -13,7 +13,13 @@ public class BigunetsMarkServiceH {
     private final BigunetsMarkRepository bigunetsMarkRepository;
 
     public void insertBigunetsMark(BigunetsMarkEntity bigunetsMark) {
-        bigunetsMarkRepository.save(bigunetsMark);
+        if (bigunetsMarkRepository.findByBigunetsMarkIdBigunetsNoAndBigunetsMarkIdStudentCodeAndBigunetsMarkIdVidomistNoAndBigunetsMarkIdTutorNo(
+                bigunetsMark.getBigunetsMarkId().getBigunetsNo(),
+                bigunetsMark.getBigunetsMarkId().getStudentCode(),
+                bigunetsMark.getBigunetsMarkId().getVidomistNo(),
+                bigunetsMark.getBigunetsMarkId().getTutorNo()) == null) {
+            bigunetsMarkRepository.save(bigunetsMark);
+        }
     }
 
     public void updateMark(BigunetsMarkEntity bigunetsMark) {

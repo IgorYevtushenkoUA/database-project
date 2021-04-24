@@ -4,3 +4,4 @@ insert into subject(subject_no,subject_name, edu_level, faculty) values (12,'tes
 insert into subject(subject_no,subject_name, edu_level, faculty) values (13,'test4', 'test4', 'test4');
 insert into subject(subject_no,subject_name, edu_level, faculty) values (14,'test5', 'test5', 'test5');
 insert into subject(subject_no,subject_name, edu_level, faculty) values (15,'test6', 'test6', 'test6');
+

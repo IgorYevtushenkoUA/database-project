@@ -1,16 +1,23 @@
 package com.project.database.serviceHibernate;
 
 import com.project.database.entities.GroupEntity;
+import com.project.database.entities.SubjectEntity;
+import com.project.database.entities.TutorEntity;
 import com.project.database.repository.GroupRepository;
+import com.project.database.repository.SubjectRepository;
+import com.project.database.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -19,6 +26,10 @@ public class GroupServiceH {
 
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private TutorRepository tutorRepository;
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     /**
      * @return [GroupEntity(groupCode = 1, groupName = Група1, eduYear = 2020 - 2021, trim = 2, course = 3, subject = SubjectEntity ( subjectNo = 1, subjectName = БД, eduLevel = бакалавр, faculty = ФІ)),...]
@@ -48,6 +59,10 @@ public class GroupServiceH {
         return groupRepository.findAllByEduYear(pageable);
     }
 
+    public List<String> findAllYears() {
+        return groupRepository.findAllYears();
+    }
+
     /**
      * @return [2020-2021, 2021-2022]
      */
@@ -56,13 +71,48 @@ public class GroupServiceH {
     }
 
     // insert
-    public void insertGroup(GroupEntity group) {
-        groupRepository.save(group);
+    public void insertGroup(GroupEntity group, SubjectEntity subject) {
+        // тут треба перевірити за назвагрупи+назвапредмету+навчальний рік+семестр+курс
+        if (findGroupByNameYearTrimCourseSubject(group, subject) == null) {
+            groupRepository.save(group);
+        }
     }
 
     // delete
     public void deleteGroupById(int groupCode) {
         groupRepository.deleteByGroupCode(groupCode);
     }
+
+    public GroupEntity findGroupByNameYearTrimCourseSubject(GroupEntity group, SubjectEntity subject) {
+        return groupRepository.findGroupByNameYearTrimCourseSubject(
+                group.getGroupName(), group.getEduYear(), group.getTrim(), group.getCourse(), subject.getSubjectName());
+    }
+
+    public List<GroupEntity> findAllBySubjectName(String subjectName) {
+        return groupRepository.findAllBySubjectName(subjectName);
+    }
+
+    public List<String> findAllGroupsByTeacherPIBAndSubjectName(String tutor, String subjet) {
+        List<Integer> listTutor = getTutorList(tutor);
+        List<String> listSubject = getSubjectList(subjet);
+        return groupRepository.findAllGroupsByTeacherPIBAndSubjectName(listTutor, listSubject);
+    }
+
+
+    private List<Integer> getTutorList(String tutorName) {
+        return tutorName == null
+                ? tutorRepository.findAll()
+                .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList())
+                : tutorRepository.findAllTutorsByFullName(tutorName);
+    }
+
+    private List<String> getSubjectList(String subjectName) {
+        return subjectName == null
+                ? subjectRepository.findAll()
+                .stream().map(SubjectEntity::getSubjectName).distinct().collect(Collectors.toList())
+                : subjectRepository.findDistinctBySubjectNameIn(Collections.singletonList(subjectName))
+                .stream().map(SubjectEntity::getSubjectName).distinct().collect(Collectors.toList());
+    }
+
 
 }

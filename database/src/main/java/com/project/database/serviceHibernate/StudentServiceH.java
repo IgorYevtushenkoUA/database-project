@@ -1,5 +1,7 @@
 package com.project.database.serviceHibernate;
 
+import com.project.database.dto.student.StudentShortInfo;
+import com.project.database.dto.subject.StudentSubjectShortInfo;
 import com.project.database.entities.GroupEntity;
 import com.project.database.entities.StudentEntity;
 import com.project.database.entities.SubjectEntity;
@@ -9,14 +11,12 @@ import com.project.database.repository.StudentRepository;
 import com.project.database.repository.SubjectRepository;
 import com.project.database.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +30,7 @@ public class StudentServiceH {
     private final GroupRepository groupRepository;
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
+
 
     /**
      * Знайти студента за Айді
@@ -70,8 +71,9 @@ public class StudentServiceH {
      * @return [[Кучерявий, Вадим, Юрійович], [Рибак, Володимир, Ярославович]]
      */
     public List<List<String>> findAllStudentNames(String name) {
-        return studentRepository.findAllStudentNames('%' + name + '%');
+        return studentRepository.findAllStudentNames('%' + name.toLowerCase() + '%');
     }
+
 
     /**
      * Знайти всі трими
@@ -83,41 +85,53 @@ public class StudentServiceH {
         return studentRepository.findTrims(str);
     }
 
+
     /**
      * Знайти Середню оцінку (РЕЙТИНГ) студентів за певний проміжок часу
      * МЕТОД ДЛЯ РЕЙТИНГУ (коли є хоча б 1 параметр)
      *
-     * @param semestr
-     * @param course
      * @param eduYear
+     * @param semester
+     * @param course
      * @param sortBy
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findStudentsWithRating(
-            String eduYear, String subjectName, Integer tutorNo, String groupName, Integer semestr, Integer course,
+    public Page<StudentShortInfo> findStudentsWithRating(
+            String eduYear, String subjectName, String tutorName, String groupName, Integer semester, Integer course,
             String sortBy, boolean sortDesc, int page, int numberPerPage
     ) {
-
-        List<String> eduYearList = getEduYearsList(eduYear);
-        List<String> subjectList = getSubjectList(subjectName);
-        List<Integer> tutorList = getTutorList(tutorNo);
-        List<String> groupList = getGroupList(groupName);
-        List<String> semesterList = getSemestrList(semestr, semestrParser(course, semestr));
-        List<Integer> courseList = getCourseList(course);
         Sort sort = setSort(sortBy, sortDesc);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
+        Page<Object[]> pageList;
 
-        return studentRepository.findStudentsWithRating(
-                eduYearList, subjectList, tutorList, groupList, semesterList, courseList, pageable);
+        if (eduYear != null || subjectName != null || tutorName != null || groupName != null ||
+                semester != null || course != null) {
+
+            List<String> eduYearList = getEduYearsList(eduYear);
+            List<String> subjectList = getSubjectList(subjectName);
+            List<Integer> tutorList = getTutorList(tutorName);
+            List<String> groupList = getGroupList(groupName);
+            List<String> semesterList = getSemestrList(semester, semestrParser(course, semester));
+            List<Integer> courseList = getCourseList(course);
+
+            pageList = studentRepository.findStudentsWithRating(
+                    eduYearList, subjectList, tutorList, groupList, semesterList, courseList, pageable);
+        } else {
+            pageList = studentRepository.findStudentsWithRatingDefault(pageable);
+        }
+        return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 
-    public Page<List<Object>> findStudentsWithRatingDefault(
+
+    public Page<StudentShortInfo> findStudentsWithRatingDefault(
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         Sort sort = setSort(sortBy, sortDesc);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
-        return studentRepository.findStudentsWithRatingDefault(pageable);
+        Page<Object[]> pageList = studentRepository.findStudentsWithRatingDefault(pageable);
+        return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
+
 
     /**
      * Знайти середню оцінку(РЕЙТИНГ) студента
@@ -131,7 +145,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAverageStudentMarksTrimCourse(
+    public Page<Object[]> findAverageStudentMarksTrimCourse(
             Integer studentCode, Integer semestr, Integer course, String eduYear,
             String sortBy, boolean sortDesc, int page, int numberPerPage
     ) {
@@ -142,6 +156,7 @@ public class StudentServiceH {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
         return studentRepository.findAverageStudentMarksTrimCourse(studentCode, semesters, courses, eduYears, pageable);
     }
+
 
     /**
      * todo (тут проблеми із сортуванням, із Pageable мають вирішитися)
@@ -157,7 +172,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<Object>> findDebtorsRatingDefault(
+    public Page<StudentShortInfo> findDebtorsRatingDefault(
             String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
             String sortBy, boolean sortDesc, int page, int numberPerPage
     ) {
@@ -171,13 +186,40 @@ public class StudentServiceH {
         Sort sort = setSort(sortBy, sortDesc);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
 
-        return studentRepository.findDebtorsRatingDefault(
+        Page<Object[]> pageList = studentRepository.findDebtorsRatingDefault(
                 eduYearList, subjectList, tutorList, groupList, trimList, courseList, pageable);
+        return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 
-    public List<List<String>> findStudentMarks(Integer studentCode, Integer course, String trim) {
-        return studentRepository.findStudentMarks(studentCode, course, trim);
+
+    public Page<StudentSubjectShortInfo> findStudentMarks(Integer studentCode, Integer course, String trim, int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        Page<Object[]> pageList = studentRepository.findStudentMarks(studentCode, course, trim, pageable);
+        return buildStudentSubjectShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
+
+
+    private Page<StudentSubjectShortInfo> buildStudentSubjectShortInfo(Page<Object[]> subjectP, Pageable pageable, int total) {
+        List<StudentSubjectShortInfo> studentSubjectShortInfos = new ArrayList<>();
+        List<Object[]> list = subjectP.getContent();
+        for (int i = 0; i < subjectP.getNumberOfElements(); i++) {
+            StudentSubjectShortInfo sssi = new StudentSubjectShortInfo();
+            Object[] obj = list.get(i);
+            int index = 0;
+            sssi.setSubjectID((Integer) obj[index++]);
+            sssi.setSubjectName((String) obj[index++]);
+            sssi.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
+            sssi.setGroup((String) obj[index++]);
+            sssi.setControlType((String) obj[index++]);
+            sssi.setExamDate((LocalDate) obj[index++]);
+            sssi.setGrade((Integer) obj[index++]);
+            sssi.setStudentCode((Integer) obj[index++]);
+
+            studentSubjectShortInfos.add(sssi);
+        }
+        return new PageImpl<>(studentSubjectShortInfos, pageable, total);
+    }
+
 
     /**
      * Знайти всіх боржників
@@ -191,7 +233,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllWhoHasRetakeSubjectTrimEduYear(
+    public Page<Object[]> findAllWhoHasRetakeSubjectTrimEduYear(
             String subjectName, Integer semestr, Integer course, String eduYear,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
 
@@ -204,6 +246,7 @@ public class StudentServiceH {
         return studentRepository.findAllWhoHasRetakeSubjectTrimEduYear(subjects, semesters, courses, eduYears, pageable);
     }
 
+
     /**
      * Знайти ВСІ борги для певного студента
      *
@@ -214,7 +257,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllRetakenSubjectForStudentTrimEduYear(
+    public Page<Object[]> findAllRetakenSubjectForStudentTrimEduYear(
             Integer studentCode, Integer trim, String eduYear,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
 
@@ -230,6 +273,7 @@ public class StudentServiceH {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, setSort(sortBy, sortDesc));
         return studentRepository.findAll(pageable);
     }
+
 
     /**
      * Знайти всіх студентів за (прізвище, ім'я, по-батькові)
@@ -247,6 +291,7 @@ public class StudentServiceH {
                 surname, name, patronymic, pageable);
     }
 
+
     /**
      * Знайти середню оцінку(РЕЙТИНГ) студента за певний період
      *
@@ -255,12 +300,13 @@ public class StudentServiceH {
      * @param trim
      * @return
      */
-    public double findStudentAverageMarksForCourseTrim(Integer studentCode, Integer course, Integer trim) {
+    public Double findStudentAverageMarksForCourseTrim(Integer studentCode, Integer course, Integer trim) {
 
         List<Integer> courseList = getCourseList(course);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
         return studentRepository.findStudentAverageMarksForCourseTrim(studentCode, courseList, trimList);
     }
+
 
     /**
      * найти всі ПРЕДМЕТ-ОЦІНКА студента за певний курс та триместр
@@ -272,7 +318,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllStudentMarks(
+    public Page<Object[]> findAllStudentMarks(
             Integer studentCode, Integer course, Integer trim,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         List<Integer> courseList = getCourseList(course);
@@ -283,9 +329,11 @@ public class StudentServiceH {
         return studentRepository.findAllStudentMarks(studentCode, courseList, trimList, pageable);
     }
 
+
     public void deleteByStudentCode(int studentCode) {
         studentRepository.deleteByStudentCode(studentCode);
     }
+
 
     /**
      * Знайти всіх СТУДЕНТІВ, за певний курс, групу, викладача, тощо
@@ -300,7 +348,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllStudentByYearSubjectGroupTeacherTrimCourse(
+    public Page<Object[]> findAllStudentByYearSubjectGroupTeacherTrimCourse(
             String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         List<String> eduYearList = getEduYearsList(eduYear);
@@ -316,8 +364,9 @@ public class StudentServiceH {
                 eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, pageable);
     }
 
-    public Page<List<String>> findAllStudents(
-            String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
+
+    public Page<Object[]> findAllStudents(
+            String eduYear, String subjectName, String groupName, Integer tutorNo, Integer trim, Integer course,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         List<String> eduYearList = getEduYearsList(eduYear);
         List<String> groupList = getGroupList(groupName);
@@ -332,6 +381,7 @@ public class StudentServiceH {
                 eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, pageable);
     }
 
+
     /**
      * Знайти всіх боржників todo (add rating)
      *
@@ -345,7 +395,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<List<String>> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
+    public Page<Object[]> findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
             String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
         List<String> eduYearList = getEduYearsList(eduYear);
@@ -360,6 +410,7 @@ public class StudentServiceH {
                 eduYearList, groupList, trimList, courseList, subjectNameList, tutorList, pageable);
     }
 
+
     /**
      * Знайти максимальний курс для студента
      *
@@ -369,6 +420,7 @@ public class StudentServiceH {
     public Integer findMaxStudentCourse(Integer studentCode) {
         return studentRepository.findMaxStudentCourse(studentCode).stream().findFirst().orElse(null);
     }
+
 
     /**
      * Знайти максимальний триместр для студента
@@ -391,6 +443,7 @@ public class StudentServiceH {
             studentRepository.save(student);
     }
 
+
     /**
      * delete by id
      *
@@ -400,6 +453,7 @@ public class StudentServiceH {
         studentRepository.deleteById(studentCode);
     }
 
+
     private List<String> getSubjectList(String subjectName) {
         return subjectName == null
                 ? subjectRepository.findAll()
@@ -407,6 +461,7 @@ public class StudentServiceH {
                 : subjectRepository.findDistinctBySubjectNameIn(Collections.singletonList(subjectName))
                 .stream().map(SubjectEntity::getSubjectName).distinct().collect(Collectors.toList());
     }
+
 
     private List<String> getSemestrList(Integer semestr, List<String> semestrList) {
         return semestr == null
@@ -416,6 +471,7 @@ public class StudentServiceH {
                 .stream().map(GroupEntity::getTrim).distinct().collect(Collectors.toList());
 
     }
+
 
     private List<Integer> getCourseList(Integer course) {
         return course == null
@@ -427,6 +483,7 @@ public class StudentServiceH {
 
     }
 
+
     private List<String> getEduYearsList(String eduYear) {
         return eduYear == null
                 ? groupRepository.findAll()
@@ -434,6 +491,7 @@ public class StudentServiceH {
                 : groupRepository.findDistinctAllByEduYearIn(Collections.singletonList(eduYear))
                 .stream().map(GroupEntity::getEduYear).distinct().collect(Collectors.toList());
     }
+
 
     private List<String> getGroupList(String groupName) {
         return groupName == null
@@ -443,6 +501,7 @@ public class StudentServiceH {
                 .stream().map(GroupEntity::getGroupName).distinct().collect(Collectors.toList());
     }
 
+
     private List<Integer> getTutorList(Integer tutorNo) {
         return tutorNo == null
                 ? tutorRepository.findAll()
@@ -450,6 +509,15 @@ public class StudentServiceH {
                 : tutorRepository.findDistinctByTutorNoIn(Collections.singletonList(tutorNo))
                 .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList());
     }
+
+
+    private List<Integer> getTutorList(String tutorName) {
+        return tutorName == null
+                ? tutorRepository.findAll()
+                .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList())
+                : tutorRepository.findAllTutorsByFullName(tutorName);
+    }
+
 
     private List<String> semestrParser(Integer course, Integer semestr) {
         if (course != null) {
@@ -475,12 +543,14 @@ public class StudentServiceH {
         }
     }
 
+
     private Sort setSort(String sortBy, boolean sortDesc) {
         sortBy = setSortBy(sortBy);
         return sortDesc
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
     }
+
 
     private String setSortBy(String sortBy) {
 
@@ -494,6 +564,27 @@ public class StudentServiceH {
             default:
                 return "studentSurname";
         }
+    }
+
+
+    private Page<StudentShortInfo> buildStudentShortInfo(Page<Object[]> studentsP, Pageable pageable, int total) {
+        List<StudentShortInfo> students = new ArrayList<>();
+        List<Object[]> list = studentsP.getContent();
+        for (int i = 0; i < studentsP.getNumberOfElements(); i++) {
+            StudentShortInfo studentInfo = new StudentShortInfo();
+            Object[] obj = list.get(i);
+            int index = 0;
+            studentInfo.setStudentId((Integer) obj[index++]);
+            studentInfo.setStudentSurname((String) obj[index++]);
+            studentInfo.setStudentName((String) obj[index++]);
+            studentInfo.setStudentPatronymic((String) obj[index++]);
+            studentInfo.setStudentRecordBook((String) obj[index++]);
+            studentInfo.setStudentRating(100.0);
+            studentInfo.setStudentCourse((Integer) obj[index++]);
+            studentInfo.setStudentTrim((String) obj[index++]);
+            students.add(studentInfo);
+        }
+        return new PageImpl<>(students, pageable, total);
     }
 
 }

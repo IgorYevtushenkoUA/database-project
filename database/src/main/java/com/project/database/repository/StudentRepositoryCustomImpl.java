@@ -1,22 +1,12 @@
 package com.project.database.repository;
 
 import com.project.database.entities.GroupEntity;
-import com.project.database.entities.StudentEntity;
-import com.project.database.entities.SubjectEntity;
-import com.project.database.entities.VidomistMarkEntity;
-import com.project.database.entities_.GroupEntity_;
-import com.project.database.entities_.StudentEntity_;
-import com.project.database.entities_.SubjectEntity_;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import javax.persistence.metamodel.StaticMetamodel;
 import java.util.List;
 
 @RequiredArgsConstructor

@@ -13,7 +13,7 @@
 |Коли немає параметрів
 |    * findDebtorsRatingDefault
 |Коли хоча б 1 параметр
-|    * findDebtorsRatingDefault
+|    * findDebtorsRating
 |
 |
 |---------------------------------------------------------------------------------
