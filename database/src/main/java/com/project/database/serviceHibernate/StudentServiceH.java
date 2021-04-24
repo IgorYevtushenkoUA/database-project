@@ -71,7 +71,7 @@ public class StudentServiceH {
      * @return [[Кучерявий, Вадим, Юрійович], [Рибак, Володимир, Ярославович]]
      */
     public List<List<String>> findAllStudentNames(String name) {
-        return studentRepository.findAllStudentNames('%' + name + '%');
+        return studentRepository.findAllStudentNames('%' + name.toLowerCase() + '%');
     }
 
 
@@ -579,7 +579,7 @@ public class StudentServiceH {
             studentInfo.setStudentName((String) obj[index++]);
             studentInfo.setStudentPatronymic((String) obj[index++]);
             studentInfo.setStudentRecordBook((String) obj[index++]);
-            studentInfo.setStudentRating((Double) obj[index++]);
+            studentInfo.setStudentRating(100.0);
             studentInfo.setStudentCourse((Integer) obj[index++]);
             studentInfo.setStudentTrim((String) obj[index++]);
             students.add(studentInfo);

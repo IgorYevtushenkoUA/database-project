@@ -48,7 +48,7 @@ public class SubjectServiceH {
      * @return [Веб-програмування, Логічне програмування, Моделювання інформаційних процесів]
      */
     public List<String> findAllSubjectNames(String name) {
-        return subjectRepository.findAllSubjectNames("%" + name + "%");
+        return subjectRepository.findAllSubjectNames("%" + name.toLowerCase() + "%");
     }
 
     // insert

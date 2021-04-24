@@ -18,7 +18,7 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, Integer>
     @Query("select s.subjectName from SubjectEntity s order by s.subjectName")
     List<String> findAllSubjectNames();
 
-    @Query("select s.subjectName from SubjectEntity s where s.subjectName like:name order by s.subjectName")
+    @Query("select s.subjectName from SubjectEntity s where lower(s.subjectName) like:name order by s.subjectName")
     List<String> findAllSubjectNames(@Param("name") String name);
 
     List<SubjectEntity> findDistinctBySubjectNameIn(@Param("subjectName") List<String> subjectName);

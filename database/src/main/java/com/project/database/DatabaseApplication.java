@@ -2,6 +2,8 @@ package com.project.database;
 
 
 import com.project.database.serviceHibernate.BigunetsServiceH;
+import com.project.database.serviceHibernate.StudentServiceH;
+import com.project.database.serviceHibernate.SubjectServiceH;
 import com.project.database.serviceHibernate.VidomistServiceH;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,11 +25,18 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        VidomistServiceH vidomistServiceH = applicationContext.getBean(VidomistServiceH.class);
-        System.out.println(vidomistServiceH.findAllStatements(null, null, null, "", true, 1, 20)
-                .getContent());
-
-
+        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
+        System.out.println(studentServiceH.findStudentsWithRating(
+                null,
+                "Веб-програмування",
+                null,
+                null,
+                null,
+                null,
+                "",
+                true,
+                1,
+                20));
 
     }
 }
