@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +38,7 @@ public class BigunetsServiceH {
     private final GroupRepository groupRepository;
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
+
 
     public Page<BigunetsShortInfo> findAllBiguntsy(String tutorName, String subjectName, String groupName, int page, int numberPerPage) {
         List<String> subjectList = getSubjectList(subjectName);

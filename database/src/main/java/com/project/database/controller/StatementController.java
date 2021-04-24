@@ -36,9 +36,8 @@ public class StatementController {
     ) {
         return vidomistServiceH.findAllStatements(
                 subjectName, tutorName, groupName,
-                 null, false,
+                null, false,
                 page, numberPerPage);
-//        return null;
     }
 
 
@@ -67,6 +66,7 @@ public class StatementController {
         return ResponseEntity.ok(statementReport);
     }
 
+
     @PostMapping("/statement/save")
     public ResponseEntity<Integer> saveStatement(
             @RequestBody StatementReport statementReport
@@ -81,8 +81,5 @@ public class StatementController {
         }
         return ResponseEntity.ok(statementId);
     }
-
-//    @GetMapping("statement/{statementNo}/students")
-//    public ResponseEntity<>
 
 }
