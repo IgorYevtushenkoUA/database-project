@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ public class StatementParser {
 //        System.out.println((Paths.get("pdf").toAbsolutePath()));
 //
 //        StatementReport statementReport =
-//                parser.getStatementsReportByRoot(Paths.get("src/main/resources/pdfs/Bigunets.pdf"));
+//                parser.getStatementsReportByRoot(Paths.get("C:\\MohylaHomework\\database-projectNEW\\database\\src\\main\\resources\\pdfs\\Bakalavr_Zalik.pdf"));
 //        System.out.println(statementReport);
     }
 
@@ -215,7 +216,7 @@ public class StatementParser {
         StatementValidator statementValidator = new StatementValidator();
         StatementErrors statementErrors = StatementErrors
                 .builder()
-                .footerErrors(statementValidator.getFooterErrors(statementFooter))
+                .footerErrors(statementValidator.getFooterErrors(statementFooter, students))
                 .headerErrors(statementValidator.getHeaderErrors(statementHeader))
                 .studentErrorsMap(statementValidator.getStudentErrors(students))
                 .build();
