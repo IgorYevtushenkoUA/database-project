@@ -2,7 +2,7 @@ package com.project.database.dao.impl;
 
 import com.project.database.dao.connector.Connector;
 import com.project.database.dao.inter.UserDAO;
-import com.project.database.entity.UserEntity;
+import com.project.database.entities.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -1,18 +1,20 @@
-package com.project.database.entity;
+package com.project.database.entities;
 
-import lombok.*;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Entity
+@Table(name = "user_entity")
 public class UserEntity implements UserDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "user_id")
     private Long id;
     private String username;
     private String password;
@@ -22,7 +24,6 @@ public class UserEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton((GrantedAuthority) () -> role);
     }
-
 
     @Override
     public boolean isAccountNonExpired() {

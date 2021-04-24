@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "bigunets")
@@ -29,7 +28,7 @@ public class BigunetsEntity {
     @Column(name = "postp_reason")
     private String postpReason;
 
-    @Column(name = "control_type")
+    @Column(name = "control_type", columnDefinition = "CHAR(10)")
     private String controlType;
 
     @ManyToOne
