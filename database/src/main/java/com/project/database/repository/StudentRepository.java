@@ -21,16 +21,17 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     @Query("select s.studentSurname, s.studentName, s.studentPatronymic from StudentEntity s where lower(s.studentSurname) like:name or s.studentName like:name or s.studentPatronymic like:name")
     List<List<String>> findAllStudentNames(@Param("name") String name);
 
-    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, gr.course as course, gr.trim  " +
+    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, (sum(sub.credits * vm.completeMark) / sum(sub.credits)) as rating,gr.course as course, gr.trim  " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
             "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
             "inner join SubjectEntity sub on sub.subjectNo=gr.subject.subjectNo " +
-            "where lower(concat(s.studentSurname,' ', s.studentName, ' ', s.studentPatronymic)) like :pib ")
+            "where lower(concat(s.studentSurname,' ', s.studentName, ' ', s.studentPatronymic)) like :pib " +
+            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, gr.course, gr.trim ")
     Page<Object[]> findAllStudentsByPIB(@Param("pib") String pib, Pageable pageable);
 
-    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, gr.course as course, gr.trim  " +
+    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, (sum(sub.credits * vm.completeMark) / sum(sub.credits)) as rating, gr.course as course, gr.trim  " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
@@ -59,23 +60,18 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             Pageable pageable
     );
 
-    @Query(value = "select s.student_code , s.student_surname as studentSurname,s.student_name, s.student_patronymic, s.student_record_book, gr.course as course, gr.trim " +
-            "from \"group\" gr " +
-            "inner join vidomist v on gr.group_code = v.group_code " +
-            "inner join vidomist_mark vm on v.vidomist_no = vm.vidomist_no " +
-            "inner join student s on s.student_code = vm.student_code " +
-            "where exists( " +
-            "select s0.student_code, s0.student_surname, gr0.edu_year, gr0.course, gr0.trim " +
-            "from \"group\" gr0 " +
-            "inner join vidomist v0 on gr0.group_code = v0.group_code " +
-            "inner join vidomist_mark vm0 on v0.vidomist_no = vm0.vidomist_no " +
-            "inner join student s0 on s0.student_code = vm0.student_code " +
-            "where s.student_code = s0.student_code " +
-            "group by s0.student_code, s0.student_surname, gr0.edu_year, gr0.course, gr0.trim " +
-            "having gr.course = max(gr0.course) " +
-            "and gr.trim = max(gr0.trim) " +
-            ") " +
-            "group by s.student_code, s.student_surname,s.student_name, s.student_patronymic, s.student_record_book,  gr.course, gr.trim ", nativeQuery = true)
+    @Query(value = "select s.student_code,\n" +
+            "       s.student_surname                                      as studentSurname,\n" +
+            "       s.student_name,\n" +
+            "       s.student_patronymic,\n" +
+            "       s.student_record_book,\n" +
+            "       (sum(sub.credits * vm.complete_mark) / sum(sub.credits)) as rating \n" +
+            "from \"group\" gr\n" +
+            "         inner join vidomist v on gr.group_code = v.group_code\n" +
+            "         inner join vidomist_mark vm on v.vidomist_no = vm.vidomist_no\n" +
+            "         inner join student s on s.student_code = vm.student_code\n" +
+            "         inner join subject sub on gr.subject_no = sub.subject_no\n" +
+            "group by s.student_code, s.student_surname, s.student_name, s.student_patronymic, s.student_record_book ", nativeQuery = true)
     Page<Object[]> findStudentsWithRatingDefault(Pageable pageable);
 
     @Query("select s.studentCode, s.studentRecordBook, s.studentSurname, s.studentName, s.studentPatronymic, gr.course as course, avg(vm.completeMark) as completeMark " +
@@ -98,12 +94,13 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             Pageable pageable
     );
 
-    @Query(value = "select s.student_code, s.student_surname, s.student_name, s.student_patronymic, s.student_record_book, gr.course as course, gr.trim " +
+    @Query(value = "select s.student_code, s.student_surname, s.student_name, s.student_patronymic, s.student_record_book, (sum(sub.credits * vm.complete_mark) / sum(sub.credits)) as rating, gr.course as course, gr.trim " +
             "from \"group\" gr " +
             "inner join vidomist v on gr.group_code = v.group_code " +
             "inner join vidomist_mark vm on v.vidomist_no = vm.vidomist_no " +
             "inner join student s on s.student_code = vm.student_code " +
             "inner join bigunets_mark bme on bme.student_code=s.student_code " +
+            "inner join subject sub on gr.subject_no = sub.subject_no " +
             "where exists ( " +
             "   select vm " +
             "   from vidomist_mark vm " +
@@ -255,7 +252,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     Double findStudentAverageMarksForCourseTrim(@Param("studentCode") Integer studentCode);
 
     // here todo
-    @Query("select sub.subjectNo, sub.subjectName, t.tutorSurname, t.tutorName, t.tutorPatronymic,gr.groupName, v.controlType, v.examDate, s.studentCode, vm.completeMark " +
+    @Query("select sub.subjectNo, sub.subjectName, t.tutorSurname, t.tutorName, t.tutorPatronymic, gr.groupName, v.controlType, v.examDate, s.studentCode, vm.completeMark " +
             "from StudentEntity s " +
             "inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on vm.vidomistMarkId.studentCode=v.vidomistNo " +

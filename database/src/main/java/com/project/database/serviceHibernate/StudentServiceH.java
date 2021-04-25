@@ -590,10 +590,14 @@ public class StudentServiceH {
             studentInfo.setStudentName((String) obj[index++]);
             studentInfo.setStudentPatronymic((String) obj[index++]);
             studentInfo.setStudentRecordBook((String) obj[index++]);
-            studentInfo.setStudentRating(100.0);
-//            index++;
-            studentInfo.setStudentCourse((Integer) obj[index++]);
-            studentInfo.setStudentTrim((String) obj[index++]);
+            studentInfo.setStudentRating((Double) obj[index++]);
+            if (obj.length == index) {
+                studentInfo.setStudentCourse(null);
+                studentInfo.setStudentTrim(null);
+            } else {
+                studentInfo.setStudentCourse((Integer) obj[index++]);
+                studentInfo.setStudentTrim((String) obj[index++]);
+            }
             students.add(studentInfo);
         }
         return new PageImpl<>(students, pageable, total);

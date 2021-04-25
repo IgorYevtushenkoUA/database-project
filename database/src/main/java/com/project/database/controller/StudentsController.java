@@ -22,7 +22,7 @@ public class StudentsController {
 
     @GetMapping("/students")
     public Page<StudentShortInfo> getAllStudents(
-            @RequestParam(name = "year", defaultValue = "2020-2021") String year,
+            @RequestParam(name = "year", required = false) String year,
             @RequestParam(name = "subject", required = false) String subject,
             @RequestParam(name = "tutor", required = false) String tutor,
             @RequestParam(name = "group", required = false) String group,

@@ -23,14 +23,11 @@ public class DatabaseApplication {
     private static void test(ApplicationContext applicationContext) {
 
         StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-        System.out.println(studentServiceH.findAllStudentMarks(
-                1,
-                3,
-                1,
-                "",
-                true,
-                1,
-                20).getContent());
+//        System.out.println(studentServiceH.findStudentsWithRatingDefault(
+//                "",
+//                true,
+//                1,
+//                20).getContent());
 
 
     }
