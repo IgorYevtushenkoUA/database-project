@@ -1,7 +1,7 @@
 package com.project.database.controller;
 
 import com.project.database.dto.student.StudentShortInfo;
-import com.project.database.entity.Student;
+import com.project.database.entities.Student;
 import com.project.database.serviceHibernate.StudentServiceH;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

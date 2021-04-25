@@ -1,4 +1,4 @@
-package com.project.database.entity;
+package com.project.database.entities;
 
 import lombok.*;
 

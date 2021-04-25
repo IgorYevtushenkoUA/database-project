@@ -15,7 +15,6 @@ import java.time.LocalDate;
 public class BigunetsEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bigunets_no")
     private Integer bigunetsNo;
 
