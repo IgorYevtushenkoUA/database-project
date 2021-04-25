@@ -99,9 +99,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "       s.student_name,\n" +
             "       s.student_patronymic,\n" +
             "       s.student_record_book,\n" +
-            "       (sum(sub.credits * vm.complete_mark) / sum(sub.credits)) as rating,\n" +
-            "       gr.course                                                as course,\n" +
-            "       gr.trim\n" +
+            "       (sum(sub.credits * vm.complete_mark) / sum(sub.credits)) as rating\n"+
             "from \"group\" gr\n" +
             "         inner join vidomist v on gr.group_code = v.group_code\n" +
             "         inner join vidomist_mark vm on v.vidomist_no = vm.vidomist_no\n" +
@@ -133,7 +131,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "                    and v1.tutor_no in (:tutorNo)\n" +
             "              )\n" +
             "          )\n" +
-            "group by s.student_code, s.student_surname, s.student_name, s.student_patronymic, s.student_record_book, gr.course, gr.trim"
+            "group by s.student_code, s.student_surname, s.student_name, s.student_patronymic, s.student_record_book "
             , nativeQuery = true)
     Page<Object[]> findDebtorsRatingDefault(
             @Param("eduYear") List<String> eduYear,
