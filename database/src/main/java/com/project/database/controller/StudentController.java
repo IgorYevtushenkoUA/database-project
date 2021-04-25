@@ -2,6 +2,7 @@ package com.project.database.controller;
 
 import com.project.database.dto.bigunets.shortInfo.BigunetsShortInfo;
 import com.project.database.dto.statement.shortInfo.StatementShortInfo;
+import com.project.database.dto.student.StudentShortInfo;
 import com.project.database.dto.subject.StudentSubjectShortInfo;
 import com.project.database.entities.StudentEntity;
 import com.project.database.serviceHibernate.BigunetsServiceH;
@@ -10,6 +11,8 @@ import com.project.database.serviceHibernate.VidomistServiceH;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/")
@@ -20,6 +23,14 @@ public class StudentController {
     private final VidomistServiceH statementService;
     private final BigunetsServiceH bigunetsService;
 
+
+    @GetMapping("/student")
+    public Page<StudentShortInfo> getStudentsByPIB(
+            @RequestParam(name = "pib", required = false) String pib,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage) {
+        return studentService.findAllStudentsByPIB(pib, page, numberPerPage);
+    }
 
     @GetMapping("/student/{studentId}")
     public StudentEntity getStudentInfo(@PathVariable(name = "studentId") Integer studentId) {
