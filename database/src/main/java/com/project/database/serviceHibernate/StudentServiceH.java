@@ -173,13 +173,13 @@ public class StudentServiceH {
      * @param trim
      * @param course
      * @param subjectName
-     * @param tutorNo
+     * @param tutorName
      * @param sortBy
      * @param sortDesc
      * @return
      */
     public Page<StudentShortInfo> findDebtorsRatingDefault(
-            String eduYear, String groupName, Integer trim, Integer course, String subjectName, Integer tutorNo,
+            String eduYear, String groupName, Integer trim, Integer course, String subjectName, String tutorName,
             String sortBy, boolean sortDesc, int page, int numberPerPage
     ) {
 
@@ -188,7 +188,7 @@ public class StudentServiceH {
         List<Integer> courseList = getCourseList(course);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
         List<String> subjectList = getSubjectList(subjectName);
-        List<Integer> tutorList = getTutorList(tutorNo);
+        List<Integer> tutorList = getTutorList(tutorName);
         Sort sort = setSort(sortBy, sortDesc);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
 
