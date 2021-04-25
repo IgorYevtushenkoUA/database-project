@@ -22,16 +22,8 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-        System.out.println(studentServiceH.findDebtorsRatingDefault(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                "", true,
-                1, 20).getContent());
+        BigunetsServiceH bigunetsServiceH = applicationContext.getBean(BigunetsServiceH.class);
+        System.out.println(bigunetsServiceH.findBigunetsById(1));
 
     }
 }

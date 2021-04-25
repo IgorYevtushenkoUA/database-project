@@ -572,6 +572,8 @@ public class StudentServiceH {
                 return "completeMark";
             case "course":
                 return "course";
+            case "rating" :
+                return "rating";
             default:
                 return "studentSurname";
         }

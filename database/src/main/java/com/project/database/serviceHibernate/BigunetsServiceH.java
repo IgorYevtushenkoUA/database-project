@@ -1,6 +1,9 @@
 package com.project.database.serviceHibernate;
 
 import com.project.database.dto.bigunets.BigunetsReport;
+import com.project.database.dto.bigunets.info.BigunetsHeader;
+import com.project.database.dto.bigunets.info.BigunetsInfo;
+import com.project.database.dto.bigunets.info.BigunetsStudent;
 import com.project.database.dto.bigunets.shortInfo.BigunetsShortInfo;
 import com.project.database.entities.BigunetsEntity;
 import com.project.database.entities.GroupEntity;
@@ -39,18 +42,55 @@ public class BigunetsServiceH {
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
 
-    public BigunetsShortInfo findBigunetsById(Integer id){
+    public BigunetsInfo findBigunetsById(Integer id) {
         Pageable pageable = PageRequest.of(0, 1);
-        BigunetsShortInfo bsi = new BigunetsShortInfo();
         List<Object[]> list = bigunetsRepository.findBigunetsById(id, pageable).getContent();
-        bsi.setStatementNo((Integer) list.get(0)[0]);
-        bsi.setTutorFullName((String) list.get(0)[1]);
-        bsi.setSubjectName((String) list.get(0)[2]);
-        bsi.setControlType((String) list.get(0)[3]);
-        bsi.setPostponeReason((String) list.get(0)[4]);
-        bsi.setExamDate((LocalDate) list.get(0)[5]);
-        bsi.setValidUntil((LocalDate) list.get(0)[6]);
-        return bsi;
+        int index = 0;
+        BigunetsInfo bigunetsInfo = new BigunetsInfo();
+
+        BigunetsHeader bigunetsHeader = new BigunetsHeader();
+        bigunetsHeader.setBigunNo((Integer) list.get(0)[index++]);
+        bigunetsHeader.setEduLevel((String) list.get(0)[index++]);
+        bigunetsHeader.setFaculty((String) list.get(0)[index++]);
+        bigunetsHeader.setCourse((Integer) list.get(0)[index++]);
+        bigunetsHeader.setGroup((String) list.get(0)[index++]);
+        bigunetsHeader.setSubjectName((String) list.get(0)[index++]);
+        bigunetsHeader.setSemester((String) list.get(0)[index++]);
+
+        Float credits = (Float) list.get(0)[index++];
+
+        bigunetsHeader.setCreditNumber(String.valueOf(credits));
+        bigunetsHeader.setDueTo((LocalDate) list.get(0)[index++]);
+        bigunetsHeader.setPostponeReason((String) list.get(0)[index++]);
+        bigunetsHeader.setControlType((String) list.get(0)[index++]);
+        bigunetsHeader.setExamDate((LocalDate) list.get(0)[index++]);
+        bigunetsHeader.setTutorFullName((String) list.get(0)[index++]);
+        bigunetsHeader.setTutorPosition((String) list.get(0)[index++]);
+        bigunetsHeader.setTutorAcademicStatus((String) list.get(0)[index++]);
+
+        bigunetsInfo.setBigunetsHeader(bigunetsHeader);
+
+        List<BigunetsStudent> bigunetsStudentList = new ArrayList<>();
+        List<Object[]> stud = bigunetsRepository.findAllStudentByBigunetsId(id);
+        for (int i = 0; i < stud.size(); i++) {
+            BigunetsStudent bigunetsStudent = new BigunetsStudent();
+            index = 0;
+
+            bigunetsStudent.setStudentId((Integer) stud.get(i)[index++]);
+            bigunetsStudent.setStudentPI((String) stud.get(i)[index++]);
+            bigunetsStudent.setStudentPatronymic((String) stud.get(i)[index++]);
+            bigunetsStudent.setStudentRecordBook((String) stud.get(i)[index++]);
+            bigunetsStudent.setSemesterGrade((Integer) stud.get(i)[index++]);
+            bigunetsStudent.setControlGrade((Integer) stud.get(i)[index++]);
+            bigunetsStudent.setTotalGrade((Integer) stud.get(i)[index++]);
+            bigunetsStudent.setNationalGrade((String) stud.get(i)[index++]);
+            bigunetsStudent.setEctsGrade((String) stud.get(i)[index++]);
+
+            bigunetsStudentList.add(bigunetsStudent);
+        }
+        bigunetsInfo.setBigunetsStudents(bigunetsStudentList);
+
+        return bigunetsInfo;
     }
 
     public Page<BigunetsShortInfo> findAllBiguntsy(String tutorName, String subjectName, String groupName, int page, int numberPerPage) {

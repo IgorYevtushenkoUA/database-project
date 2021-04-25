@@ -12,7 +12,21 @@ import java.util.List;
 
 public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Integer> {
 
-    @Query("select b.bigunetsNo, concat(b.tutor.tutorSurname,' ', b.tutor.tutorName,' ', b.tutor.tutorPatronymic), sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil " +
+    @Query("select b.bigunetsNo, " +
+            "g.eduYear, " +
+            "sub.faculty, " +
+            "g.course, " +
+            "g.groupName, " +
+            "sub.subjectName, " +
+            "g.trim, " +
+            "sub.credits, " +
+            "b.validUntil, " +
+            "b.postpReason, " +
+            "b.controlType, " +
+            "b.examDate, " +
+            "concat(b.tutor.tutorSurname,' ', b.tutor.tutorName,' ', b.tutor.tutorPatronymic), " +
+            "t.position, " +
+            "t.academStatus " +
             "from BigunetsEntity b " +
             "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.bigunetsNo=b.bigunetsNo " +
             "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=bm.bigunetsMarkId.vidomistNo " +
@@ -22,8 +36,33 @@ public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Intege
             "inner join StudentEntity s on s.studentCode=bm.bigunetsMarkId.studentCode " +
             "inner join TutorEntity t on t.tutorNo= v.tutor.tutorNo " +
             "where b.bigunetsNo=:bigunetsNo " +
-            "group by b.bigunetsNo, concat(b.tutor.tutorSurname,' ', b.tutor.tutorName,' ', b.tutor.tutorPatronymic), sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil")
+            "group by b.bigunetsNo, g.eduYear, sub.faculty, g.course, g.groupName, sub.subjectName, g.trim, sub.credits, " +
+            "b.validUntil, b.postpReason, b.controlType, b.examDate, " +
+            "concat(b.tutor.tutorSurname,' ', b.tutor.tutorName,' ', b.tutor.tutorPatronymic), t.position, t.academStatus ")
     Page<Object[]> findBigunetsById(@Param("bigunetsNo") Integer bigunetsNo, Pageable pageable);
+
+
+    @Query("select s.studentCode, " +
+            "concat(s.studentSurname,' ', s.studentName,' '), " +
+            "s.studentPatronymic, "+
+            "s.studentRecordBook, " +
+            "bm.trimMark , " +
+            "bm.markCheck ,"+
+            "bm.completeMark ,"+
+            "bm.natMark ,"+
+            "bm.ectsMark "+
+            "from BigunetsEntity b " +
+            "inner join BigunetsMarkEntity bm on bm.bigunetsMarkId.bigunetsNo=b.bigunetsNo " +
+            "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo=bm.bigunetsMarkId.vidomistNo " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
+            "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
+            "inner join StudentEntity s on s.studentCode=bm.bigunetsMarkId.studentCode " +
+            "inner join TutorEntity t on t.tutorNo= v.tutor.tutorNo " +
+            "where b.bigunetsNo=:bigunetsNo " +
+            "group by s.studentCode, concat(s.studentSurname,' ', s.studentName,' '), s.studentPatronymic, s.studentRecordBook, " +
+            "bm.trimMark , bm.markCheck ,bm.completeMark ,bm.natMark ,bm.ectsMark " )
+    List<Object[]> findAllStudentByBigunetsId(@Param("bigunetsNo") Integer bigunetsNo);
 
     @Query("select b.bigunetsNo, b.tutor.tutorSurname, b.tutor.tutorName, b.tutor.tutorPatronymic, sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil " +
             "from BigunetsEntity b " +
