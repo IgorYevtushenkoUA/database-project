@@ -23,7 +23,7 @@ public interface BigunetsRepository extends JpaRepository<BigunetsEntity, Intege
             "inner join TutorEntity t on t.tutorNo= v.tutor.tutorNo " +
             "where b.bigunetsNo=:bigunetsNo " +
             "group by b.bigunetsNo, concat(b.tutor.tutorSurname,' ', b.tutor.tutorName,' ', b.tutor.tutorPatronymic), sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil")
-    Page<Object[]> findABigunetsById(@Param("bigunetsNo") Integer bigunetsNo, Pageable pageable);
+    Page<Object[]> findBigunetsById(@Param("bigunetsNo") Integer bigunetsNo, Pageable pageable);
 
     @Query("select b.bigunetsNo, b.tutor.tutorSurname, b.tutor.tutorName, b.tutor.tutorPatronymic, sub.subjectName, b.controlType, b.postpReason, b.examDate, b.validUntil " +
             "from BigunetsEntity b " +

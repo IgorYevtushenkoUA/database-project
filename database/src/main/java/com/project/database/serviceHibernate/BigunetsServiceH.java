@@ -40,10 +40,10 @@ public class BigunetsServiceH {
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
 
-    public BigunetsShortInfo findABigunetsById(Integer id){
+    public BigunetsShortInfo findBigunetsById(Integer id){
         Pageable pageable = PageRequest.of(0, 1);
         BigunetsShortInfo bsi = new BigunetsShortInfo();
-        List<Object[]> list = bigunetsRepository.findABigunetsById(id, pageable).getContent();
+        List<Object[]> list = bigunetsRepository.findBigunetsById(id, pageable).getContent();
         bsi.setStatementNo((Integer) list.get(0)[0]);
         bsi.setTutorFullName((String) list.get(0)[1]);
         bsi.setSubjectName((String) list.get(0)[2]);
