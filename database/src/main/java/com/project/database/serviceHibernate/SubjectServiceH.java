@@ -51,6 +51,13 @@ public class SubjectServiceH {
         return subjectRepository.findAllSubjectNames("%" + name.toLowerCase() + "%");
     }
 
+    public Page<SubjectShortInfo> findAllSubjectsByName(String subject, int page, int numberPerPage) {
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
+        Page<Object[]> pageList = subjectRepository.findAllSubjectsByName("%" + subject.toLowerCase() + "%", pageable);
+        System.out.println(pageList.getContent());
+        return buildSubjectShortInfo(pageList, pageable, (int) pageList.getTotalElements());
+    }
+
     // insert
     public void insertSubject(SubjectEntity subject) {
         if (subjectRepository.findBySubjectName(subject.getSubjectName()) == null) {
@@ -87,7 +94,8 @@ public class SubjectServiceH {
             subjectInfo.setSubjectID((Integer) obj[index++]);
             subjectInfo.setSubjectName((String) obj[index++]);
             subjectInfo.setTutorFullName((String) obj[index++] + " " + obj[index++] + " " + obj[index++]);
-            subjectInfo.setGrade((BigDecimal) obj[index++]);
+            Double d = (Double) obj[index++];
+            subjectInfo.setGrade((BigDecimal) new BigDecimal(d));
             subjects.add(subjectInfo);
         }
         return new PageImpl<>(subjects, pageable, total);

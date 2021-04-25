@@ -25,7 +25,15 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, Integer>
 
     SubjectEntity findBySubjectName(String subjectName);
 
-    Page<Object[]> findAllBySubjectNameLike(String subjectName, Pageable pageable);
+    @Query("select sub.subjectNo, sub.subjectName, t.tutorSurname, t.tutorName, t.tutorPatronymic, avg(vm.completeMark) " +
+            "from SubjectEntity sub " +
+            "inner join GroupEntity gr on gr.subject.subjectNo=sub.subjectNo " +
+            "inner join VidomistEntity v on v.group.groupCode=gr.groupCode " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "inner join VidomistMarkEntity vm on vm.vidomistMarkId.vidomistNo = v.vidomistNo " +
+            "where lower(sub.subjectName) like:name " +
+            "group by sub.subjectNo, sub.subjectName, t.tutorSurname, t.tutorName, t.tutorPatronymic ")
+    Page<Object[]> findAllSubjectsByName(@Param("name") String name, Pageable pageable);
 
     @Query(value = "select sub.subject_no, subject_name, t.tutor_surname, t.tutor_name, t.tutor_patronymic, avg(vm.complete_mark)\n" +
             "from student s\n" +
@@ -69,7 +77,6 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, Integer>
             "and sub.subject_name=:subjectName " +
             "group by sub.subject_no, subject_name, t.tutor_surname, t.tutor_name, t.tutor_patronymic ", nativeQuery = true)
     Page<Object[]> findSubjectAverageMarkBySubjectName(@Param("subjectName") String subjectName, Pageable pageable);
-
 
 
 }

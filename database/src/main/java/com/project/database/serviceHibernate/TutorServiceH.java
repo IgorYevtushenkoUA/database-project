@@ -50,7 +50,7 @@ public class TutorServiceH {
      * @param name
      * @return [[Ющенко, Юрій, Олексійович],....]
      */
-    public List<List<String>> findAllTutorNamesByPartOFName(String name) {
+    public List<List<String>> findAllTutorNames(String name) {
         return tutorRepository.findAllTutorNamesByPartOFName("%" + name + "%");
     }
 

@@ -44,7 +44,7 @@ public interface VidomistRepository extends JpaRepository<VidomistEntity, Intege
             "and " +
             "   g.groupName in (:groupName) " +
             "group by v.vidomistNo,t.tutorSurname,t.tutorName,t.tutorPatronymic, sub.subjectName,g.groupName,v.controlType, v.presentCount,v.absentCount,v.rejectedCount, v.examDate "
-           )
+    )
     Page<Object[]> findAllStatements(
             @Param("subjectName") List<String> subjectName,
             @Param("tutorNo") List<Integer> tutorNo,

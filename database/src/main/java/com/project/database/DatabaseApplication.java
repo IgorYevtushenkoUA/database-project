@@ -22,11 +22,11 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        GroupServiceH groupServiceH = applicationContext.getBean(GroupServiceH.class);
-        System.out.println(groupServiceH.findAllGroupsByTeacherPIBAndSubjectName(null,null));
+        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
+        System.out.println(studentServiceH.findStudentAverageMarksForCourseTrim(1));
 
-        SubjectServiceH subjectServiceH = applicationContext.getBean(SubjectServiceH.class);
-        System.out.println(subjectServiceH.findAllSubjectNames());
+//        SubjectServiceH subjectServiceH = applicationContext.getBean(SubjectServiceH.class);
+//        System.out.println(subjectServiceH.findAllSubjectsByName("бд",1,20));
     }
 }
 

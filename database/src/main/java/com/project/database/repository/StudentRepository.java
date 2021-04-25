@@ -27,6 +27,15 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
             "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
             "inner join SubjectEntity sub on sub.subjectNo=gr.subject.subjectNo " +
+            "where lower(concat(s.studentSurname,' ', s.studentName, ' ', s.studentPatronymic)) like :pib ")
+    Page<Object[]> findAllStudentsByPIB(@Param("pib") String pib, Pageable pageable);
+
+    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, gr.course as course, gr.trim  " +
+            "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "inner join SubjectEntity sub on sub.subjectNo=gr.subject.subjectNo " +
             "where " +
             "   gr.eduYear in (:eduYears) " +
             "and " +
@@ -237,19 +246,27 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
                                                 @Param("course") List<Integer> course,
                                                 @Param("trim") List<String> trim);
 
-
-
-    @Query("select sub.subjectName, sub.eduLevel,sub.faculty, vm.completeMark as completeMark " +
+    @Query("select avg(vm.completeMark) " +
             "from VidomistMarkEntity vm " +
             "inner join VidomistEntity v on vm.vidomistMarkId.vidomistNo=v.vidomistNo " +
             "inner join GroupEntity g on g.groupCode=v.group.groupCode " +
-            "inner join SubjectEntity sub on sub.subjectNo=g.subject.subjectNo " +
+            "where " +
+            "   vm.vidomistMarkId.studentCode=:studentCode ")
+    Double findStudentAverageMarksForCourseTrim(@Param("studentCode") Integer studentCode);
+
+    // here todo
+    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, gr.course as course, gr.trim  " +
+            "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
+            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+            "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
+            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
+            "inner join SubjectEntity sub on sub.subjectNo=gr.subject.subjectNo " +
             "where " +
             "   vm.vidomistMarkId.studentCode=:studentCode " +
             "and " +
-            "  g.course in (:course) " +
+            "  gr.course in (:course) " +
             "and " +
-            "   g.trim in (:trim) ")
+            "   gr.trim in (:trim) ")
     Page<Object[]> findAllStudentMarks(@Param("studentCode") Integer studentCode,
                                        @Param("course") List<Integer> course,
                                        @Param("trim") List<String> trim,
