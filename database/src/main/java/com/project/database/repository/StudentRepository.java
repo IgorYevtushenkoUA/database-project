@@ -255,12 +255,13 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     Double findStudentAverageMarksForCourseTrim(@Param("studentCode") Integer studentCode);
 
     // here todo
-    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, gr.course as course, gr.trim  " +
-            "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
-            "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
+    @Query("select sub.subjectNo, sub.subjectName, t.tutorSurname, t.tutorName, t.tutorPatronymic,gr.groupName, v.controlType, v.examDate, s.studentCode, vm.completeMark " +
+            "from StudentEntity s " +
+            "inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
+            "inner join VidomistEntity v on vm.vidomistMarkId.studentCode=v.vidomistNo " +
+            "inner join TutorEntity t on v.tutor.tutorNo=t.tutorNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
-            "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
-            "inner join SubjectEntity sub on sub.subjectNo=gr.subject.subjectNo " +
+            "inner join SubjectEntity sub on sub.subjectNo = gr.subject.subjectNo " +
             "where " +
             "   vm.vidomistMarkId.studentCode=:studentCode " +
             "and " +

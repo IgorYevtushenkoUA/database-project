@@ -22,8 +22,17 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        StatementServiceH statementServiceH = applicationContext.getBean(StatementServiceH.class);
-        System.out.println(statementServiceH.findStatementById(1));
+        StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
+        System.out.println(studentServiceH.findAllStudentMarks(
+                1,
+                3,
+                1,
+                "",
+                true,
+                1,
+                20).getContent());
+
+
     }
 }
 

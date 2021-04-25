@@ -328,7 +328,7 @@ public class StudentServiceH {
      * @param sortDesc
      * @return
      */
-    public Page<StudentShortInfo> findAllStudentMarks(
+    public Page<StudentSubjectShortInfo> findAllStudentMarks(
             Integer studentCode, Integer course, Integer trim,
             String sortBy, boolean sortDesc, int page, int numberPerPage) {
 
@@ -338,7 +338,7 @@ public class StudentServiceH {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
 
         Page<Object[]> pageList = studentRepository.findAllStudentMarks(studentCode, courseList, trimList, pageable);
-        return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
+        return buildStudentSubjectShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 
     public void deleteByStudentCode(int studentCode) {
