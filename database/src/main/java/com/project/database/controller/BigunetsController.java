@@ -41,7 +41,7 @@ public class BigunetsController {
     @GetMapping("/bigunets/{id}")
     public ResponseEntity<BigunetsInfo> getStatementInfo(@PathVariable("id") int id) {
         return null;
-//        return ResponseEntity.of(bigunetsService.findById(id));
+//        return ResponseEntity.of(bigunetsService.findBigunetsById(id));
     }
 
 

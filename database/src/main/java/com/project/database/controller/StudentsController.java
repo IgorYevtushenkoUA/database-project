@@ -1,7 +1,6 @@
 package com.project.database.controller;
 
 import com.project.database.dto.student.StudentShortInfo;
-import com.project.database.entities.Student;
 import com.project.database.serviceHibernate.StudentServiceH;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/")
@@ -35,7 +32,7 @@ public class StudentsController {
     ) {
         Page<StudentShortInfo> students;
         students = studentServiceH.findStudentsWithRating(
-                year, subject,  tutor, group,
+                year, subject, tutor, group,
                 semester, course,
                 sortBy, sortDesc, page, numberPerPage
         );
@@ -44,8 +41,8 @@ public class StudentsController {
 
 
     @GetMapping("/debtors")
-    public List<Student> getAllDebtors(
-            @RequestParam(name = "year",  required = false) String year,
+    public Page<StudentShortInfo> getAllDebtors(
+            @RequestParam(name = "year", required = false) String year,
             @RequestParam(name = "subject", required = false) String subject,
             @RequestParam(name = "tutor", required = false) String tutor,
             @RequestParam(name = "group", required = false) String group,
@@ -56,13 +53,10 @@ public class StudentsController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
-        List<Student> debtors = null;
-//        debtors = studentServiceH.findAllDebtorsByYearSubjectGroupTeacherTrimCourse(
-//                year, subject, group, tutor,
-//                String.valueOf(semester), String.valueOf(course),
-//                sortBy, sortDesc, page, numberPerPage
-//        );
-        return debtors;
+        return studentServiceH.findDebtorsRatingDefault(
+                year, group, semester, course, subject, null,
+                sortBy, sortDesc, page, numberPerPage
+        );
     }
 
 }

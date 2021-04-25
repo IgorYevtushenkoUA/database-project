@@ -21,17 +21,18 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     @Query("select s.studentSurname, s.studentName, s.studentPatronymic from StudentEntity s where lower(s.studentSurname) like:name or s.studentName like:name or s.studentPatronymic like:name")
     List<List<String>> findAllStudentNames(@Param("name") String name);
 
-    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, (sum(sub.credits * vm.completeMark) / sum(sub.credits)) as rating,gr.course as course, gr.trim  " +
+    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, (sum(sub.credits * vm.completeMark) / sum(sub.credits)) as rating  " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
             "inner join TutorEntity t on t.tutorNo=v.tutor.tutorNo " +
             "inner join SubjectEntity sub on sub.subjectNo=gr.subject.subjectNo " +
             "where lower(concat(s.studentSurname,' ', s.studentName, ' ', s.studentPatronymic)) like :pib " +
-            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, gr.course, gr.trim ")
+            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook ")
     Page<Object[]> findAllStudentsByPIB(@Param("pib") String pib, Pageable pageable);
 
-    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, (sum(sub.credits * vm.completeMark) / sum(sub.credits)) as rating, gr.course as course, gr.trim  " +
+    @Query("select s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, (sum(sub" +
+            ".credits * vm.completeMark) / sum(sub.credits)) as rating " +
             "from StudentEntity s inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
             "inner join VidomistEntity v on v.vidomistNo=vm.vidomistMarkId.vidomistNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
@@ -49,7 +50,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "   gr.trim in (:semesters) " +
             "and " +
             "   gr.course in (:courses) " +
-            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook, gr.course, gr.trim ")
+            "group by s.studentCode, s.studentSurname, s.studentName, s.studentPatronymic,s.studentRecordBook ")
     Page<Object[]> findStudentsWithRating(
             @Param("eduYears") List<String> eduYears,
             @Param("subjectName") List<String> subjectName,
@@ -111,7 +112,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             "              from vidomist_mark vm\n" +
             "              where vm.student_code = s.student_code\n" +
             "                and vm.ects_mark = 'F'\n" +
-            "                and lower(vm.nat_mark) not like '%недоп%'\n" +
+            "                and lower(vm.nat_mark) not like '%не%'\n" +
             "                and not exists(\n" +
             "                      select bm\n" +
             "                      from bigunets_mark bm\n" +
