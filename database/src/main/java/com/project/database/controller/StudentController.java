@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/")
 @RequiredArgsConstructor
@@ -52,11 +50,11 @@ public class StudentController {
     public Page<StudentSubjectShortInfo> getStudentSubjects(
             @PathVariable(name = "studentId") Integer studentId,
             @RequestParam(name = "course") Integer course,
-            @RequestParam(name = "semester") String semester,
+            @RequestParam(name = "semester") Integer semester,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "numberPerPage", defaultValue = "20") int numberPerPage
     ) {
-        return studentService.findStudentMarks(studentId, course, semester, page, numberPerPage);
+        return studentService.findAllStudentMarks(studentId, course, semester, page, numberPerPage);
     }
 
     @GetMapping("/student/{studentId}/statements")

@@ -330,12 +330,11 @@ public class StudentServiceH {
      */
     public Page<StudentSubjectShortInfo> findAllStudentMarks(
             Integer studentCode, Integer course, Integer trim,
-            String sortBy, boolean sortDesc, int page, int numberPerPage) {
+            int page, int numberPerPage) {
 
         List<Integer> courseList = getCourseList(course);
         List<String> trimList = getSemestrList(trim, semestrParser(course, trim));
-        Sort sort = setSort(sortBy, sortDesc);
-        Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
+        Pageable pageable = PageRequest.of(page - 1, numberPerPage);
 
         Page<Object[]> pageList = studentRepository.findAllStudentMarks(studentCode, courseList, trimList, pageable);
         return buildStudentSubjectShortInfo(pageList, pageable, (int) pageList.getTotalElements());
