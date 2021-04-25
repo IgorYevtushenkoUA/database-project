@@ -111,7 +111,7 @@ public class VidomistServiceH {
 
 
     private List<String> getSubjectList(String subjectName) {
-        return subjectName == null
+        return subjectName == null || subjectName.isBlank()
                 ? subjectRepository.findAll()
                 .stream().map(SubjectEntity::getSubjectName).distinct().collect(Collectors.toList())
                 : subjectRepository.findDistinctBySubjectNameIn(Collections.singletonList(subjectName))
@@ -146,7 +146,7 @@ public class VidomistServiceH {
     }
 
     private List<String> getGroupList(String groupName) {
-        return groupName == null
+        return groupName == null || groupName.isBlank()
                 ? groupRepository.findAll()
                 .stream().map(GroupEntity::getGroupName).distinct().collect(Collectors.toList())
                 : groupRepository.findDistinctAllByGroupNameIn(Collections.singletonList(groupName))
@@ -162,7 +162,7 @@ public class VidomistServiceH {
     }
 
     private List<Integer> getTutorList(String tutorName) {
-        return tutorName == null
+        return tutorName == null || tutorName.isBlank()
                 ? tutorRepository.findAll()
                 .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList())
                 : tutorRepository.findAllTutorsByFullName(tutorName);
