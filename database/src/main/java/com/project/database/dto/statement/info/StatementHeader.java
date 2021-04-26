@@ -19,7 +19,7 @@ public class StatementHeader {
     private String group; // Example: 1,
     private String subjectName; // Example: 'Технології сучасних дата - центрів',
     private String semester; // Example: '6д',
-    private String creditNumber; // Example: '?',
+    private Float creditNumber; // Example: '?',
     private String controlType; // Example: 'екзамен',
     private LocalDate examDate; // Example: '2021-05-24',
     private String tutorFullName; // Example: 'Черкасов Дмитро Іванович',

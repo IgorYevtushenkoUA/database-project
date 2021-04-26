@@ -100,7 +100,7 @@ public class StatementServiceH {
         statementHeader.setGroup(statementHeaderEntity.getGroupName());
         statementHeader.setSubjectName(statementHeaderEntity.getSubjectName());
         statementHeader.setSemester(statementHeaderEntity.getTrim());
-        statementHeader.setCreditNumber("3");
+        statementHeader.setCreditNumber(statementHeader.getCreditNumber());
         statementHeader.setControlType(statementHeaderEntity.getControlType());
         statementHeader.setExamDate(statementHeaderEntity.getExamDate());
         statementHeader.setTutorFullName(statementHeaderEntity.getTutorSurname() + " " + statementHeaderEntity.getTutorName() + " " + statementHeaderEntity.getTutorPatronymic());

@@ -61,7 +61,7 @@ public class BigunetsServiceH {
 
         Float credits = (Float) list.get(0)[index++];
 
-        bigunetsHeader.setCreditNumber(String.valueOf(credits));
+        bigunetsHeader.setCreditNumber(credits);
         bigunetsHeader.setDueTo((LocalDate) list.get(0)[index++]);
         bigunetsHeader.setPostponeReason((String) list.get(0)[index++]);
         bigunetsHeader.setControlType((String) list.get(0)[index++]);

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,7 +39,9 @@ public class ParserServiceH {
     @Autowired
     private final VidomistMarkServiceH vidomistMarkServiceH;
 
+
     // not tested -> todo test
+    @Transactional
     public void insertBigunets(BigunetsInfo bigunetsInfo) throws StatementNotExist {
         // + tutor
         // + subject
@@ -52,11 +55,6 @@ public class ParserServiceH {
         BigunetsHeader header = bigunetsInfo.getBigunetsHeader();
         List<BigunetsStudent> students = bigunetsInfo.getBigunetsStudents();
 
-        if (vidomistServiceH.findById(header.getBigunNo()) == null) {
-            throw new StatementNotExist("Statement not exists");
-        }
-
-
         // tutor
         TutorEntity tutor = new TutorEntity();
         String[] tutorFullName = header.getTutorFullName().split(" ");
@@ -66,7 +64,6 @@ public class ParserServiceH {
         tutor.setScienceDegree(""); // todo бігунець це не повертає
         tutor.setAcademStatus(header.getTutorAcademicStatus());
         tutor.setPosition(header.getTutorPosition());
-        tutorServiceH.insertTutor(tutor);
 
         // subject
         SubjectEntity subject = new SubjectEntity();
@@ -76,7 +73,7 @@ public class ParserServiceH {
         subject.setEduLevel(header.getEduLevel());
         subject.setFaculty(header.getFaculty());
         subject.setGroup(gropsList);
-        subjectServiceH.insertSubject(subject);
+        subject.setCredits(header.getCreditNumber());
 
         // group
         GroupEntity group = new GroupEntity();
@@ -91,7 +88,6 @@ public class ParserServiceH {
         group.setTrim(header.getSemester());
         group.setCourse(header.getCourse());
         group.setSubject(subjectServiceH.findBySubjectName(header.getSubjectName()));
-        groupServiceH.insertGroup(group, subject);
 
         // bigunets
         BigunetsEntity bigunets = new BigunetsEntity();
@@ -102,24 +98,25 @@ public class ParserServiceH {
         bigunets.setControlType(header.getControlType());
         TutorEntity tutorEntity = tutorServiceH.findByPIB(tutor.getTutorSurname(), tutor.getTutorName(), tutor.getTutorPatronymic());
         bigunets.setTutor(tutorEntity);
-        bigunetsServiceH.insertBigunets(bigunets);
 
+        ArrayList<StudentEntity> studentEntities = new ArrayList<>(students.size());
+        List<BigunetsMarkEntity> markEntities = new ArrayList<>(students.size());
 
         // bigunets_mark
-        for (int i = 0; i < students.size(); i++) {
+        for (BigunetsStudent bs : students) {
             // student
-            BigunetsStudent bs = students.get(i);
             StudentEntity student = new StudentEntity();
             String[] studentPI = bs.getStudentPI().split(" ");
             student.setStudentSurname(studentPI[0]);
             student.setStudentName(studentPI[1]);
             student.setStudentPatronymic(bs.getStudentPatronymic());
             student.setStudentRecordBook(bs.getStudentRecordBook());
-            studentServiceH.insertStudent(student);
+            studentEntities.add(student);
 
             // vidomistNO
             VidomistEntity vidomistEntity = vidomistServiceH.findVidomistNoByStudentRecordBookAndSubjectName(bs.getStudentRecordBook(), subject.getSubjectName());
             StudentEntity studentEntity = studentServiceH.findByStudentRecordBook(bs.getStudentRecordBook());
+
             // додав цю перевірку на випадок, коли відомості (за НОМЕРОМ студента та предметм ще немає)
             if (vidomistEntity != null) {
                 // bigunetsMark
@@ -138,11 +135,24 @@ public class ParserServiceH {
                 bigunetsMark.setNatMark(bs.getNationalGrade());
                 bigunetsMark.setEctsMark(bs.getEctsGrade());
 
-                bigunetsMarkServiceH.insertBigunetsMark(bigunetsMark);
-            }
+                markEntities.add(bigunetsMark);
+            } else
+                throw new StatementNotExist("Statement not exists");
+        }
+
+        tutorServiceH.insertTutor(tutor);
+        subjectServiceH.insertSubject(subject);
+        groupServiceH.insertGroup(group, subject);
+        bigunetsServiceH.insertBigunets(bigunets);
+        for (StudentEntity studentEntity : studentEntities) {
+            studentServiceH.insertStudent(studentEntity);
+        }
+        for (BigunetsMarkEntity markEntity : markEntities) {
+            bigunetsMarkServiceH.insertBigunetsMark(markEntity);
         }
 
     }
+
 
     // todo check how works
     public void insertVidomist(StatementInfo statementInfo) {
@@ -177,6 +187,7 @@ public class ParserServiceH {
         subject.setEduLevel(header.getEduLevel());
         subject.setFaculty(header.getFaculty());
         subject.setGroup(gropsList);
+        subject.setCredits(header.getCreditNumber());
         subjectServiceH.insertSubject(subject);
 
         // group
@@ -227,7 +238,7 @@ public class ParserServiceH {
             VidomistMarkId vidomistMarkId = new VidomistMarkId();
             StudentEntity studentEntity = studentServiceH.findByStudentRecordBook(student.getStudentRecordBook());
             vidomistMarkId.setStudentCode(studentEntity.getStudentCode());
-//            vidomistMarkId.setVidomistNo(header.getStatementNo());
+            //            vidomistMarkId.setVidomistNo(header.getStatementNo());
             vidomistMarkId.setVidomistNo(header.getStatementNo());
 
             vidomistMark.setVidomistMarkId(vidomistMarkId);

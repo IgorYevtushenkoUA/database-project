@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -196,7 +195,7 @@ public class StatementParser {
                 .group(map.get(Enums.Element.GROUP))
                 .eduLevel(map.get(Enums.Element.EDU_LEVEL))
                 .semester(map.get(Enums.Element.TERM))
-                .creditNumber(map.get(Enums.Element.ZALIK_BALI))
+                .creditNumber(Float.valueOf(map.get(Enums.Element.ZALIK_BALI)))
                 .examDate(stringToDate(map.get(Enums.Element.DATE)))
                 .subjectName(map.get(Enums.Element.SUBJECT))
                 .tutorPosition(getTutorPosition(map.get(Enums.Element.TUTOR_INFO)))

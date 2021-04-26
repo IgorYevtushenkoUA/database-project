@@ -185,7 +185,7 @@ public class BigunetsParser {
                 .group(map.get(Enums.BigunElement.GROUP))
                 .eduLevel(map.get(Enums.BigunElement.EDU_LEVEL))
                 .semester(map.get(Enums.BigunElement.TERM))
-                .creditNumber(map.get(Enums.BigunElement.ZALIK_BALI))
+                .creditNumber(Float.valueOf(map.get(Enums.BigunElement.ZALIK_BALI)))
                 .examDate(stringToDate(map.get(Enums.BigunElement.DATE)))
                 .subjectName(map.get(Enums.BigunElement.SUBJECT))
                 .tutorPosition(getTutorPosition(map.get(Enums.BigunElement.TUTOR_INFO)))

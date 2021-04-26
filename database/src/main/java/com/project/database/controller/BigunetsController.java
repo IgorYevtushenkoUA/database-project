@@ -3,6 +3,7 @@ package com.project.database.controller;
 import com.project.database.dto.bigunets.BigunetsReport;
 import com.project.database.dto.bigunets.info.BigunetsInfo;
 import com.project.database.dto.bigunets.shortInfo.BigunetsShortInfo;
+import com.project.database.exception.StatementNotExist;
 import com.project.database.serviceHibernate.BigunetsServiceH;
 import com.project.database.serviceHibernate.ParserServiceH;
 import lombok.RequiredArgsConstructor;
@@ -72,6 +73,8 @@ public class BigunetsController {
         try {
             parserService.insertBigunets(bigunetsReport.getBigunetsInfo());
             bigunetsId = bigunetsReport.getBigunetsInfo().getBigunetsHeader().getBigunNo();
+        } catch (StatementNotExist e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
