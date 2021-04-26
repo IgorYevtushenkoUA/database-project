@@ -43,7 +43,12 @@ public class StatementController {
 
     @GetMapping("/statement/{id}")
     public ResponseEntity<StatementInfo> getStatementInfo(@PathVariable("id") int id) {
-        return ResponseEntity.of(statementService.getStatementInfo(id));
+        try {
+            return ResponseEntity.of(statementService.getStatementInfo(id));
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 

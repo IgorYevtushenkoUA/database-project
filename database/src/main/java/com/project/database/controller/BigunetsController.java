@@ -41,7 +41,12 @@ public class BigunetsController {
 
     @GetMapping("/bigunets/{id}")
     public ResponseEntity<BigunetsInfo> getStatementInfo(@PathVariable("id") int id) {
-        return ResponseEntity.ok(bigunetsService.findBigunetsById(id));
+        try {
+            return ResponseEntity.ok(bigunetsService.findBigunetsById(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 
