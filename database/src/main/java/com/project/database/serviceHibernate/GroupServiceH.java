@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,14 +99,14 @@ public class GroupServiceH {
 
 
     private List<Integer> getTutorList(String tutorName) {
-        return tutorName == null
+        return tutorName == null || tutorName.isBlank()
                 ? tutorRepository.findAll()
                 .stream().map(TutorEntity::getTutorNo).distinct().collect(Collectors.toList())
                 : tutorRepository.findAllTutorsByFullName(tutorName);
     }
 
     private List<String> getSubjectList(String subjectName) {
-        return subjectName == null
+        return subjectName == null || subjectName.isBlank()
                 ? subjectRepository.findAll()
                 .stream().map(SubjectEntity::getSubjectName).distinct().collect(Collectors.toList())
                 : subjectRepository.findDistinctBySubjectNameIn(Collections.singletonList(subjectName))
