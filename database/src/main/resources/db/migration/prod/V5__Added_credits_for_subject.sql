@@ -1,0 +1,1 @@
+alter table subject add column credits float;
