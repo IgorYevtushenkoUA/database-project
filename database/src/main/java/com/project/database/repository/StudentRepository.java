@@ -294,12 +294,12 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     @Query("select sub.subjectNo, sub.subjectName, t.tutorSurname, t.tutorName, t.tutorPatronymic, gr.groupName, v.controlType, v.examDate, vm.completeMark,s.studentCode " +
             "from StudentEntity s " +
             "inner join VidomistMarkEntity vm on s.studentCode=vm.vidomistMarkId.studentCode " +
-            "inner join VidomistEntity v on vm.vidomistMarkId.studentCode=v.vidomistNo " +
+            "inner join VidomistEntity v on vm.vidomistMarkId.vidomistNo=v.vidomistNo " +
             "inner join TutorEntity t on v.tutor.tutorNo=t.tutorNo " +
             "inner join GroupEntity gr on gr.groupCode=v.group.groupCode " +
             "inner join SubjectEntity sub on sub.subjectNo = gr.subject.subjectNo " +
             "where " +
-            "   vm.vidomistMarkId.studentCode=:studentCode " +
+            "   s.studentCode=:studentCode " +
             "and " +
             "  gr.course in (:course) " +
             "and " +

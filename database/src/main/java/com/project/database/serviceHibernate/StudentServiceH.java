@@ -76,7 +76,7 @@ public class StudentServiceH {
 
     public Page<StudentShortInfo> findAllStudentsByPIB(String pib, int page, int numberPerPage) {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
-        Page<Object[]> pageList = studentRepository.findAllStudentsByPIB('%' + pib + '%', pageable);
+        Page<Object[]> pageList = studentRepository.findAllStudentsByPIB('%' + pib.toLowerCase() + '%', pageable);
         return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
 
