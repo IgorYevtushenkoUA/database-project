@@ -30,6 +30,10 @@ public class VidomistServiceH {
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
 
+    public VidomistEntity findById(int id){
+        return vidomistRepository.findById(id).orElse(null);
+    }
+
     public Page<StatementShortInfo> findAllStudentVidomosties(int studentCode, int page, int numberPerPage) {
         Pageable pageable = PageRequest.of(page - 1, numberPerPage);
         Page<Object[]> pageList = vidomistRepository.findAllStudentVidomosties(studentCode, pageable);

@@ -22,10 +22,8 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-      StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
-        System.out.println(studentServiceH.findAllStudentMarks(
-                3, 3,1,1,20
-        ).getContent());
+      VidomistServiceH vidomistServiceH = applicationContext.getBean(VidomistServiceH.class);
+        System.out.println(vidomistServiceH.findById(156));
 
     }
 }

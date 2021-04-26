@@ -8,6 +8,7 @@ import com.project.database.dto.statement.info.StatementHeader;
 import com.project.database.dto.statement.info.StatementInfo;
 import com.project.database.dto.statement.info.StatementStudent;
 import com.project.database.entities.*;
+import com.project.database.exception.StatementNotExist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class ParserServiceH {
     private final VidomistMarkServiceH vidomistMarkServiceH;
 
     // not tested -> todo test
-    public void insertBigunets(BigunetsInfo bigunetsInfo) {
+    public void insertBigunets(BigunetsInfo bigunetsInfo) throws StatementNotExist {
         // + tutor
         // + subject
         // + group
@@ -46,8 +47,14 @@ public class ParserServiceH {
         // - vidomistNO
         // student
         // bigunets_mark
+
+
         BigunetsHeader header = bigunetsInfo.getBigunetsHeader();
         List<BigunetsStudent> students = bigunetsInfo.getBigunetsStudents();
+
+        if (vidomistServiceH.findById(header.getBigunNo()) == null) {
+            throw new StatementNotExist("Statement not exists");
+        }
 
 
         // tutor

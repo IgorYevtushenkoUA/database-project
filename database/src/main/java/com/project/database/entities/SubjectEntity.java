@@ -32,6 +32,6 @@ public class SubjectEntity {
     private Float credits;
 
     @OneToMany
-    private List<GroupEntity> group;
+    @ToString.Exclude private List<GroupEntity> group;
 
 }
