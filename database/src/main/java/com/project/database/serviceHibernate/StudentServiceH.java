@@ -320,13 +320,6 @@ public class StudentServiceH {
 
     /**
      * найти всі ПРЕДМЕТ-ОЦІНКА студента за певний курс та триместр
-     *
-     * @param studentCode
-     * @param course
-     * @param trim
-     * @param sortBy
-     * @param sortDesc
-     * @return
      */
     public Page<StudentSubjectShortInfo> findAllStudentMarks(
             Integer studentCode, Integer course, Integer trim,

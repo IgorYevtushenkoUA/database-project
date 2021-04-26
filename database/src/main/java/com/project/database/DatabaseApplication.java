@@ -22,8 +22,10 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-        BigunetsServiceH bigunetsServiceH = applicationContext.getBean(BigunetsServiceH.class);
-        System.out.println(bigunetsServiceH.findBigunetsById(1));
+      StudentServiceH studentServiceH = applicationContext.getBean(StudentServiceH.class);
+        System.out.println(studentServiceH.findAllStudentMarks(
+                3, 3,1,1,20
+        ).getContent());
 
     }
 }

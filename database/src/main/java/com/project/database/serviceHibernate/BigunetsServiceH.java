@@ -53,7 +53,9 @@ public class BigunetsServiceH {
         bigunetsHeader.setEduLevel((String) list.get(0)[index++]);
         bigunetsHeader.setFaculty((String) list.get(0)[index++]);
         bigunetsHeader.setCourse((Integer) list.get(0)[index++]);
-        bigunetsHeader.setGroup((String) list.get(0)[index++]);
+//        bigunetsHeader.setGroup((String) list.get(0)[index++]);
+        index++;
+        bigunetsHeader.setGroup("бігунець");
         bigunetsHeader.setSubjectName((String) list.get(0)[index++]);
         bigunetsHeader.setSemester((String) list.get(0)[index++]);
 
