@@ -22,8 +22,10 @@ public class DatabaseApplication {
 
     private static void test(ApplicationContext applicationContext) {
 
-      VidomistServiceH vidomistServiceH = applicationContext.getBean(VidomistServiceH.class);
-        System.out.println(vidomistServiceH.findById(156));
+//        VidomistServiceH vidomistServiceH = applicationContext.getBean(VidomistServiceH.class);
+//        System.out.println(vidomistServiceH.findByVidomistNo(2222211));
+        BigunetsServiceH bigunetsServiceH = applicationContext.getBean(BigunetsServiceH.class);
+        System.out.println(bigunetsServiceH.findBigunetsById(2222211));
 
     }
 }

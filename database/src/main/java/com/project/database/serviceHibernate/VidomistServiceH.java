@@ -30,8 +30,9 @@ public class VidomistServiceH {
     private final SubjectRepository subjectRepository;
     private final TutorRepository tutorRepository;
 
-    public VidomistEntity findById(int id){
-        return vidomistRepository.findById(id).orElse(null);
+    public VidomistEntity findByVidomistNo(int id) {
+        VidomistEntity vidomistEntity = vidomistRepository.findByVidomistNo(id);
+        return vidomistEntity;
     }
 
     public Page<StatementShortInfo> findAllStudentVidomosties(int studentCode, int page, int numberPerPage) {

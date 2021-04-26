@@ -52,9 +52,10 @@ public class ParserServiceH {
         BigunetsHeader header = bigunetsInfo.getBigunetsHeader();
         List<BigunetsStudent> students = bigunetsInfo.getBigunetsStudents();
 
-        if (vidomistServiceH.findById(header.getBigunNo()) == null) {
-            throw new StatementNotExist("Statement not exists");
-        }
+        System.out.println(header.getBigunNo());
+//        if (vidomistServiceH.findByVidomistNo(header.getBigunNo()) == null) {
+//            throw new StatementNotExist("Statement not exists");
+//        }
 
 
         // tutor
@@ -139,6 +140,8 @@ public class ParserServiceH {
                 bigunetsMark.setEctsMark(bs.getEctsGrade());
 
                 bigunetsMarkServiceH.insertBigunetsMark(bigunetsMark);
+            }else {
+                // throw new StatementNotExist("Statement not exists")
             }
         }
 

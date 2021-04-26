@@ -165,7 +165,6 @@ public class StudentServiceH {
 
 
     /**
-     * todo (тут проблеми із сортуванням, із Pageable мають вирішитися)
      * Знайти всіх боржників
      *
      * @param eduYear
@@ -192,7 +191,10 @@ public class StudentServiceH {
         Sort sort = setSort(sortBy, sortDesc);
         Pageable pageable = PageRequest.of(page - 1, numberPerPage, sort);
 
-        Page<Object[]> pageList = studentRepository.findDebtorsRatingDefault(
+        // todo choose methods
+
+//        Page<Object[]> pageList = studentRepository.findDebtorsRatingDefault(
+        Page<Object[]> pageList = studentRepository.findDebtorsRatingDefault2(
                 eduYearList, subjectList, tutorList, groupList, trimList, courseList, pageable);
         return buildStudentShortInfo(pageList, pageable, (int) pageList.getTotalElements());
     }
@@ -564,7 +566,7 @@ public class StudentServiceH {
                 return "completeMark";
             case "course":
                 return "course";
-            case "rating" :
+            case "rating":
                 return "rating";
             default:
                 return "studentSurname";
